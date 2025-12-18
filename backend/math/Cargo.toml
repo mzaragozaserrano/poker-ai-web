@@ -15,8 +15,8 @@ serde = { workspace = true }
 ndarray = { version = "0.15", features = ["serde"] }
 ndarray-stats = "0.5"
 
-# Intrinsics de SIMD (AVX2) para montecarlo
-packed_simd_2 = "0.3"
+# SIMD: Usaremos std::arch directamente (disponible en Rust 1.27+)
+# No requiere dependencias externas para AVX2 intrinsics
 
 # Generacion de numeros aleatorios
 rand = "0.8"
