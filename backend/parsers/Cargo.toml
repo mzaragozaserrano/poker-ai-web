@@ -16,7 +16,7 @@ serde_json = { workspace = true }
 # Crate-specific dependencies
 regex = "1.10"
 nom = "7.1"
-chrono = { version = "0.4", features = ["serde"] }
+chrono = { workspace = true, features = ["serde"] }
 
 [dev-dependencies]
 tempfile = "3.8"
