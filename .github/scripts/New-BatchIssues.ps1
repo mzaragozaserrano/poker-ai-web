@@ -4,6 +4,13 @@
     Este script es modificado automáticamente por el Agente de Cursor antes de su ejecución.
     
 .NOTES
+    IMPORTANTE - CODIFICACIÓN DEL ARCHIVO:
+    Este archivo DEBE estar guardado en UTF-8 sin BOM para que los caracteres especiales
+    (ñ, á, é, í, ó, ú) se muestren correctamente en GitHub.
+    
+    Si el archivo está en Windows-1252 u otra codificación, el script intentará corregir
+    automáticamente los caracteres corruptos, pero es mejor guardar el archivo en UTF-8.
+    
     Sintaxis recomendada para títulos y bodies:
     - Usa Here-String (@"..."@) para facilitar la lectura
     - Puedes escribir tildes y acentos directamente

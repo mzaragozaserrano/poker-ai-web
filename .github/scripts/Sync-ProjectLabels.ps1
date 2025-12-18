@@ -25,7 +25,12 @@ $ErrorActionPreference = "Stop"
 # CONFIGURACIÓN
 # ============================================================================
 $projectLabelsPath = ".github/docs/project_labels.json"
-$repoRoot = git rev-parse --show-toplevel 2>$null || Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
+$gitRoot = git rev-parse --show-toplevel 2>$null
+if ($gitRoot) {
+    $repoRoot = $gitRoot
+} else {
+    $repoRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
+}
 
 Write-Host "`n[Sincronizando Etiquetas de Proyecto]" -ForegroundColor Cyan
 
