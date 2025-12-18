@@ -1,0 +1,47 @@
+# --- Dependencias y Sistema (CRÍTICO) ---
+# La IA ya conoce las librerías populares, no necesita leerlas.
+node_modules/
+.git/
+.DS_Store
+.vscode/
+
+# --- Artefactos de Build y Salida ---
+# No queremos que la IA edite el código compilado.
+dist/
+build/
+coverage/
+tmp/
+
+# --- Archivos de Bloqueo de Paquetes (AHORRO MASIVO) ---
+# Estos archivos tienen miles de líneas de versiones y consumen muchísimos tokens.
+# La IA solo necesita package.json para ver qué librerías usas.
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+bun.lockb
+
+# --- Archivos Multimedia y Binarios ---
+# La IA no puede "ver" imágenes y su codificación en texto es basura para el contexto.
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.ico
+*.svg
+*.woff
+*.woff2
+*.ttf
+*.eot
+*.mp4
+*.webm
+
+# --- Logs y Archivos Temporales ---
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# --- Documentación Archivada ---
