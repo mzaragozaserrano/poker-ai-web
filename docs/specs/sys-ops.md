@@ -57,6 +57,11 @@ Para manejar actualizaciones de DuckDB o cambios en las columnas de Parquet:
 - **Equity Engine:** Test de velocidad comparativo: Monte Carlo estándar vs. optimización AVX2.
 - **Consultas DuckDB:** Medición de latencia en frío (disco) vs. caliente (64GB RAM).
 
+## 6. Configuración de Rutas (MANDATORIO)
+- **Path de Historial:** `C:\Users\Miguel\AppData\Roaming\winamax\documents\accounts\thesmoy\history`.
+- **Path de DuckDB:** `%APPDATA%/winamax-analyzer/database.duckdb`.
+- **Huge Pages:** Configuración manual de Windows para optimizar la tabla de búsqueda de 7 cartas en RAM.
+
 ---
 
 ## 7. Continuous Integration (CI/CD)
@@ -86,7 +91,3 @@ El proyecto utiliza **GitHub Actions** para validación automática de código e
 
 ---
 
-## 6. Configuración de Rutas (MANDATORIO)
-- **Path de Historial:** `C:\Users\Miguel\AppData\Roaming\winamax\documents\accounts\thesmoy\history`.
-- **Path de DuckDB:** `%APPDATA%/winamax-analyzer/database.duckdb`.
-- **Huge Pages:** Configuración manual de Windows para optimizar la tabla de búsqueda de 7 cartas en RAM.
