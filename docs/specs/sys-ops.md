@@ -59,6 +59,33 @@ Para manejar actualizaciones de DuckDB o cambios en las columnas de Parquet:
 
 ---
 
+## 7. Continuous Integration (CI/CD)
+
+El proyecto utiliza **GitHub Actions** para validación automática de código en cada push y pull request.
+
+### 7.1 CI para Rust Backend
+- **Workflow:** `.github/workflows/ci-rust.yml`
+- **Trigger:** Cambios en `backend/**` o en el workflow mismo
+- **Plataforma:** Windows (Windows-latest)
+- **Jobs:**
+  1. **Test:** Build, tests unitarios, verificación de formato (`cargo fmt`) y linting (`cargo clippy`)
+  2. **Build Release:** Compilación optimizada con perfil release para validar configuración de optimizaciones
+
+### 7.2 Validaciones Automáticas
+- **Compilación:** Todos los miembros del workspace (`parsers`, `math`, `ranges`, `db`) deben compilar correctamente
+- **Tests:** Ejecución de `cargo test --workspace` con cobertura completa
+- **Formato:** Verificación automática con `cargo fmt --check` para mantener consistencia de estilo
+- **Linting:** `cargo clippy` con `-D warnings` para evitar código problemático
+
+### 7.3 Cache de Dependencias
+- Utiliza `actions/cache@v4` para acelerar builds mediante cache de:
+  - `backend/target/`
+  - `~/.cargo/registry/`
+  - `~/.cargo/git/db/`
+- Key basada en hash de `Cargo.lock` para invalidación automática
+
+---
+
 ## 6. Configuración de Rutas (MANDATORIO)
 - **Path de Historial:** `C:\Users\Miguel\AppData\Roaming\winamax\documents\accounts\thesmoy\history`.
 - **Path de DuckDB:** `%APPDATA%/winamax-analyzer/database.duckdb`.
