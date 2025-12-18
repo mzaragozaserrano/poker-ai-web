@@ -1,0 +1,36 @@
+[workspace]
+members = ["parsers", "math", "ranges", "db"]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.70"
+authors = ["Miguel Zaragoza <mzaragoza@example.com>"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/mzaragozaserrano/poker-ai-web"
+
+[profile.release]
+# Optimizaciones agresivas para Ryzen 3800X (16 cores, Zen 2)
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true
+# SIMD y AVX2 habilitados para montecarlo y evaluadores
+[profile.release.package."*"]
+opt-level = 3
+
+[profile.dev]
+opt-level = 0
+
+# Workspace-level dependencies (evita versiones desconectadas)
+[workspace.dependencies]
+rayon = "1.7"
+notify = "6.1"
+duckdb = "0.9"
+pyo3 = { version = "0.20", features = ["extension-module"] }
+arrow = "51.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tokio = { version = "1.35", features = ["full"] }
+

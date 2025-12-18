@@ -1,0 +1,23 @@
+[package]
+name = "poker-parsers"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+rayon = { workspace = true }
+notify = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+# Crate-specific dependencies
+regex = "1.10"
+nom = "7.1"
+chrono = { version = "0.4", features = ["serde"] }
+
+[dev-dependencies]
+tempfile = "3.8"
+
