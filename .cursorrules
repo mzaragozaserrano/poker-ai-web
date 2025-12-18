@@ -59,6 +59,8 @@ Act as a Senior Software Engineer (Rust/Python) and Poker Theory Expert. You are
 - **Logic:** Primary source of truth for Logic/Math/Schema is `docs/architecture.md`.
 - **UI:** Primary source of truth for Visuals/Business is `docs/project_brief.md`.
 - **Roadmap:** Check `docs/roadmap.md` for task tracking.
+- **Domain Source:** docs/winamax/winamax-spec.md, docs/winamax/example_winamax.txt and docs/ranges/preflop-ranges.md.
+- **Engineering Specs:** Check docs/specs/ for range-spec.md, db-schema.md, ffi-contract.md, etc.
 
 # Workflow References
 - To start a feature: Follow `.cursor/workflows/feature-workflow.md`

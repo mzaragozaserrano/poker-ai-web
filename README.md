@@ -11,6 +11,7 @@ La aplicación opera íntegramente de forma local para garantizar la privacidad 
 - **Almacenamiento In-Memory**: DuckDB configurado para operar 100% en RAM (64GB), eliminando cuellos de botella de disco
 - **Visualización de Alto Rendimiento**: Interfaz React con Hand Replayer renderizado en HTML5 Canvas (Konva) a 60 FPS
 - **Análisis Post-Juego**: Estadísticas agregadas (VPIP, PFR, 3Bet) y visualización de manos históricas para análisis detallado
+- **Análisis de Rangos**: Comparación de acciones reales con rangos estratégicos GTO definidos en formato HandRangeDSL
 - **Modo Oscuro**: Interfaz diseñada específicamente para reducir la fatiga visual durante sesiones prolongadas
 
 ## Stack Tecnológico
@@ -31,6 +32,7 @@ La aplicación opera íntegramente de forma local para garantizar la privacidad 
 ### API y Orquestación
 - **Python 3.11+**: FastAPI para endpoints REST
 - **PyO3/FFI**: Integración sin sobrecarga entre Rust y Python
+- **Apache Arrow**: Intercambio de datos masivos sin penalización de serialización
 
 ### Frontend
 - **React 18**: Framework UI con Vite
@@ -189,7 +191,10 @@ La documentación completa del proyecto se encuentra en el directorio `docs/`:
 - **[API Specification](docs/specs/api-spec.md)**: Contratos de endpoints REST
 - **[DB Schema](docs/specs/db-schema.md)**: Esquema completo de base de datos
 - **[Winamax Spec](docs/winamax/winamax-spec.md)**: Especificación del formato de historiales Winamax
-- **[Poker Logic](docs/specs/poker-logc.md)**: Lógica de negocio y cálculos analíticos
+- **[Poker Logic](docs/specs/poker-logic.md)**: Lógica de negocio y cálculos analíticos
+- **[Range Specification](docs/specs/range-spec.md)**: Formato y especificación de rangos estratégicos
+- **[FFI Contract](docs/specs/ffi-contract.md)**: Contratos de comunicación Rust ↔ Python (PyO3/Apache Arrow)
+- **[Preflop Ranges](docs/ranges/preflop-ranges.md)**: Rangos estratégicos GTO para situaciones preflop
 
 ## Privacidad y Seguridad
 

@@ -63,3 +63,8 @@ Winamax aplica el rake basándose en el pozo final.
 
 ## 5. Especialización Posicional (Cash 6-max)
 El motor lógico debe forzar el mapeo de 5-max a 6-max omitiendo **EP (UTG)** para que las estadísticas de posición sean comparables entre diferentes tipos de mesas de Winamax.
+
+## 6. Integración de Rangos Estratégicos
+El sistema comparará la acción real de **thesmoy** con los rangos definidos en `preflop-ranges.md`.
+- **Identificación de Situación:** Se utiliza el `situationId` (ej: `SB_Open_Raise_01`) para vincular la mano parseada con el rango teórico.
+- **Análisis de Desviación:** Si la mano jugada tiene una frecuencia de 0.0 en el rango estratégico para esa acción, se marcará como un "Leak" en la UI.

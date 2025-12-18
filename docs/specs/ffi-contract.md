@@ -41,13 +41,9 @@ Los datos parseados por Rust se entregan a Python/DuckDB siguiendo este esquema 
 
 ## 3. Sintaxis de Rangos (HandRangeDSL)
 
-El parámetro `villain_range` acepta una cadena de texto con la siguiente gramática:
-
-1.  **Manos Específicas:** `AA, KQs, JTo`.
-2.  **Grupos con '+'**: `88+` (88, 99, ..., AA), `AJs+` (AJs, AQs, AKs).
-3.  **Rangos de Parejas:** `[22-77]` (22, 33, 44, 55, 66, 77).
-4.  **Pesos (GTO):** `AA:1.0, AKs:0.5, 76s:0.25` (donde 1.0 es 100% de frecuencia).
-5.  **Separador:** Coma (`,`) sin espacios necesarios.
+El motor de equidad en Rust interpreta el formato textual para `villain_range` y los rangos de `thesmoy`.
+- **Referencia Completa:** Ver `docs/specs/range-spec.md` para gramática, pesos (frecuencias) y validaciones de suma de frecuencias ≤ 1.0.
+- **Carga de Datos:** El backend cargará las situaciones definidas en `docs/ranges/preflop-ranges.md` al iniciar la sesión.
 
 ---
 
