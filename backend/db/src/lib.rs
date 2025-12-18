@@ -17,12 +17,13 @@
 //! Los 64GB de RAM disponibles permiten mantener toda la base de datos
 //! "caliente" en memoria para latencia cero.
 
-pub mod schema;
-pub mod connection;
-pub mod parquet_io;
-pub mod query;
+// TODO: Implementar módulos (Fase 1.3 según roadmap)
+// pub mod schema;
+// pub mod connection;
+// pub mod parquet_io;
+// pub mod query;
 
-pub use connection::DbConnection;
-pub use schema::{HandAction, PlayerStatFlat};
-pub use parquet_io::{ParquetReader, ParquetWriter};
+// pub use connection::DbConnection;
+// pub use schema::{HandAction, PlayerStatFlat};
+// pub use parquet_io::{ParquetReader, ParquetWriter};
 

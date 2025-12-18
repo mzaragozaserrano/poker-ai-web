@@ -18,11 +18,12 @@
 //! AA:1,KK:0.9,AKs:0.8,...
 //! ```
 
-pub mod dsl_parser;
-pub mod range_analyzer;
-pub mod leak_detector;
+// TODO: Implementar módulos (Fase 2.1 según roadmap)
+// pub mod dsl_parser;
+// pub mod range_analyzer;
+// pub mod leak_detector;
 
-pub use dsl_parser::RangeParser;
-pub use range_analyzer::RangeAnalyzer;
-pub use leak_detector::LeakDetector;
+// pub use dsl_parser::RangeParser;
+// pub use range_analyzer::RangeAnalyzer;
+// pub use leak_detector::LeakDetector;
 

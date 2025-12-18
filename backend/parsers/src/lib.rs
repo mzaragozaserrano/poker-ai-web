@@ -11,9 +11,10 @@
 //! - Soporte para Cash Games NLHE 6-max
 //! - File watching con notificación en tiempo real
 
-pub mod fsm;
-pub mod winamax;
+// TODO: Implementar módulos (Fase 1.2 según roadmap)
+// pub mod fsm;
+// pub mod winamax;
 
-pub use fsm::HandParser;
-pub use winamax::WinamaxHistoryParser;
+// pub use fsm::HandParser;
+// pub use winamax::WinamaxHistoryParser;
 

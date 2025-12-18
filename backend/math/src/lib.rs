@@ -13,11 +13,12 @@
 //! - Intrínsecos AVX2 para evaluaciones vectorizadas
 //! - Rayon para paralelización de simulaciones
 
-pub mod equity;
-pub mod monte_carlo;
-pub mod hand_evaluator;
+// TODO: Implementar módulos (Fase 2.1 según roadmap)
+// pub mod equity;
+// pub mod monte_carlo;
+// pub mod hand_evaluator;
 
-pub use equity::EquityCalculator;
-pub use monte_carlo::MonteCarloSimulator;
-pub use hand_evaluator::HandEvaluator;
+// pub use equity::EquityCalculator;
+// pub use monte_carlo::MonteCarloSimulator;
+// pub use hand_evaluator::HandEvaluator;
 
