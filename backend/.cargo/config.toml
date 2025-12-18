@@ -1,0 +1,25 @@
+# Configuración de Cargo para Ryzen 7 3800X (Zen 2 Architecture)
+# 16 cores / 32 threads, AVX2 SIMD
+
+[build]
+# Usar todos los cores disponibles durante compilación
+jobs = 16
+
+# Flags de compilación específicos para Ryzen 3800X
+rustflags = [
+    # AVX2 habilitado para SIMD intrinsics
+    "-C", "target-feature=+avx2",
+    # Usar inline assembly donde sea óptimo
+    "-C", "inline-threshold=1000",
+]
+
+[alias]
+# Alias para compilación rápida en desarrollo
+dev = "build"
+# Alias para release optimizado
+opt = "build --release"
+# Alias para tests
+test-all = "test --all --all-features"
+# Alias para benchmarks
+bench-all = "bench --all --all-features"
+

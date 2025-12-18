@@ -48,3 +48,8 @@ __pycache__/
 *$py.class
 *.so
 .Python
+
+# Rust
+backend/target/
+**/*.rs.bk
+# Cargo.lock se incluye para garantizar builds reproducibles

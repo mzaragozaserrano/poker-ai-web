@@ -1,0 +1,26 @@
+[package]
+name = "poker-math"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+rayon = { workspace = true }
+serde = { workspace = true }
+
+# SIMD y calculos de equidad
+ndarray = { version = "0.15", features = ["serde"] }
+ndarray-stats = "0.5"
+
+# SIMD: Usaremos std::arch directamente (disponible en Rust 1.27+)
+# No requiere dependencias externas para AVX2 intrinsics
+
+# Generacion de numeros aleatorios
+rand = "0.8"
+
+[dev-dependencies]
+criterion = "0.5"
+
