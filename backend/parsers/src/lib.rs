@@ -1,10 +1,10 @@
 //! # Poker Parsers
-//! 
+//!
 //! Módulo de parsing ultra-rápido para historiales de Winamax.
-//! 
+//!
 //! Utiliza una Máquina de Estados Finitos (FSM) para procesar líneas de historiales
 //! de forma eficiente con paralelización multihilo mediante Rayon.
-//! 
+//!
 //! ## Features
 //! - FSM para análisis de historiales Winamax
 //! - Paralelización con Rayon (16 threads en Ryzen 3800X)

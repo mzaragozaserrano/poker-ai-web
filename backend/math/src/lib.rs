@@ -1,13 +1,13 @@
 //! # Poker Math Engine
-//! 
+//!
 //! Módulo de cálculos matemáticos para análisis de poker.
-//! 
+//!
 //! Incluye:
 //! - Evaluadores de manos optimizados con SIMD AVX2
 //! - Simulaciones Monte Carlo paralelizadas
 //! - Cálculos de equidad
 //! - Análisis de probabilidades
-//! 
+//!
 //! ## Performance
 //! Diseñado para ejecutarse en Ryzen 3800X (16 cores) aprovechando:
 //! - Intrínsecos AVX2 para evaluaciones vectorizadas

@@ -1,13 +1,13 @@
 //! # Poker Ranges Parser
-//! 
+//!
 //! Módulo para parsear y gestionar rangos estratégicos en formato HandRangeDSL.
-//! 
+//!
 //! Soporta:
 //! - Archivos Markdown con frontmatter YAML
 //! - Notación compacta de rangos (AA:1, KK:0.9, AKs:0.8)
 //! - Análisis de desviaciones entre acciones reales y rangos GTO
 //! - Integración con sistema de detección de leaks
-//! 
+//!
 //! ## Formato HandRangeDSL
 //! Los rangos se definen en `docs/ranges/preflop-ranges.md` con sintaxis:
 //! ```markdown
