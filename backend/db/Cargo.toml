@@ -14,7 +14,7 @@ serde = { workspace = true }
 serde_json = { workspace = true }
 
 # Parquet para persistencia
-parquet = "49.0"
+parquet = "51.0"
 
 # Async runtime
 tokio = { workspace = true }
