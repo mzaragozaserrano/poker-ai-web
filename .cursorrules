@@ -69,5 +69,8 @@ Act as a Senior Software Engineer (Rust/Python) and Poker Theory Expert. You are
 
 # AGENT COMMANDS (Shortcuts)
 - "START #N": Run `gh issue view #N` to get context, then execute `.cursor/workflows/feature-workflow.md`.
-- "FIX #N": Run `gh issue view #N`, then execute `.cursor/workflows/bug-workflow.md`.
-- "MERGE #N": Execute `.cursor/workflows/merge-workflow.md`.
+- "FIX #N": Run `gh issue view #N`, then execute `.cursor/workflows/bug-workflow.md` (Focus on reproduction & fix).
+- "MERGE #N": Execute `.cursor/workflows/merge-workflow.md` for Issue #N.
+- "BATCH PHASE X": Read `docs/roadmap.md`, break task into simple subtasks, update `.github/scripts/New-BatchIssues.ps1` and execute.
+- "REPORT BUG <TITLE>": Execute `.cursor/workflows/create-bug-workflow.md`. ASK for details first, then sanitize & create issue.
+- "DRAFT ISSUE <CONTEXT>": Generate a "Title" and a "Body" (in Markdown format). USE PLAIN TEXT (No Unicode codes). STRICTLY follow structure. Include suggested labels following `.github/docs/labels_convention.md`.
