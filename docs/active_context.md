@@ -1,27 +1,27 @@
 # Context Activo - Sesión en Curso
 
 ## Current Focus
-**Issue #1.1.1:** Inicializacin de workspace Rust (Cargo)
+**Issue #2:** Configuración de entorno Python (FastAPI + PyO3)
 
 ## Task Description
-Configurar el workspace de Rust para el núcleo de procesamiento de alto rendimiento de la plataforma Winamax Analyzer.
+Configurar el entorno Python para la API FastAPI y el puente FFI con Rust. Crear la estructura de servidor-api/ con Poetry, FastAPI, uvicorn, PyO3 y DuckDB.
 
 ## Key Requirements
-- Crear estructura de proyecto `backend/` con Cargo.toml
-- Configurar workspace multimembre (parsers, math, ranges, db)
-- Rust 1.70+ requerido para SIMD AVX2
-- Perfiles de release optimizados para Ryzen 3800X
-- Configurar dependencias clave: rayon, notify, duckdb, pyo3, arrow
+- Crear estructura de proyecto server-api/ con Poetry
+- Crear server-api/app/main.py como punto de entrada FastAPI
+- Crear server-api/app/bridge/ para módulos PyO3
+- Configurar pyproject.toml: FastAPI, uvicorn, pyo3, duckdb
+- Script de build con maturin para compilar extensiones PyO3
+- Variables de entorno: WINAMAX_HISTORY_PATH, DUCKDB_MEMORY_LIMIT
 
 ## Active Problems
+- Issue #2: Configuración de entorno Python (FastAPI + PyO3)
 - ✅ COMPLETADO: Workspace de Rust creado con estructura multimembre
-- ✅ COMPLETADO: Estructura de directorios según `docs/project/architecture.md`
-- ✅ COMPLETADO: Dependencias iniciales configuradas en Cargo.toml
 
 ## Recent Decisions
-- Usar monorepo en Rust para modularidad (parsers, math, ranges, db)
-- Priorizar SIMD/AVX2 desde el inicio
-- Optimizar para hardware específico: Ryzen 7 3800X (16 hilos)
+- Usar Poetry para gestión de dependencias Python
+- Usar Maturin para compilar extensiones PyO3
+- DuckDB con límite de memoria de 48GB (dejar margen de 16GB)
 
 ## Reference Docs
 - `docs/project/architecture.md` - Arquitectura del proyecto
@@ -29,12 +29,12 @@ Configurar el workspace de Rust para el núcleo de procesamiento de alto rendimi
 - `.cursor/workflows/feature-workflow.md` - Flujo de desarrollo
 
 ## Implementation Status
-- ✅ Paso 1: Estructura base creada (`backend/` con submódulos)
-- ✅ Paso 2: Perfiles de release optimizados (Ryzen 3800X)
-- ✅ Paso 3: Directorio structure completa (parsers, math, ranges, db)
-- ✅ Paso 4: Dependencias iniciales configuradas en workspace
-- ⏳ Paso 5: Validación pendiente (requiere Rust instalado)
+- ✅ Paso 1: Rama creada (feat/issue-2-config-python-fastapi)
+- ⏳ Paso 2: Crear estructura server-api/ con Poetry
+- ⏳ Paso 3: Configurar pyproject.toml con dependencias
+- ⏳ Paso 4: Crear scripts de build con maturin
+- ⏳ Paso 5: Configurar variables de entorno
 
 ---
-*Última actualización: 2025-12-18*
+*Última actualización: 2025-12-19*
 
