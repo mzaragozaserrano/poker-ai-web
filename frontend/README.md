@@ -1,73 +1,97 @@
-# React + TypeScript + Vite
+# Frontend - Poker AI Web
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Plataforma de análisis de póker de alto rendimiento para Winamax, construida con React 18, Vite, TypeScript y Tailwind CSS.
 
-Currently, two official plugins are available:
+## Requisitos
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Node.js 18+ 
+- npm 9+
 
-## React Compiler
+## Instalación
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Desarrollo
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Para ejecutar el servidor de desarrollo local:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run dev
 ```
+
+El servidor estará disponible en `http://localhost:5173/`
+
+## Compilación
+
+Para crear una compilación de producción:
+
+```bash
+npm run build
+```
+
+Los archivos compilados estarán en `dist/`
+
+## Visualización de Compilación de Producción
+
+Para probar la compilación de producción localmente:
+
+```bash
+npm run preview
+```
+
+## Estructura del Proyecto
+
+```
+src/
+├── components/          # Componentes reutilizables
+├── features/            # Características principales
+│   ├── replayer/       # Hand Replayer para análisis post-juego
+│   ├── stats/          # Estadísticas y análisis
+│   └── dashboard/      # Dashboard principal
+├── lib/                # Utilidades y librerías
+│   └── canvas/        # Renderizado con Konva
+├── hooks/              # Custom React hooks
+├── utils/              # Funciones utilitarias
+├── types/              # Definiciones de tipos TypeScript
+├── App.tsx            # Componente raíz
+├── main.tsx           # Punto de entrada
+└── index.css          # Estilos globales (Tailwind)
+```
+
+## Stack Tecnológico
+
+- **React 18**: Framework UI
+- **Vite 7**: Build tool moderno y rápido
+- **TypeScript**: Type safety
+- **Tailwind CSS 4**: Utility-first CSS framework
+- **React Router DOM**: Navegación
+- **Konva & React-Konva**: Renderizado Canvas para Hand Replayer
+- **ECharts**: Gráficos de estadísticas
+- **React Query**: Gestión de estado asincrónico
+- **Zustand**: State management
+
+## Configuración
+
+### TypeScript
+- Strict mode activado
+- Path aliases configurados (@/, @components/, @features/, etc.)
+
+### Tailwind CSS
+- Tema oscuro (slate-950/slate-800)
+- Paleta de colores de póker personalizada (raise, call, fold, equity)
+- Breakpoints responsivos
+
+### Vite
+- Optimizaciones de producción
+- Code splitting automático
+- Fast Refresh para HMR
+
+## Linting y Formato
+
+El proyecto incluye ESLint para mantener la calidad del código.
+
+## Licencia
+
+Parte del proyecto Poker AI Web.
