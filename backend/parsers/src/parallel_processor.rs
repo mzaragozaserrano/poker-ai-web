@@ -455,18 +455,18 @@ Total pot 0.03€ | No rake
         let file1 = create_test_file(content);
         let file2 = create_test_file(content);
 
-        let files = vec![
-            file1.path().to_path_buf(),
-            file2.path().to_path_buf(),
-        ];
+        let files = vec![file1.path().to_path_buf(), file2.path().to_path_buf()];
 
         let progress_updates = Arc::new(AtomicUsize::new(0));
         let progress_counter = progress_updates.clone();
 
         let processor = ParallelProcessor::new(ProcessingConfig::with_threads(2));
-        let _result = processor.process_files(files, Some(move |_progress| {
-            progress_counter.fetch_add(1, Ordering::SeqCst);
-        }));
+        let _result = processor.process_files(
+            files,
+            Some(move |_progress| {
+                progress_counter.fetch_add(1, Ordering::SeqCst);
+            }),
+        );
 
         // Debería haber 2 actualizaciones de progreso (una por archivo)
         assert_eq!(progress_updates.load(Ordering::SeqCst), 2);
@@ -478,10 +478,7 @@ Total pot 0.03€ | No rake
         let file1 = create_test_file(content);
         let file2 = create_test_file(content);
 
-        let files = vec![
-            file1.path().to_path_buf(),
-            file2.path().to_path_buf(),
-        ];
+        let files = vec![file1.path().to_path_buf(), file2.path().to_path_buf()];
 
         let token = CancellationToken::new();
         token.cancel(); // Cancelar antes de procesar

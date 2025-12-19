@@ -337,20 +337,16 @@ fn bench_parallel_scalability(c: &mut Criterion) {
     for num_files in [5, 10, 20, 50, 100] {
         let files = create_test_files(&temp_dir, num_files, 50);
 
-        group.bench_with_input(
-            BenchmarkId::new("files", num_files),
-            &files,
-            |b, files| {
-                let processor = ParallelProcessor::default_ryzen();
-                b.iter(|| {
-                    let result = processor.process_files(
-                        black_box(files.clone()),
-                        None::<fn(parallel_processor::ProcessingProgress)>,
-                    );
-                    black_box(result);
-                });
-            },
-        );
+        group.bench_with_input(BenchmarkId::new("files", num_files), &files, |b, files| {
+            let processor = ParallelProcessor::default_ryzen();
+            b.iter(|| {
+                let result = processor.process_files(
+                    black_box(files.clone()),
+                    None::<fn(parallel_processor::ProcessingProgress)>,
+                );
+                black_box(result);
+            });
+        });
     }
 
     group.finish();
