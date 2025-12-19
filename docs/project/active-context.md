@@ -1,16 +1,16 @@
-# TAREA ACTIVA: ISSUE #5
+# TAREA ACTIVA: ISSUE #6
 
 ## Título
-feat(1.2.2): Implementación de lectura optimizada con string slicing
+feat(1.2.3): Integración de Rayon para paralelización multihilo
 
 ## Descripción y Requisitos
-Optimizar la lectura de archivos usando técnicas de bajo nivel para máximo rendimiento. Implementar:
-- Lectura eficiente con std::fs::read para archivos pequeños (< 10MB) y BufReader con buffer de 64KB para archivos grandes
-- Detección de prefijos sin Regex usando bytes
-- Extracción de valores numéricos con aritmética de enteros
-- Benchmarks con criterion para validar mejoras vs Regex
+Paralelizar la ingesta masiva de historiales usando los 16 hilos del Ryzen 3800X. Implementar:
+- Configuración de pool de hilos de Rayon con 16 hilos (número de cores lógicos)
+- Procesamiento paralelo de archivos usando par_iter() de Rayon
+- Sincronización segura de resultados en DuckDB
+- Sistema de progreso y cancelación
 
-## Estado: COMPLETADO
+## Estado: EN PROGRESO
 
 ## Tareas Completadas
 - [x] Implementar lectura eficiente de archivos (std::fs::read + BufReader)
