@@ -101,11 +101,17 @@ You are developing a High-Performance Local Analysis Platform for Winamax.
 
 **B. GitHub CLI (`gh`) - Issues & PRs**
 - **ALWAYS** use **Here-Strings** (`@"..."@`) for Title and Body to ensure PowerShell passes text cleanly.
+- **CRITICAL:** The `@"` must be alone at end of line, and `"@` must be at the START of its own line (no spaces before).
 - **Format:**
   ```powershell
-  $title = @"Título con Tildes"@;
-  $body = @"Descripción detallada del problema o feature"@;
-  # Use flags normally
-  gh issue create --title $title --body $body --label "bug,backend";
+  $title = @"
+Título con Tildes
+"@
+
+  $body = @"
+Descripción detallada del problema o feature
+"@
+
+  gh issue create --title "$title" --body "$body" --label "bug,backend"
   # Or for PRs
-  gh pr create --title $title --body $body --base main;
+  gh pr create --title "$title" --body "$body" --base main
