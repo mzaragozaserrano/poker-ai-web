@@ -60,19 +60,19 @@ Seat 3: CucleBen (button) won 0.91€
 /// Benchmark: Lectura de archivos pequeños (< 10MB).
 fn bench_file_reading_small(c: &mut Criterion) {
     let mut group = c.benchmark_group("file_reading_small");
-    
+
     for num_hands in [10, 100, 1000] {
         let content = generate_test_history(num_hands);
         let size = content.len();
-        
+
         // Crear archivo temporal
         let mut temp_file = NamedTempFile::new().unwrap();
         temp_file.write_all(content.as_bytes()).unwrap();
         temp_file.flush().unwrap();
         let path = temp_file.path();
-        
+
         group.throughput(Throughput::Bytes(size as u64));
-        
+
         group.bench_with_input(
             BenchmarkId::new("optimized", num_hands),
             &path,
@@ -83,7 +83,7 @@ fn bench_file_reading_small(c: &mut Criterion) {
                 });
             },
         );
-        
+
         group.bench_with_input(
             BenchmarkId::new("std_read_to_string", num_hands),
             &path,
@@ -95,20 +95,20 @@ fn bench_file_reading_small(c: &mut Criterion) {
             },
         );
     }
-    
+
     group.finish();
 }
 
 /// Benchmark: Parsing completo de manos.
 fn bench_full_parsing(c: &mut Criterion) {
     let mut group = c.benchmark_group("full_parsing");
-    
+
     for num_hands in [10, 100, 1000] {
         let content = generate_test_history(num_hands);
         let size = content.len();
-        
+
         group.throughput(Throughput::Bytes(size as u64));
-        
+
         group.bench_with_input(
             BenchmarkId::new("parse", num_hands),
             &content,
@@ -121,14 +121,14 @@ fn bench_full_parsing(c: &mut Criterion) {
             },
         );
     }
-    
+
     group.finish();
 }
 
 /// Benchmark: Detección de prefijos (bytes vs str).
 fn bench_prefix_detection(c: &mut Criterion) {
     let mut group = c.benchmark_group("prefix_detection");
-    
+
     let lines = vec![
         "Winamax Poker - CashGame - HandId: #123",
         "Table: 'Nice 09' 5-max (real money)",
@@ -140,7 +140,7 @@ fn bench_prefix_detection(c: &mut Criterion) {
         "Player2 calls 0.02€",
         "*** SUMMARY ***",
     ];
-    
+
     group.bench_function("bytes_starts_with", |b| {
         b.iter(|| {
             for line in &lines {
@@ -160,7 +160,7 @@ fn bench_prefix_detection(c: &mut Criterion) {
             }
         });
     });
-    
+
     group.bench_function("str_starts_with", |b| {
         b.iter(|| {
             for line in &lines {
@@ -170,14 +170,14 @@ fn bench_prefix_detection(c: &mut Criterion) {
             }
         });
     });
-    
+
     group.finish();
 }
 
 /// Benchmark: Parsing de cantidades (bytes vs float).
 fn bench_amount_parsing(c: &mut Criterion) {
     let mut group = c.benchmark_group("amount_parsing");
-    
+
     let amounts = vec![
         b"0.01".as_slice(),
         b"0.02".as_slice(),
@@ -185,7 +185,7 @@ fn bench_amount_parsing(c: &mut Criterion) {
         b"10.00".as_slice(),
         b"100.50".as_slice(),
     ];
-    
+
     group.bench_function("bytes_parse_amount", |b| {
         b.iter(|| {
             for amount in &amounts {
@@ -194,7 +194,7 @@ fn bench_amount_parsing(c: &mut Criterion) {
             }
         });
     });
-    
+
     group.bench_function("float_parse_amount", |b| {
         b.iter(|| {
             for amount in &amounts {
@@ -205,20 +205,20 @@ fn bench_amount_parsing(c: &mut Criterion) {
             }
         });
     });
-    
+
     group.finish();
 }
 
 /// Benchmark: Extracción de cartas.
 fn bench_card_extraction(c: &mut Criterion) {
     let mut group = c.benchmark_group("card_extraction");
-    
+
     let lines = vec![
         b"Dealt to thesmoy [8d 8s]".as_slice(),
         b"Player1 shows [Ah Kh] (Two pairs)".as_slice(),
         b"*** FLOP *** [6d Qc 7s]".as_slice(),
     ];
-    
+
     group.bench_function("extract_cards", |b| {
         b.iter(|| {
             for line in &lines {
@@ -227,7 +227,7 @@ fn bench_card_extraction(c: &mut Criterion) {
             }
         });
     });
-    
+
     group.finish();
 }
 
@@ -235,7 +235,7 @@ fn bench_card_extraction(c: &mut Criterion) {
 fn bench_target_performance(c: &mut Criterion) {
     let content = generate_test_history(1000);
     let size = content.len();
-    
+
     c.bench_function("parse_1000_hands", |b| {
         b.iter(|| {
             let mut parser = WinamaxParser::new();
@@ -244,8 +244,11 @@ fn bench_target_performance(c: &mut Criterion) {
             black_box(result);
         });
     });
-    
-    println!("\n=== OBJETIVO: < 10ms para 1000 manos ({} bytes) ===\n", size);
+
+    println!(
+        "\n=== OBJETIVO: < 10ms para 1000 manos ({} bytes) ===\n",
+        size
+    );
 }
 
 criterion_group!(

@@ -28,7 +28,7 @@ pub mod tokens {
     pub const DEALT_TO: &[u8] = b"Dealt to ";
     pub const TOTAL_POT: &[u8] = b"Total pot";
     pub const BOARD: &[u8] = b"Board:";
-    
+
     // Acciones (multi-idioma)
     pub const FOLDS: &[u8] = b" folds";
     pub const PASSE: &[u8] = b" passe"; // FR
@@ -155,7 +155,7 @@ pub fn parse_amount_cents(bytes: &[u8]) -> i64 {
     let decimal_cents = match decimal_digits {
         0 => 0,
         1 => decimal_part * 10, // 0.5 -> 50 centavos
-        _ => decimal_part,       // 0.05 -> 5 centavos
+        _ => decimal_part,      // 0.05 -> 5 centavos
     };
 
     integer_part * 100 + decimal_cents
@@ -176,35 +176,37 @@ pub fn parse_amount_cents(bytes: &[u8]) -> i64 {
 /// ```
 pub fn extract_first_amount(bytes: &[u8]) -> i64 {
     let mut i = 0;
-    
+
     // Buscar el primer número que esté precedido por espacio o al inicio
     while i < bytes.len() {
         // Saltar hasta encontrar un dígito
         while i < bytes.len() && !bytes[i].is_ascii_digit() {
             i += 1;
         }
-        
+
         if i >= bytes.len() {
             return 0;
         }
-        
+
         // Verificar si el dígito está precedido por espacio (no es parte de un nombre)
         let is_valid_start = i == 0 || bytes[i - 1] == b' ' || bytes[i - 1] == b'\t';
-        
+
         if is_valid_start {
             // Encontrar el final del número
             let start = i;
-            while i < bytes.len() && (bytes[i].is_ascii_digit() || bytes[i] == b'.' || bytes[i] == b',') {
+            while i < bytes.len()
+                && (bytes[i].is_ascii_digit() || bytes[i] == b'.' || bytes[i] == b',')
+            {
                 i += 1;
             }
-            
+
             return parse_amount_cents(&bytes[start..i]);
         }
-        
+
         // Saltar este dígito y continuar buscando
         i += 1;
     }
-    
+
     0
 }
 
@@ -410,10 +412,7 @@ mod tests {
     #[test]
     fn test_extract_player_name() {
         let keywords = &[tokens::FOLDS, tokens::CALLS, tokens::RAISES];
-        assert_eq!(
-            extract_player_name(b"Player1 folds", keywords),
-            b"Player1"
-        );
+        assert_eq!(extract_player_name(b"Player1 folds", keywords), b"Player1");
         assert_eq!(
             extract_player_name(b"thesmoy calls 0.02", keywords),
             b"thesmoy"
