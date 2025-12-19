@@ -8,9 +8,13 @@
 //! Ejecutar con: `cargo bench`
 
 use criterion::{black_box, criterion_group, criterion_main, BenchmarkId, Criterion, Throughput};
-use poker_parsers::{bytes_parser, file_reader, WinamaxParser};
+use poker_parsers::{
+    bytes_parser, file_reader, parallel_processor, ParallelProcessor, ProcessingConfig,
+    WinamaxParser,
+};
 use std::io::Write;
-use tempfile::NamedTempFile;
+use std::path::PathBuf;
+use tempfile::{NamedTempFile, TempDir};
 
 /// Genera un historial de prueba con N manos.
 fn generate_test_history(num_hands: usize) -> String {
@@ -251,6 +255,128 @@ fn bench_target_performance(c: &mut Criterion) {
     );
 }
 
+/// Crea archivos de prueba en un directorio temporal.
+fn create_test_files(temp_dir: &TempDir, num_files: usize, hands_per_file: usize) -> Vec<PathBuf> {
+    let mut files = Vec::with_capacity(num_files);
+
+    for i in 0..num_files {
+        let content = generate_test_history(hands_per_file);
+        let path = temp_dir.path().join(format!("history_{}.txt", i));
+        std::fs::write(&path, content).unwrap();
+        files.push(path);
+    }
+
+    files
+}
+
+/// Benchmark: Procesamiento paralelo vs secuencial.
+fn bench_parallel_processing(c: &mut Criterion) {
+    let mut group = c.benchmark_group("parallel_processing");
+
+    // Configuración: 10 archivos con 100 manos cada uno (1000 manos total)
+    let temp_dir = TempDir::new().unwrap();
+    let files = create_test_files(&temp_dir, 10, 100);
+
+    // Benchmark secuencial (1 hilo)
+    group.bench_function("sequential_1_thread", |b| {
+        let processor = ParallelProcessor::new(ProcessingConfig::with_threads(1));
+        b.iter(|| {
+            let result = processor.process_files(
+                black_box(files.clone()),
+                None::<fn(parallel_processor::ProcessingProgress)>,
+            );
+            black_box(result);
+        });
+    });
+
+    // Benchmark paralelo (4 hilos)
+    group.bench_function("parallel_4_threads", |b| {
+        let processor = ParallelProcessor::new(ProcessingConfig::with_threads(4));
+        b.iter(|| {
+            let result = processor.process_files(
+                black_box(files.clone()),
+                None::<fn(parallel_processor::ProcessingProgress)>,
+            );
+            black_box(result);
+        });
+    });
+
+    // Benchmark paralelo (8 hilos)
+    group.bench_function("parallel_8_threads", |b| {
+        let processor = ParallelProcessor::new(ProcessingConfig::with_threads(8));
+        b.iter(|| {
+            let result = processor.process_files(
+                black_box(files.clone()),
+                None::<fn(parallel_processor::ProcessingProgress)>,
+            );
+            black_box(result);
+        });
+    });
+
+    // Benchmark paralelo (16 hilos - Ryzen 3800X)
+    group.bench_function("parallel_16_threads", |b| {
+        let processor = ParallelProcessor::default_ryzen();
+        b.iter(|| {
+            let result = processor.process_files(
+                black_box(files.clone()),
+                None::<fn(parallel_processor::ProcessingProgress)>,
+            );
+            black_box(result);
+        });
+    });
+
+    group.finish();
+}
+
+/// Benchmark: Escalabilidad con diferentes cantidades de archivos.
+fn bench_parallel_scalability(c: &mut Criterion) {
+    let mut group = c.benchmark_group("parallel_scalability");
+
+    let temp_dir = TempDir::new().unwrap();
+
+    for num_files in [5, 10, 20, 50, 100] {
+        let files = create_test_files(&temp_dir, num_files, 50);
+
+        group.bench_with_input(
+            BenchmarkId::new("files", num_files),
+            &files,
+            |b, files| {
+                let processor = ParallelProcessor::default_ryzen();
+                b.iter(|| {
+                    let result = processor.process_files(
+                        black_box(files.clone()),
+                        None::<fn(parallel_processor::ProcessingProgress)>,
+                    );
+                    black_box(result);
+                });
+            },
+        );
+    }
+
+    group.finish();
+}
+
+/// Benchmark: Objetivo de 100+ archivos simultáneos.
+fn bench_parallel_target(c: &mut Criterion) {
+    let temp_dir = TempDir::new().unwrap();
+    let files = create_test_files(&temp_dir, 100, 10); // 100 archivos, 10 manos cada uno
+
+    c.bench_function("parallel_100_files", |b| {
+        let processor = ParallelProcessor::default_ryzen();
+        b.iter(|| {
+            let result = processor.process_files(
+                black_box(files.clone()),
+                None::<fn(parallel_processor::ProcessingProgress)>,
+            );
+            assert_eq!(result.successful_files, 100);
+            assert_eq!(result.total_hands, 1000);
+            black_box(result);
+        });
+    });
+
+    println!("\n=== OBJETIVO: Procesar 100+ archivos simultáneamente sin bloqueos ===\n");
+}
+
 criterion_group!(
     benches,
     bench_file_reading_small,
@@ -259,6 +385,9 @@ criterion_group!(
     bench_amount_parsing,
     bench_card_extraction,
     bench_target_performance,
+    bench_parallel_processing,
+    bench_parallel_scalability,
+    bench_parallel_target,
 );
 
 criterion_main!(benches);
