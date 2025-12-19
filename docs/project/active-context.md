@@ -1,35 +1,24 @@
-# TAREA ACTIVA: ISSUE #3
+# TAREA ACTIVA: ISSUE #4
 
 ## Título
-feat(1.1.3): Setup de React + Vite + TypeScript para frontend
+feat(1.2.1): Desarrollo de Máquina de Estados Finitos (FSM) para Winamax
 
 ## Descripción y Requisitos
-Configurar el frontend con React 18, Vite y TypeScript siguiendo el modo oscuro.
+Implementar el parser FSM para interpretar el formato de texto de Winamax sin usar Regex costosas. El parser debe ser capaz de procesar historiales de Cash Games 6-max, manejar múltiples idiomas (Inglés/Francés/Español) y casos límite específicos de Winamax.
 
-## Estado: COMPLETADO
+## Estado: EN PROGRESO
 
-## Tareas Completadas
-- [x] Inicializar proyecto Vite con template React + TypeScript
-- [x] Instalar dependencias principales (React, Router, Tailwind, Konva, ECharts, React Query)
-- [x] Configurar Tailwind CSS con paleta de modo oscuro
-- [x] Crear estructura de directorios según arquitectura
-- [x] Configurar TypeScript strict mode y paths aliases
-- [x] Documentación (README y Frontend Architecture)
+## Tareas Pendientes
+- [ ] Analizar formato de historiales Winamax según winamax-spec.md
+- [ ] Diseñar estados del FSM (Initial, Header, Preflop, Flop, Turn, River, Summary)
+- [ ] Implementar FSM en backend/parsers/src/lib.rs
+- [ ] Manejar casos límite (cambios de mesa, sit-out, side pots)
 
-## Criterios de Aceptación - TODOS SATISFECHOS
-- [x] El proyecto Vite compila y ejecuta correctamente
-- [x] Tailwind CSS está configurado con modo oscuro
-- [x] Las dependencias están instaladas y funcionando
-- [x] La estructura de directorios sigue la arquitectura definida
-- [x] TypeScript está configurado con strict mode
-
-## Commits Realizados
-1. 670804a - chore(docs): start work on issue #3
-2. bde257c - feat(frontend): initialize React + Vite + TypeScript project with Tailwind CSS
-3. 9e911ad - docs: add frontend README and architecture guide
+## Criterios de Aceptación
+- [ ] El FSM parsea correctamente historiales de Cash Game 6-max
+- [ ] No se usan Regex en loops críticos de rendimiento
+- [ ] Se manejan correctamente todos los casos límite documentados
+- [ ] El parser extrae todas las acciones y metadatos necesarios
 
 ## Rama
-feat/issue-3-setup-react-vite-ts
-
-## PR
-#14
+feat/issue-4-fsm-winamax-parser
