@@ -1,35 +1,37 @@
-# TAREA ACTIVA: ISSUE #4
+# TAREA ACTIVA: ISSUE #5
 
 ## Título
-feat(1.2.1): Desarrollo de Máquina de Estados Finitos (FSM) para Winamax
+feat(1.2.2): Implementación de lectura optimizada con string slicing
 
 ## Descripción y Requisitos
-Implementar el parser FSM para interpretar el formato de texto de Winamax sin usar Regex costosas. El parser debe ser capaz de procesar historiales de Cash Games 6-max, manejar múltiples idiomas (Inglés/Francés/Español) y casos límite específicos de Winamax.
+Optimizar la lectura de archivos usando técnicas de bajo nivel para máximo rendimiento. Implementar:
+- Lectura eficiente con std::fs::read para archivos pequeños (< 10MB) y BufReader con buffer de 64KB para archivos grandes
+- Detección de prefijos sin Regex usando bytes
+- Extracción de valores numéricos con aritmética de enteros
+- Benchmarks con criterion para validar mejoras vs Regex
 
-## Estado: COMPLETADO
+## Estado: EN PROGRESO
 
 ## Tareas Completadas
-- [x] Analizar formato de historiales Winamax según winamax-spec.md
-- [x] Diseñar estados del FSM (Initial, Header, Seats, Blinds, Preflop, Flop, Turn, River, Showdown, Summary)
-- [x] Implementar FSM en backend/parsers/src/fsm.rs
-- [x] Implementar tipos de datos en backend/parsers/src/types.rs
-- [x] Manejar casos límite (side pots, showdown, múltiples ganadores)
-- [x] Soporte multi-idioma (Inglés/Francés: folds/passe, calls/suit, raises/relance, bets/mise)
+- [ ] Implementar lectura eficiente de archivos (std::fs::read + BufReader)
+- [ ] Implementar detección de prefijos sin Regex (starts_with_bytes, lookup tables)
+- [ ] Implementar extracción de valores numéricos (parser de centavos, timestamps)
+- [ ] Crear benchmarks con criterion
 
-## Criterios de Aceptación - TODOS SATISFECHOS
-- [x] El FSM parsea correctamente historiales de Cash Game 5-max y 6-max
-- [x] No se usan Regex en loops críticos de rendimiento (usa string slicing y prefijos)
-- [x] Se manejan correctamente todos los casos límite documentados
-- [x] El parser extrae todas las acciones y metadatos necesarios
-- [x] Tests unitarios pasan (4 tests: parse_amount, parse_simple_hand, parse_showdown_hand, card_parse)
+## Criterios de Aceptación
+- [ ] La lectura de archivos es eficiente y no bloquea
+- [ ] El parsing usa string slicing en lugar de Regex
+- [ ] Los benchmarks muestran mejoras significativas vs Regex (objetivo: < 10ms por archivo de 1000 manos)
+- [ ] El código maneja correctamente archivos grandes (> 100MB)
 
-## Archivos Creados/Modificados
-- `backend/parsers/src/types.rs` - Tipos de datos (ParserState, GameType, Street, ActionType, Position, Card, Player, Action, PotInfo, ParsedHand, ParseResult)
-- `backend/parsers/src/fsm.rs` - Implementación del parser FSM (WinamaxParser)
-- `backend/parsers/src/lib.rs` - Módulo principal con re-exports
+## Archivos a Crear/Modificar
+- `backend/parsers/src/file_reader.rs` - Módulo de lectura eficiente
+- `backend/parsers/src/bytes_parser.rs` - Parser optimizado usando bytes
+- `backend/parsers/benches/benchmark.rs` - Benchmarks con criterion
+- `backend/parsers/Cargo.toml` - Agregar criterion y dependencias necesarias
 
 ## Rama
-feat/issue-4-fsm-winamax-parser
+feat/issue-5-optimized-file-reading
 
 ## PR
-#15
+(Por crear)
