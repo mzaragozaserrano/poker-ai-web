@@ -340,7 +340,10 @@ fn is_valid_suit(byte: u8) -> bool {
 
 /// Convierte bytes ASCII a string (sin validación UTF-8).
 ///
+/// # Safety
+///
 /// UNSAFE: Solo usar si estás seguro de que los bytes son ASCII válido.
+/// Si los bytes contienen UTF-8 inválido, este comportamiento es undefined.
 ///
 /// # Ejemplo
 ///
