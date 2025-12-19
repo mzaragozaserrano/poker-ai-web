@@ -46,6 +46,19 @@ Este documento detalla la experiencia de usuario y el flujo de producto para la 
 ### 3.2 Visualización de Bounties y ROI
 - **ROI Detallado:** Desglose visual entre premios por posición y beneficios por eliminaciones (Bounties).
 
+### 3.3 Hand Replayer - Formato de Visualización de Cantidades
+- **Toggle de Formato:** El replayer incluye un interruptor para alternar entre dos formatos de visualización de cantidades:
+  - **Big Blinds (bb):** Muestra todas las apuestas, botes y stacks en big blinds (ej: "2.5bb", "15bb"). Útil para análisis estratégico y comparación entre diferentes stakes.
+  - **Monedas (€):** Muestra cantidades en la divisa real (ej: "0.05€", "0.30€"). Útil para entender el impacto financiero real de las decisiones.
+- **Persistencia:** La preferencia del usuario se guarda en el estado local del navegador y se aplica automáticamente en sesiones futuras.
+- **Ubicación del Toggle:** El control se encuentra en la barra de controles del replayer, junto a los botones de Play/Pause y velocidad de reproducción.
+- **Aplicación:** El formato seleccionado se aplica a:
+  - Apuestas y raises mostradas en el canvas
+  - Botes (pot) visualizados en el centro de la mesa
+  - Stacks de los jugadores
+  - Log de acciones en el panel derecho
+  - Información de ganancias en el resumen de la mano
+
 ---
 
 ## 4. Estados de la Aplicación y Mensajes
