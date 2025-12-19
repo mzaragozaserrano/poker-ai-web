@@ -7,7 +7,7 @@
 ## Step 1: Context Gathering
 
 1. Read the issue details using `gh issue view <ISSUE_NUMBER>`.
-2. Analyze `docs/architecture.md` and `docs/project_brief.md` to understand the impact.
+2. Analyze `docs/project/architecture.md` and `docs/project_brief.md` to understand the impact.
 
 ## Step 2: Branch Creation (PowerShell)
 
@@ -26,7 +26,7 @@ git checkout -b "feat/issue-$issueId-$desc";
 
 ## Step 3: Documentation Update & Initial Commit
 
-1. Update `docs/active_context.md`:
+1. Update `docs/project/active-context.md`:
    - Set "Current Focus" to the Issue Title.
    - Add the Issue ID to "Active Problems" or "Recent Decisions".
 
@@ -37,7 +37,7 @@ git checkout -b "feat/issue-$issueId-$desc";
 - Do NOT use Here-Strings for git commit.
 
 ```powershell
-git add docs/active_context.md;
+git add docs/project/active-context.md;
 git commit -m "chore(docs): start work on issue #<ISSUE_NUMBER>";
 git push -u origin HEAD;
 ```

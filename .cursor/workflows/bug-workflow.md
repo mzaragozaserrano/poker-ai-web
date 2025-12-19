@@ -7,7 +7,7 @@
 ## Step 1: Diagnosis & Context
 
 1. Read the issue details: `gh issue view <ISSUE_NUMBER>`.
-2. Analyze `docs/architecture.md` and `docs/active_context.md` to understand the broken area.
+2. Analyze `docs/project/architecture.md` and `docs/project/active-context.md` to understand the broken area.
 3. **CRITICAL:** Before fixing, ask the user: "Do we have a reproduction case or a failing test? Should I create one?"
 
 ## Step 2: Branch Creation (PowerShell)
@@ -27,7 +27,7 @@ git checkout -b "fix/issue-$issueId-$desc";
 
 ## Step 3: Documentation Update & Initial Commit
 
-1. Update `docs/active_context.md`:
+1. Update `docs/docs/project/active-context.md`:
    - Add the Issue ID and description to the "Active Problems / Blockers" section.
    - Set "Current Focus" to "Debugging Issue #ID".
 
@@ -36,7 +36,7 @@ git checkout -b "fix/issue-$issueId-$desc";
 **Git Commit Rule:** Use standard quotes. The system handles UTF-8 correctly.
 
 ```powershell
-git add docs/active_context.md;
+git add docs/project/active-context.md;
 # Example: "chore(docs): start debugging issue..."
 git commit -m "chore(docs): start debugging issue #<ISSUE_NUMBER>";
 git push -u origin HEAD;

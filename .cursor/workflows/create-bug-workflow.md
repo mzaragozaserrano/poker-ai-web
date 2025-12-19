@@ -30,7 +30,7 @@ The agent must ensure the bug report is complete.
    - Based on the bug context, assign labels following the convention:
      - **Type:** `bug` (mandatory for bugs)
      - **Technology:** `backend`, `frontend`, `database`, `devops`, or `testing`
-     - **Phase:** `fase-1`, `fase-2`, `fase-3`, or `fase-4` (check `docs/roadmap.md` for current phase)
+     - **Phase:** `fase-1`, `fase-2`, `fase-3`, or `fase-4` (check `docs/project/roadmap.md` for current phase)
 
 ## Step 3: Execution (PowerShell)
 
@@ -64,7 +64,7 @@ gh issue create --title "$Title" --body "$Body" --label "$Labels";
 
 ## Step 4: Documentation Update
 
-1. Update `docs/active_context.md`:
+1. Update `docs/project/active-context.md`:
    - Mention that a new bug has been reported (include the Issue URL or ID returned by the command).
 
 2. Ask the user if they want to switch context to fix it immediately ("FIX #ID").

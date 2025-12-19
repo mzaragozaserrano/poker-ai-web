@@ -57,11 +57,11 @@ You are developing a High-Performance Local Analysis Platform for Winamax.
 - **Output Style:** CSV (Concise, Specific, Valid). Only output modified code blocks.
 
 ## 2. Context & Documentation Protocol
-- **Context:** Always check `docs/active-context.md` before starting a task.
-- **Logic:** `docs/architecture.md`.
-- **Business:** `docs/project-brief.md`.
-- **Roadmap:** `docs/roadmap.md`.
-- **UI:** `docs/ui-foundations.md`.
+- **Context:** Always check `docs/project/active-context.md` before starting a task.
+- **Logic:** `docs/project/architecture.md`.
+- **Business:** `docs/project/project-brief.md`.
+- **Roadmap:** `docs/project/roadmap.md`.
+- **UI:** `docs/project/ui-foundations.md`.
 
 ## 3. Naming Conventions (Strict)
 - **Documentation (`.md`):** Use `kebab-case` (e.g., `project-brief.md`, `architecture-decision.md`).
@@ -74,7 +74,7 @@ You are developing a High-Performance Local Analysis Platform for Winamax.
 - **"START #N":** Run `gh issue view #N` to get context, then execute `.cursor/workflows/feature-workflow.md`.
 - **"FIX #N":** Run `gh issue view #N`, then execute `.cursor/workflows/bug-workflow.md` (Focus on reproduction & fix).
 - **"MERGE #N":** Execute `.cursor/workflows/merge-workflow.md` for Issue #N.
-- **"BATCH PHASE X":** Read `docs/roadmap.md`, break task into simple subtasks, update `.github/scripts/New-BatchIssues.ps1` and execute.
+- **"BATCH PHASE X":** Read `docs/project/roadmap.md`, break task into simple subtasks, update `.github/scripts/New-BatchIssues.ps1` and execute.
 - **"REPORT BUG {TITLE}":** Execute `.cursor/workflows/create-bug-workflow.md`. ASK for details first, then sanitize & create issue.
 - **"DRAFT ISSUE {CONTEXT}":** Generate a "Title" and a "Body" (in Markdown) for manual UI creation.
 

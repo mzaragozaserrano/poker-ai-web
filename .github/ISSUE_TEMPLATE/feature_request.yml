@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Gracias por proponer una mejora. Por favor, asegúrate de revisar primero `docs/roadmap.md` para ver si ya está planificada.
+        Gracias por proponer una mejora. Por favor, asegúrate de revisar primero `docs/project/roadmap.md` para ver si ya está planificada.
   
   - type: textarea
     id: problem
@@ -29,5 +29,5 @@ body:
     id: context
     attributes:
       label: Contexto Técnico (Opcional)
-      description: ¿A qué partes de `docs/architecture.md` o componentes existentes afectaría?
+      description: ¿A qué partes de `docs/project/architecture.md` o componentes existentes afectaría?
       placeholder: Afectaría al componente PokerGrid y a la tabla de Dexie 'results'...

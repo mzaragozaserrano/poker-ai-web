@@ -2,7 +2,7 @@
 
 **Trigger:** User commands "BATCH PHASE <PHASE_NUMBER>" (e.g., "BATCH PHASE 2")
 
-**Pre-requisites:** `gh` CLI installed. `docs/roadmap.md` exists.
+**Pre-requisites:** `gh` CLI installed. `docs/project/roadmap.md` exists.
 
 ## Step 1: Validar/Crear project_labels.json
 
@@ -24,7 +24,7 @@
 
 ## Step 2: Roadmap Analysis
 
-1. Read `docs/roadmap.md`.
+1. Read `docs/project/roadmap.md`.
 2. Locate the section corresponding to the requested Phase.
 3. Extract all unchecked tasks (`- [ ]`) from that phase.
 4. If a task has sub-tasks (indented), treat the parent as an "Epic" (or main issue) and sub-tasks as details in the Body.
@@ -76,7 +76,7 @@ Once confirmed, execute the script to push issues to GitHub:
 
 ## Step 6: Documentation Update
 
-Update `docs/active_context.md`:
+Update `docs/project/active-context.md`:
 
 1. Note that Phase <X> has started.
 2. List the newly created issues (if possible, ask user to run `gh issue list` to get IDs).
