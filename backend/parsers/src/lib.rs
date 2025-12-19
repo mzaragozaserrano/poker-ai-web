@@ -10,10 +10,26 @@
 //! - Paralelización con Rayon (16 threads en Ryzen 3800X)
 //! - Soporte para Cash Games NLHE 6-max
 //! - File watching con notificación en tiempo real
+//!
+//! ## Uso
+//!
+//! ```rust,no_run
+//! use poker_parsers::WinamaxParser;
+//!
+//! let content = std::fs::read_to_string("history.txt").unwrap();
+//! let mut parser = WinamaxParser::new();
+//! let result = parser.parse(&content);
+//!
+//! for hand in result.hands {
+//!     println!("Hand ID: {}", hand.hand_id);
+//! }
+//! ```
 
-// TODO: Implementar módulos (Fase 1.2 según roadmap)
-// pub mod fsm;
-// pub mod winamax;
+pub mod fsm;
+pub mod types;
 
-// pub use fsm::HandParser;
-// pub use winamax::WinamaxHistoryParser;
+pub use fsm::WinamaxParser;
+pub use types::{
+    Action, ActionType, Card, GameType, ParseResult, ParsedHand, ParserState, Player, Position,
+    PotInfo, Street,
+};
