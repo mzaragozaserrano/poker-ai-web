@@ -147,7 +147,7 @@ impl<R: Read> Iterator for ByteLineIterator<R> {
 
     fn next(&mut self) -> Option<Self::Item> {
         let mut line = Vec::new();
-            match self.reader.read_until(b'\n', &mut line) {
+        match self.reader.read_until(b'\n', &mut line) {
             Ok(0) => None, // EOF
             Ok(_) => {
                 // Remover \n o \r\n del final
