@@ -1,15 +1,19 @@
 # Bug Fix Workflow
 
 **Trigger:** User commands "FIX #<ISSUE_NUMBER>"
+
 **Pre-requisites:** `gh` CLI installed.
 
 ## Step 1: Diagnosis & Context
+
 1. Read the issue details: `gh issue view <ISSUE_NUMBER>`.
-2. Analyze `@docs/architecture.md` and `@docs/active_context.md` to understand the broken area.
+2. Analyze `docs/architecture.md` and `docs/active_context.md` to understand the broken area.
 3. **CRITICAL:** Before fixing, ask the user: "Do we have a reproduction case or a failing test? Should I create one?"
 
 ## Step 2: Branch Creation (PowerShell)
+
 Standard bugfix naming convention.
+
 *Replace `<ISSUE_NUMBER>` and `<SLUG>` (short description).*
 
 ```powershell
@@ -22,12 +26,14 @@ git checkout -b "fix/issue-$issueId-$desc";
 ```
 
 ## Step 3: Documentation Update & Initial Commit
-1. Update `@docs/active_context.md`:
-   - Add the Issue ID and description to the **"Active Problems / Blockers"** section.
-   - Set "Current Focus" to "Debugging Issue #<ID>".
-2. **Execute immediately** (Apply UTF-8 rules from `.github/docs/windows_utf8_setup.md`):
-   - **CRITICAL:** Use subexpressions `$([char]0x00XX)` for any special characters in commit messages (local PowerShell).
-   - Here-Strings are NOT recommended for `git commit -m` on Windows.
+
+1. Update `docs/active_context.md`:
+   - Add the Issue ID and description to the "Active Problems / Blockers" section.
+   - Set "Current Focus" to "Debugging Issue #ID".
+
+2. Execute immediately:
+
+**Git Commit Rule:** Use standard quotes. The system handles UTF-8 correctly.
 
 ```powershell
 git add docs/active_context.md;
@@ -37,27 +43,32 @@ git push -u origin HEAD;
 ```
 
 ## Step 4: Create Draft Pull Request
+
 Create a PR to track the fix with appropriate labels.
-**CRITICAL - Context Matters (LOCAL PowerShell):** 
-1. Use Here-Strings (@"..."@) for title and body - `gh cli` handles UTF-8 internally.
-2. Read the issue labels using `gh issue view <ISSUE_NUMBER> --json labels` to inherit them, or assign labels following `.github/docs/labels_convention.md`.
+
+**PowerShell Rule for gh:**
+
+- ALWAYS use Here-Strings (`@"..."@`) for Title and Body.
 
 ```powershell
 # Get issue labels to inherit them
 $issueLabels = (gh issue view <ISSUE_NUMBER> --json labels | ConvertFrom-Json).labels.name -join ","
-# If no labels found, assign based on convention: "bug,backend,fase-2" (check docs/roadmap.md for phase)
+# If empty, use convention: "bug,backend,fase-2"
 
-# Use Here-Strings (@"..."@) for title and body - assign to variables first
-# gh cli handles UTF-8 internally on Windows - no subexpressions needed
-$prTitle = @"fix: corrección del timer"@
-$prBody = @"Investigating bug. Closes #<ISSUE_NUMBER>"@
+# Use Here-Strings (@"..."@) for safety
+$prTitle = @"
+fix: corrección del timer
+"@
+
+$prBody = @"
+Investigating bug. Closes #<ISSUE_NUMBER>
+"@
 
 gh pr create --draft --title "$prTitle" --body "$prBody" --label "$issueLabels";
-# Note: Here-Strings (@"..."@) work with gh cli - gh handles UTF-8 natively on Windows.
-# Do NOT use subexpressions $([char]0x00XX) here - keep tildes direct.
 ```
 
 ## Step 5: Execution Loop
+
 1. **Reproduce:** Create a failing test case (if applicable) that proves the bug exists.
 2. **Fix:** Modify the code to pass the test.
 3. **Verify:** Run full test suite to ensure no regressions.

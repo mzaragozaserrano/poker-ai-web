@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Gracias por reportar un error. Por favor, revisa `docs/active_context.md` primero.
+        Gracias por reportar un error. Por favor, revisa `docs/active-context.md` primero.
   - type: textarea
     id: description
     attributes:
