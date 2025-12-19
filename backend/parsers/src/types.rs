@@ -6,9 +6,10 @@
 use serde::{Deserialize, Serialize};
 
 /// Estado actual del parser FSM.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum ParserState {
     /// Esperando inicio de una nueva mano.
+    #[default]
     Initial,
     /// Parseando cabecera (formato, mesa, timestamp).
     Header,
@@ -28,12 +29,6 @@ pub enum ParserState {
     Showdown,
     /// Extrayendo resultados y resumen.
     Summary,
-}
-
-impl Default for ParserState {
-    fn default() -> Self {
-        Self::Initial
-    }
 }
 
 /// Tipo de juego detectado en el historial.
