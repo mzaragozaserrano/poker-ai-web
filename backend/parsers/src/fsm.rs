@@ -331,8 +331,7 @@ impl WinamaxParser {
                         self.current_hand.hero_cards = Some([c1.clone(), c2.clone()]);
 
                         // Asignar cartas al jugador héroe
-                        if let Some(hero) =
-                            self.current_hand.players.iter_mut().find(|p| p.is_hero)
+                        if let Some(hero) = self.current_hand.players.iter_mut().find(|p| p.is_hero)
                         {
                             hero.hole_cards = Some([c1, c2]);
                         }
@@ -510,7 +509,10 @@ impl WinamaxParser {
         let amount = self.extract_amount_from_line(line);
 
         // Agregar a ganadores
-        self.current_hand.pot.winners.push((player_name.clone(), amount));
+        self.current_hand
+            .pot
+            .winners
+            .push((player_name.clone(), amount));
 
         let action = Action {
             player_name,
@@ -594,7 +596,14 @@ impl WinamaxParser {
     fn extract_amount_from_line(&self, line: &str) -> i64 {
         // Buscar el primer número después de una palabra clave de cantidad
         let keywords = [
-            "calls ", "bets ", "raises ", "blind ", "collected ", "suit ", "mise ", "relance ",
+            "calls ",
+            "bets ",
+            "raises ",
+            "blind ",
+            "collected ",
+            "suit ",
+            "mise ",
+            "relance ",
             "blinde ",
         ];
 
@@ -667,10 +676,8 @@ impl WinamaxParser {
 
         // Validaciones básicas
         if self.current_hand.players.is_empty() {
-            self.errors.push(format!(
-                "Hand {} has no players",
-                self.current_hand.hand_id
-            ));
+            self.errors
+                .push(format!("Hand {} has no players", self.current_hand.hand_id));
         }
 
         self.hands.push(std::mem::take(&mut self.current_hand));
