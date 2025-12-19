@@ -50,9 +50,15 @@
 pub mod bytes_parser;
 pub mod file_reader;
 pub mod fsm;
+pub mod parallel_processor;
 pub mod types;
 
 pub use fsm::WinamaxParser;
+pub use parallel_processor::{
+    process_files_parallel, process_files_parallel_with_progress, BatchProcessingResult,
+    CancellationToken, FileProcessingError, FileProcessingResult, ParallelProcessor,
+    ProcessingConfig, ProcessingProgress,
+};
 pub use types::{
     Action, ActionType, Card, GameType, ParseResult, ParsedHand, ParserState, Player, Position,
     PotInfo, Street,

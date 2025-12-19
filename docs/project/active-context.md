@@ -1,44 +1,59 @@
-# TAREA ACTIVA: ISSUE #5
+# TAREA ACTIVA: ISSUE #6
 
 ## Título
-feat(1.2.2): Implementación de lectura optimizada con string slicing
+feat(1.2.3): Integración de Rayon para paralelización multihilo
 
 ## Descripción y Requisitos
-Optimizar la lectura de archivos usando técnicas de bajo nivel para máximo rendimiento. Implementar:
-- Lectura eficiente con std::fs::read para archivos pequeños (< 10MB) y BufReader con buffer de 64KB para archivos grandes
-- Detección de prefijos sin Regex usando bytes
-- Extracción de valores numéricos con aritmética de enteros
-- Benchmarks con criterion para validar mejoras vs Regex
+Paralelizar la ingesta masiva de historiales usando los 16 hilos del Ryzen 3800X. Implementar:
+- Configuración de pool de hilos de Rayon con 16 hilos (número de cores lógicos)
+- Procesamiento paralelo de archivos usando par_iter() de Rayon
+- Sincronización segura de resultados
+- Sistema de progreso y cancelación
 
 ## Estado: COMPLETADO
 
 ## Tareas Completadas
-- [x] Implementar lectura eficiente de archivos (std::fs::read + BufReader)
-- [x] Implementar detección de prefijos sin Regex (starts_with_bytes, lookup tables)
-- [x] Implementar extracción de valores numéricos (parser de centavos, timestamps)
-- [x] Crear benchmarks con criterion
+- [x] Configurar pool de hilos de Rayon (ThreadPoolBuilder con 16 hilos)
+- [x] Implementar procesamiento paralelo de archivos (process_files_parallel con par_iter)
+- [x] Implementar sincronización de resultados (contadores atómicos AtomicUsize)
+- [x] Implementar progreso y cancelación (callback de progreso + CancellationToken)
+- [x] Crear benchmarks de paralelización con criterion
 
 ## Criterios de Aceptación - TODOS SATISFECHOS
-- [x] La lectura de archivos es eficiente y no bloquea
-- [x] El parsing usa string slicing en lugar de Regex
-- [x] Los benchmarks muestran mejoras significativas vs Regex (14.4ms para 1000 manos, cerca del objetivo de 10ms)
-- [x] El código maneja correctamente archivos grandes (> 100MB)
+- [x] El procesamiento paralelo utiliza eficientemente los 16 hilos
+- [x] No hay race conditions en la agregación de resultados
+- [x] El rendimiento escala linealmente con el número de archivos
+- [x] El sistema puede procesar 100+ archivos simultáneamente sin bloqueos
 
-## Resultados de Benchmarks
-- **Lectura optimizada**: 137µs para 1000 manos (vs 305µs con std::fs::read_to_string)
-- **Parsing completo**: 14.4ms para 1000 manos (918KB)
-- **Detección de prefijos**: 16.2ns con bytes vs 16.7ns con strings
-- **Parsing de cantidades**: 29.9ns con bytes vs 67.6ns con floats (2.3x más rápido)
+## Arquitectura Implementada
+- **ThreadPool personalizado**: 16 hilos con stack size de 128KB
+- **Granularidad**: Cada hilo procesa un archivo completo
+- **Sincronización**: Contadores atómicos (AtomicUsize) para progreso y errores
+- **Cancelación**: CancellationToken con AtomicBool para abort seguro
+- **Progreso**: Callback opcional con ProcessingProgress (completed, total, errors)
 
 ## Archivos Creados/Modificados
-- `backend/parsers/src/file_reader.rs` - Módulo de lectura eficiente (NUEVO)
-- `backend/parsers/src/bytes_parser.rs` - Parser optimizado usando bytes (NUEVO)
-- `backend/parsers/src/lib.rs` - Actualizado para exponer nuevos módulos
-- `backend/parsers/benches/parser_benchmark.rs` - Benchmarks con criterion (NUEVO)
-- `backend/parsers/Cargo.toml` - Agregado criterion y configuración de benchmarks
+- `backend/parsers/src/parallel_processor.rs` - Módulo de procesamiento paralelo (NUEVO)
+- `backend/parsers/src/lib.rs` - Actualizado para exponer nuevo módulo
+- `backend/parsers/benches/parser_benchmark.rs` - Agregados benchmarks de paralelización
+
+## API Principal
+```rust
+// Uso simple
+let result = process_files_parallel(files);
+
+// Con progreso
+let result = process_files_parallel_with_progress(files, |p| {
+    println!("{}/{}", p.completed, p.total);
+});
+
+// Con configuración personalizada y cancelación
+let processor = ParallelProcessor::new(ProcessingConfig::with_threads(8));
+let result = processor.process_files_with_cancellation(files, callback, token);
+```
 
 ## Rama
-feat/issue-5-optimized-file-reading
+feat/issue-6-rayon-parallelization
 
 ## PR
-#16
+#17
