@@ -1,21 +1,20 @@
-name: Full CI (Main/Develop)
+name: Release
 
 on:
   push:
     branches: [main, develop]
     paths:
       - 'backend/**'
-      - '.github/workflows/full-ci.yml'
-  workflow_dispatch: # Permitir ejecución manual
+      - '.github/workflows/release.yml'
+  workflow_dispatch:
 
 env:
   CARGO_TERM_COLOR: always
   RUST_BACKTRACE: 1
 
 jobs:
-  # Tests completos en Windows (target real)
   test-windows:
-    name: Test on Windows (Target Platform)
+    name: Test on Windows
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
@@ -50,9 +49,8 @@ jobs:
         working-directory: backend
         run: cargo clippy --workspace --all-targets --all-features -- -D warnings
 
-  # Build release optimizado (solo en main)
   build-release:
-    name: Build Release (Optimized)
+    name: Build Release
     runs-on: windows-latest
     if: github.ref == 'refs/heads/main'
     needs: test-windows

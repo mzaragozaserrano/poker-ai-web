@@ -1,18 +1,17 @@
-name: Fast Checks (PR)
+name: CI
 
 on:
   pull_request:
     branches: [main, develop]
     paths:
       - 'backend/**'
-      - '.github/workflows/fast-checks.yml'
+      - '.github/workflows/ci.yml'
 
 env:
   CARGO_TERM_COLOR: always
   RUST_BACKTRACE: 1
 
 jobs:
-  # Job 1: Formato (muy rápido, falla fast)
   fmt:
     name: Check Formatting
     runs-on: ubuntu-latest
@@ -28,7 +27,6 @@ jobs:
         working-directory: backend
         run: cargo fmt --all -- --check
 
-  # Job 2: Clippy (paralelo con tests)
   clippy:
     name: Clippy Lints
     runs-on: ubuntu-latest
@@ -58,7 +56,6 @@ jobs:
         working-directory: backend
         run: cargo clippy --workspace --all-targets --all-features -- -D warnings
 
-  # Job 3: Tests unitarios (paralelo con clippy)
   test:
     name: Unit Tests
     runs-on: ubuntu-latest
@@ -86,7 +83,6 @@ jobs:
         working-directory: backend
         run: cargo test --workspace --lib --bins --verbose
 
-  # Job 4: Build check (solo verifica que compila, sin optimizar)
   build:
     name: Build Check
     runs-on: ubuntu-latest
