@@ -94,10 +94,8 @@ impl DbConnection {
     /// Aplica la configuración de optimización a DuckDB
     fn apply_config(&mut self) -> DuckDbResult<()> {
         // Configurar threads
-        self.conn.execute(
-            &format!("PRAGMA threads={}", self.config.threads),
-            [],
-        )?;
+        self.conn
+            .execute(&format!("PRAGMA threads={}", self.config.threads), [])?;
 
         // Configurar límite de memoria
         self.conn.execute(
@@ -107,8 +105,7 @@ impl DbConnection {
 
         // Habilitar cache de objetos
         if self.config.enable_object_cache {
-            self.conn
-                .execute("PRAGMA enable_object_cache=true", [])?;
+            self.conn.execute("PRAGMA enable_object_cache=true", [])?;
         }
 
         Ok(())
@@ -203,7 +200,7 @@ impl DbConnection {
             // Intentar hacer una consulta simple a la tabla
             let query = format!("SELECT COUNT(*) FROM {}", table);
             match self.conn.prepare(&query) {
-                Ok(_) => continue, // La tabla existe
+                Ok(_) => continue,          // La tabla existe
                 Err(_) => return Ok(false), // La tabla no existe
             }
         }
@@ -316,7 +313,9 @@ mod tests {
 
     #[test]
     fn test_apply_config() {
-        let config = DbConfig::in_memory().with_threads(8).with_memory_limit_gb(32);
+        let config = DbConfig::in_memory()
+            .with_threads(8)
+            .with_memory_limit_gb(32);
         let conn = DbConnection::new(config);
         assert!(conn.is_ok());
     }
@@ -326,15 +325,19 @@ mod tests {
         let mut conn = DbConnection::in_memory().unwrap();
         let result = conn.init_schema_embedded();
         assert!(result.is_ok());
-        
+
         // Intentar crear una tabla simple para verificar que la conexión funciona
-        conn.conn().execute(
-            "CREATE TABLE IF NOT EXISTS test_table (id INTEGER, name VARCHAR)",
-            []
-        ).unwrap();
-        
+        conn.conn()
+            .execute(
+                "CREATE TABLE IF NOT EXISTS test_table (id INTEGER, name VARCHAR)",
+                [],
+            )
+            .unwrap();
+
         // Verificar que la tabla se creó
-        let count: i64 = conn.conn().prepare("SELECT COUNT(*) FROM test_table")
+        let count: i64 = conn
+            .conn()
+            .prepare("SELECT COUNT(*) FROM test_table")
             .unwrap()
             .query_row([], |row| row.get(0))
             .unwrap();
@@ -345,7 +348,7 @@ mod tests {
     fn test_verify_schema() {
         let mut conn = DbConnection::in_memory().unwrap();
         conn.init_schema_embedded().unwrap();
-        
+
         // Verificar cada tabla individualmente para debugging
         let tables = vec![
             "players",
@@ -366,7 +369,7 @@ mod tests {
             let count: i64 = stmt.query_row([], |row| row.get(0)).unwrap();
             println!("Table '{}': count = {}", table, count);
         }
-        
+
         let verified = conn.verify_schema().unwrap();
         assert!(verified);
     }
@@ -402,4 +405,3 @@ mod tests {
         assert!(summary.contains("Hands: 1000"));
     }
 }
-

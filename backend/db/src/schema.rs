@@ -111,7 +111,7 @@ pub struct HandMetadata {
     pub format: GameFormat,
     pub table_name: String,
     pub blind_level: i64, // SB en centavos
-    pub button_seat: u8,   // 0-5 para 6-max
+    pub button_seat: u8,  // 0-5 para 6-max
     pub created_at: String,
 }
 
@@ -323,8 +323,10 @@ impl CashSession {
     pub fn calculate_bb_100(&mut self, blind_level: i64) {
         if self.hands_played > 0 && blind_level > 0 {
             let bb = blind_level * 2;
-            self.bb_100 = Some((self.net_won_cents as f64 / bb as f64) / self.hands_played as f64 * 100.0);
-            self.ev_bb_100 = Some((self.ev_won_cents as f64 / bb as f64) / self.hands_played as f64 * 100.0);
+            self.bb_100 =
+                Some((self.net_won_cents as f64 / bb as f64) / self.hands_played as f64 * 100.0);
+            self.ev_bb_100 =
+                Some((self.ev_won_cents as f64 / bb as f64) / self.hands_played as f64 * 100.0);
         }
     }
 }
@@ -553,7 +555,7 @@ mod tests {
         session.net_won_cents = 1000;
         session.hands_played = 100;
         session.calculate_bb_100(5); // 5 cents SB = 10 cents BB
-        
+
         assert!(session.bb_100.is_some());
         // (1000 cents / 10 BB) / 100 hands * 100 = 100 BB / 100 hands * 100 = 100.0 bb/100
         assert_eq!(session.bb_100.unwrap(), 100.0);
@@ -569,7 +571,7 @@ mod tests {
             1000,
         );
         result.calculate_roi(1000, 100); // 10€ buyin + 1€ rake
-        
+
         assert!(result.roi_real.is_some());
         // (6000 - 1100) / 1100 * 100 = 445.45%
         assert!((result.roi_real.unwrap() - 445.45).abs() < 0.1);
@@ -577,20 +579,17 @@ mod tests {
 
     #[test]
     fn test_hand_metadata_builder() {
-        let metadata = HandMetadataBuilder::new(
-            "HAND789".to_string(),
-            "2024-01-15T12:00:00Z".to_string(),
-        )
-        .stake("NL50".to_string())
-        .format(GameFormat::Cash)
-        .table_name("High Stakes".to_string())
-        .blind_level(25)
-        .button_seat(3)
-        .build();
+        let metadata =
+            HandMetadataBuilder::new("HAND789".to_string(), "2024-01-15T12:00:00Z".to_string())
+                .stake("NL50".to_string())
+                .format(GameFormat::Cash)
+                .table_name("High Stakes".to_string())
+                .blind_level(25)
+                .button_seat(3)
+                .build();
 
         assert_eq!(metadata.stake, "NL50");
         assert_eq!(metadata.blind_level, 25);
         assert_eq!(metadata.button_seat, 3);
     }
 }
-

@@ -18,8 +18,8 @@
 //! "caliente" en memoria para latencia cero.
 
 // Módulos implementados
-pub mod schema;
 pub mod connection;
+pub mod schema;
 
 // TODO: Implementar módulos restantes (Fase 1.3 según roadmap)
 // pub mod parquet_io;
