@@ -30,7 +30,7 @@ impl Default for InMemoryOptimization {
     fn default() -> Self {
         Self {
             aggressive_cache: true,
-            buffer_pool_mb: 8192,        // 8GB de buffer pool
+            buffer_pool_mb: 8192, // 8GB de buffer pool
             dictionary_compression: true,
             simd_vectorization: true,
             max_workers: 16,
@@ -77,10 +77,7 @@ impl InMemoryOptimization {
     /// Aplica todas las optimizaciones a la conexión
     pub fn apply(&self, conn: &Connection) -> DuckDbResult<()> {
         // Configurar threads/workers
-        conn.execute(
-            &format!("PRAGMA threads={}", self.max_workers),
-            [],
-        )?;
+        conn.execute(&format!("PRAGMA threads={}", self.max_workers), [])?;
 
         // Habilitar caché de objetos si se requiere
         if self.aggressive_cache {
@@ -88,10 +85,7 @@ impl InMemoryOptimization {
         }
 
         // Configurar tamaño de buffer pool
-        conn.execute(
-            &format!("PRAGMA default_null_order='nulls_last'", ),
-            [],
-        )?;
+        conn.execute("PRAGMA default_null_order='nulls_last'", [])?;
 
         // Habilitar vectorización SIMD
         if self.simd_vectorization {
@@ -189,11 +183,11 @@ impl MemoryMaintenance {
     /// Obtiene estadísticas de caché
     pub fn get_cache_stats(conn: &Connection) -> DuckDbResult<CacheStats> {
         // Intentar obtener estadísticas del caché
-        match conn.prepare(
-            "SELECT * FROM duckdb_functions() WHERE function_name LIKE '%cache%' LIMIT 1",
-        ) {
+        match conn
+            .prepare("SELECT * FROM duckdb_functions() WHERE function_name LIKE '%cache%' LIMIT 1")
+        {
             Ok(mut stmt) => {
-                let _row = stmt.query_row([], |_row| Ok(()))?;
+                stmt.query_row([], |_row| Ok(()))?;
                 Ok(CacheStats {
                     hits: 0,
                     misses: 0,
@@ -273,10 +267,7 @@ mod tests {
 
         let cached = optimizer.get_cached_query("hands_stats");
         assert!(cached.is_some());
-        assert_eq!(
-            cached.unwrap(),
-            "SELECT COUNT(*) FROM hands_actions"
-        );
+        assert_eq!(cached.unwrap(), "SELECT COUNT(*) FROM hands_actions");
     }
 
     #[test]
@@ -297,4 +288,3 @@ mod tests {
         assert_eq!(stats.hit_rate(), 0.0);
     }
 }
-

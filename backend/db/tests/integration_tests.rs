@@ -5,8 +5,8 @@
 #[cfg(test)]
 mod integration_tests {
     use poker_db::{
-        DbConnection, InMemoryOptimization, MemoryMonitor, MemoryMaintenance, ParquetLoader,
-        ParquetLoadConfig,
+        DbConnection, InMemoryOptimization, MemoryMaintenance, MemoryMonitor, ParquetLoadConfig,
+        ParquetLoader,
     };
 
     #[test]
@@ -47,7 +47,10 @@ mod integration_tests {
         let config = ParquetLoadConfig::new("/data/parquet")
             .with_preload_all(true)
             .with_max_files(1000)
-            .with_tables(vec!["hands_metadata".to_string(), "hands_actions".to_string()]);
+            .with_tables(vec![
+                "hands_metadata".to_string(),
+                "hands_actions".to_string(),
+            ]);
 
         assert_eq!(config.data_dir.to_str().unwrap(), "/data/parquet");
         assert!(config.preload_all);
@@ -96,9 +99,7 @@ mod integration_tests {
         let _loader = ParquetLoader::new(config);
 
         // Validar que el schema fue inicializado
-        let verified = conn
-            .verify_schema()
-            .expect("Verificación fallida");
+        let verified = conn.verify_schema().expect("Verificación fallida");
         assert!(verified, "Schema verification failed");
     }
 
@@ -118,4 +119,3 @@ mod integration_tests {
         assert!(duration.as_millis() < 5000, "Schema init took too long");
     }
 }
-

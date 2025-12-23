@@ -88,7 +88,7 @@ impl MemoryMonitor {
 
     /// Establece el umbral de alerta en porcentaje
     pub fn set_alert_threshold(mut self, threshold: f64) -> Self {
-        self.alert_threshold = threshold.min(100.0).max(0.0);
+        self.alert_threshold = threshold.clamp(0.0, 100.0);
         self
     }
 
@@ -258,8 +258,8 @@ mod tests {
     #[test]
     fn test_memory_metrics_calculation() {
         let mut metrics = MemoryMetrics {
-            used_bytes: 50_000_000_000,      // 50 GB
-            limit_bytes: 100_000_000_000,    // 100 GB
+            used_bytes: 50_000_000_000,   // 50 GB
+            limit_bytes: 100_000_000_000, // 100 GB
             ..Default::default()
         };
 
@@ -270,8 +270,8 @@ mod tests {
     #[test]
     fn test_memory_alert_threshold() {
         let mut metrics = MemoryMetrics {
-            used_bytes: 85_000_000_000,      // 85 GB
-            limit_bytes: 100_000_000_000,    // 100 GB
+            used_bytes: 85_000_000_000,   // 85 GB
+            limit_bytes: 100_000_000_000, // 100 GB
             ..Default::default()
         };
 
@@ -334,4 +334,3 @@ mod tests {
         assert_eq!(parsed, 50_000_000); // 50 MB en bytes
     }
 }
-
