@@ -141,6 +141,7 @@ impl HandMetadata {
     }
 
     /// Crea metadata para una mano de torneo
+    #[allow(clippy::too_many_arguments)]
     pub fn new_tournament(
         hand_id: String,
         tournament_id: String,

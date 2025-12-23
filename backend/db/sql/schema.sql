@@ -35,8 +35,7 @@ CREATE TABLE IF NOT EXISTS player_aliases (
     player_id VARCHAR NOT NULL,
     site_name VARCHAR NOT NULL,
     site_nickname VARCHAR NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (player_id) REFERENCES players(player_id)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Índice compuesto para búsqueda rápida por sala y nickname
@@ -94,14 +93,12 @@ CREATE TABLE IF NOT EXISTS hands_actions (
     is_hero_action BOOLEAN NOT NULL DEFAULT FALSE,
     ev_cents BIGINT,
     action_sequence INTEGER NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (hand_id) REFERENCES hands_metadata(hand_id),
-    FOREIGN KEY (player_id) REFERENCES players(player_id)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Índice Hash para joins ultra-rápidos con hands_metadata
+-- Índice para joins ultra-rápidos con hands_metadata
 CREATE INDEX IF NOT EXISTS idx_hands_actions_hand_id 
-ON hands_actions USING HASH (hand_id);
+ON hands_actions(hand_id);
 
 -- Índice compuesto para cálculo de estadísticas (VPIP, PFR, etc.)
 CREATE INDEX IF NOT EXISTS idx_hands_actions_player_street 
@@ -136,8 +133,7 @@ CREATE TABLE IF NOT EXISTS cash_sessions (
     ev_bb_100 DOUBLE,
     hands_played INTEGER NOT NULL DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (player_id) REFERENCES players(player_id)
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Índice para filtros temporales de sesiones
@@ -185,9 +181,7 @@ CREATE TABLE IF NOT EXISTS tournament_results (
     bounty_won_cents BIGINT NOT NULL DEFAULT 0,
     total_won_cents BIGINT NOT NULL DEFAULT 0,
     roi_real DOUBLE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (tournament_id) REFERENCES tournaments(tournament_id),
-    FOREIGN KEY (player_id) REFERENCES players(player_id)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Índice para joins con tournaments

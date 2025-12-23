@@ -210,24 +210,13 @@ impl DbConnection {
 
     /// Obtiene estadísticas de la base de datos
     pub fn get_stats(&self) -> DuckDbResult<DbStats> {
-        let mut stats = DbStats::default();
-
-        // Contar jugadores
-        stats.player_count = self.count_rows("players")?;
-
-        // Contar manos
-        stats.hand_count = self.count_rows("hands_metadata")?;
-
-        // Contar acciones
-        stats.action_count = self.count_rows("hands_actions")?;
-
-        // Contar sesiones
-        stats.session_count = self.count_rows("cash_sessions")?;
-
-        // Contar torneos
-        stats.tournament_count = self.count_rows("tournaments")?;
-
-        Ok(stats)
+        Ok(DbStats {
+            player_count: self.count_rows("players")?,
+            hand_count: self.count_rows("hands_metadata")?,
+            action_count: self.count_rows("hands_actions")?,
+            session_count: self.count_rows("cash_sessions")?,
+            tournament_count: self.count_rows("tournaments")?,
+        })
     }
 
     /// Cuenta las filas de una tabla
