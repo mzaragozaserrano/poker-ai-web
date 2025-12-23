@@ -1,59 +1,39 @@
-# TAREA ACTIVA: ISSUE #6
+# TAREA ACTIVA: ISSUE #7
 
 ## Título
-feat(1.2.3): Integración de Rayon para paralelización multihilo
+1.2.4 Sistema de detección de archivos con crate notify
 
 ## Descripción y Requisitos
-Paralelizar la ingesta masiva de historiales usando los 16 hilos del Ryzen 3800X. Implementar:
-- Configuración de pool de hilos de Rayon con 16 hilos (número de cores lógicos)
-- Procesamiento paralelo de archivos usando par_iter() de Rayon
-- Sincronización segura de resultados
-- Sistema de progreso y cancelación
+Implementar file watching para detectar nuevos historiales automáticamente. El sistema debe:
+- Configurar crate notify para file watching en Windows
+- Detectar eventos Create y Modify de archivos .txt
+- Evitar procesamiento duplicado usando hash MD5
+- Manejar archivos en escritura parcial
+- Integrar con sistema de parsing paralelo de Rayon
 
-## Estado: COMPLETADO
+## Estado: EN PROGRESO
 
-## Tareas Completadas
-- [x] Configurar pool de hilos de Rayon (ThreadPoolBuilder con 16 hilos)
-- [x] Implementar procesamiento paralelo de archivos (process_files_parallel con par_iter)
-- [x] Implementar sincronización de resultados (contadores atómicos AtomicUsize)
-- [x] Implementar progreso y cancelación (callback de progreso + CancellationToken)
-- [x] Crear benchmarks de paralelización con criterion
+## Ruta de Monitoreo
+`C:\Users\Miguel\AppData\Roaming\winamax\documents\accounts\thesmoy\history`
 
-## Criterios de Aceptación - TODOS SATISFECHOS
-- [x] El procesamiento paralelo utiliza eficientemente los 16 hilos
-- [x] No hay race conditions en la agregación de resultados
-- [x] El rendimiento escala linealmente con el número de archivos
-- [x] El sistema puede procesar 100+ archivos simultáneamente sin bloqueos
+## Tareas Pendientes
+- [ ] Crear módulo file_watcher.rs con notify::Watcher
+- [ ] Implementar detección de eventos Create/Modify
+- [ ] Implementar sistema de deduplicación con MD5
+- [ ] Crear cola de procesamiento con mpsc::channel
+- [ ] Implementar retry logic para archivos bloqueados
+- [ ] Integrar con ParallelProcessor de Rayon
+- [ ] Crear tests unitarios del watcher
+- [ ] Crear ejemplo de uso del watcher
 
-## Arquitectura Implementada
-- **ThreadPool personalizado**: 16 hilos con stack size de 128KB
-- **Granularidad**: Cada hilo procesa un archivo completo
-- **Sincronización**: Contadores atómicos (AtomicUsize) para progreso y errores
-- **Cancelación**: CancellationToken con AtomicBool para abort seguro
-- **Progreso**: Callback opcional con ProcessingProgress (completed, total, errors)
-
-## Archivos Creados/Modificados
-- `backend/parsers/src/parallel_processor.rs` - Módulo de procesamiento paralelo (NUEVO)
-- `backend/parsers/src/lib.rs` - Actualizado para exponer nuevo módulo
-- `backend/parsers/benches/parser_benchmark.rs` - Agregados benchmarks de paralelización
-
-## API Principal
-```rust
-// Uso simple
-let result = process_files_parallel(files);
-
-// Con progreso
-let result = process_files_parallel_with_progress(files, |p| {
-    println!("{}/{}", p.completed, p.total);
-});
-
-// Con configuración personalizada y cancelación
-let processor = ParallelProcessor::new(ProcessingConfig::with_threads(8));
-let result = processor.process_files_with_cancellation(files, callback, token);
-```
+## Criterios de Aceptación
+- [ ] El sistema detecta automáticamente nuevos archivos de historial
+- [ ] No se procesan archivos duplicados
+- [ ] Se manejan correctamente archivos en escritura
+- [ ] El file watcher funciona correctamente en Windows
 
 ## Rama
-feat/issue-6-rayon-parallelization
+feat/issue-7-file-watcher
 
 ## PR
-#17
+Pendiente de creación
