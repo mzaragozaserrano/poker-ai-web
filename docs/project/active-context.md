@@ -1,31 +1,32 @@
-# TAREA ACTIVA: ISSUE #9
+# TAREA ACTIVA: ISSUE #11
 
 ## Título
-1.3.3 Configuración de DuckDB para operación in-memory
+1.3.2 Implementación de persistencia en formato Parquet
 
 ## Descripción y Requisitos
-Configurar DuckDB para operar íntegramente en memoria aprovechando los 64GB de RAM. El sistema debe:
-- Configurar DuckDB en modo in-memory con límite de 48GB
-- Optimizar configuración para Ryzen 3800X (16 threads)
-- Implementar estrategia de carga de archivos Parquet
-- Implementar gestión y monitoreo de memoria
+Implementar la capa de persistencia usando Apache Parquet para almacenamiento inmutable y comprimido. El sistema debe:
+- Configurar escritura a Parquet con Arrow y compresión ZSTD/SNAPPY
+- Implementar particionamiento por fecha (year=YYYY/month=MM/day=DD/)
+- Implementar clustering por player_id y ordenamiento temporal
+- Implementar lectura desde Parquet con carga incremental
+- Validar integridad de datos al cargar
 
-## Estado: COMPLETADO
+## Estado: EN PROGRESO
 
-## Tareas Completadas
-- [x] Configurar DuckDB en modo in-memory con límite de 48GB
-- [x] Optimizar configuración para Ryzen 3800X (16 threads)
-- [x] Implementar estrategia de carga de Parquet
-- [x] Implementar gestión y monitoreo de memoria
-- [x] Implementar 32 tests unitarios (todos pasando)
-- [x] Implementar 7 tests de integración (todos pasando)
+## Tareas Pendientes
+- [ ] Configurar escritura a Parquet con Arrow y compresión ZSTD
+- [ ] Implementar particionamiento por fecha en estructura de directorios
+- [ ] Implementar clustering por player_id y ordenamiento temporal
+- [ ] Implementar lectura desde Parquet con carga incremental
+- [ ] Crear tests unitarios e integración
+- [ ] Validar integridad de datos al cargar
 
 ## Criterios de Aceptación
-- [x] DuckDB opera completamente en memoria sin swapping
-- [x] La configuración aprovecha los 16 hilos del Ryzen 3800X
-- [x] Los datos se cargan eficientemente desde Parquet
-- [x] El sistema puede manejar 10M+ de manos en memoria
-- [x] El uso de memoria se mantiene dentro de límites razonables
+- [ ] Los datos se escriben correctamente en formato Parquet
+- [ ] El particionamiento por fecha funciona correctamente
+- [ ] Los archivos Parquet se pueden leer y consultar en DuckDB
+- [ ] La compresión reduce significativamente el tamaño de almacenamiento
+- [ ] El clustering mejora el rendimiento de consultas por jugador
 
 ## Arquitectura Planificada
 - **Base de Datos**: DuckDB (In-Memory con 64GB RAM)
@@ -42,14 +43,11 @@ Configurar DuckDB para operar íntegramente en memoria aprovechando los 64GB de 
 - `backend/db/migrations/` - Directorio creado para futuras migraciones
 
 ## Rama
-feat/issue-9-duckdb-inmemory
+feat/issue-11-parquet-persistence
 
-## PR
-https://github.com/mzaragozaserrano/poker-ai-web/pull/20
-
-## Archivos Creados/Modificados
-- `backend/db/src/memory_monitor.rs` - Monitoreo de memoria en tiempo real (356 líneas)
-- `backend/db/src/parquet_loader.rs` - Carga de archivos Parquet (308 líneas)
-- `backend/db/src/inmemory.rs` - Optimizaciones in-memory (332 líneas)
-- `backend/db/src/lib.rs` - Exportar nuevos módulos
-- `backend/db/tests/integration_tests.rs` - Tests de integración (103 líneas)
+## Archivos a Crear/Modificar
+- `backend/db/src/parquet_writer.rs` - Escritura de archivos Parquet con particionamiento (NUEVO)
+- `backend/db/src/parquet_reader.rs` - Lectura incremental de archivos Parquet (NUEVO)
+- `backend/db/src/lib.rs` - Exportar nuevos módulos reader/writer
+- `backend/db/Cargo.toml` - Actualizar dependencias de Parquet/Arrow
+- `backend/db/tests/parquet_tests.rs` - Tests unitarios e integración (NUEVO)
