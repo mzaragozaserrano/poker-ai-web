@@ -1,46 +1,31 @@
-# TAREA ACTIVA: ISSUE #8
+# TAREA ACTIVA: ISSUE #9
 
 ## Título
-1.3.1 Diseño del Esquema Star en DuckDB
+1.3.3 Configuración de DuckDB para operación in-memory
 
 ## Descripción y Requisitos
-Diseñar e implementar el esquema Star Schema optimizado para consultas analíticas. El sistema debe:
-- Crear tabla hands_metadata (Dimension Table) con campos definidos en db-schema.md
-- Crear tabla hands_actions (Fact Table) con campos definidos en db-schema.md
-- Crear tablas adicionales: players, player_aliases, cash_sessions
-- Crear índices optimizados para consultas analíticas
-- Usar tipos de datos apropiados (VARCHAR, TIMESTAMP, ENUM, BIGINT)
+Configurar DuckDB para operar íntegramente en memoria aprovechando los 64GB de RAM. El sistema debe:
+- Configurar DuckDB en modo in-memory con límite de 48GB
+- Optimizar configuración para Ryzen 3800X (16 threads)
+- Implementar estrategia de carga de archivos Parquet
+- Implementar gestión y monitoreo de memoria
 
-## Estado: EN PROGRESO (Parcialmente Completado)
+## Estado: COMPLETADO
 
 ## Tareas Completadas
-- [x] Crear schema.sql con todas las tablas definidas
-- [x] Crear tabla hands_metadata (Dimension Table)
-- [x] Crear tabla hands_actions (Fact Table)
-- [x] Crear tablas adicionales (players, player_aliases, cash_sessions, tournaments, tournament_results)
-- [x] Crear índices optimizados (B-Tree, Hash, Compuestos)
-- [x] Crear estructuras Rust para todas las tablas
-- [x] Crear módulo connection.rs para gestión de DuckDB
-- [x] Implementar tests unitarios (13 tests, 9 pasando)
-
-## Problemas Encontrados
-- **Foreign Keys en DuckDB**: Las foreign keys causan errores "Cannot alter entry" al intentar crear tablas relacionadas
-- **Resource Deadlock**: Múltiples statements ejecutados en secuencia causan deadlocks en DuckDB
-- **Tipos UUID**: DuckDB no soporta UUID nativamente, se usa VARCHAR en su lugar
-- **Vistas y Funciones**: Sintaxis no compatible, eliminadas del schema inicial
-
-## Tareas Pendientes
-- [ ] Resolver problema de foreign keys (eliminarlas o cambiar approach)
-- [ ] Resolver deadlocks en init_schema_embedded
-- [ ] Hacer que todos los tests pasen (actualmente 9/13)
-- [ ] Implementar vistas como queries Rust en lugar de SQL
-- [ ] Validar esquema completo contra especificaciones
+- [x] Configurar DuckDB en modo in-memory con límite de 48GB
+- [x] Optimizar configuración para Ryzen 3800X (16 threads)
+- [x] Implementar estrategia de carga de Parquet
+- [x] Implementar gestión y monitoreo de memoria
+- [x] Implementar 32 tests unitarios (todos pasando)
+- [x] Implementar 7 tests de integración (todos pasando)
 
 ## Criterios de Aceptación
-- [ ] El esquema Star está correctamente implementado en DuckDB
-- [ ] Los tipos de datos son apropiados para análisis analítico
-- [ ] Los índices mejoran significativamente el rendimiento de consultas
-- [ ] El esquema sigue las especificaciones de db-schema.md
+- [x] DuckDB opera completamente en memoria sin swapping
+- [x] La configuración aprovecha los 16 hilos del Ryzen 3800X
+- [x] Los datos se cargan eficientemente desde Parquet
+- [x] El sistema puede manejar 10M+ de manos en memoria
+- [x] El uso de memoria se mantiene dentro de límites razonables
 
 ## Arquitectura Planificada
 - **Base de Datos**: DuckDB (In-Memory con 64GB RAM)
@@ -57,7 +42,14 @@ Diseñar e implementar el esquema Star Schema optimizado para consultas analíti
 - `backend/db/migrations/` - Directorio creado para futuras migraciones
 
 ## Rama
-feat/issue-8-star-schema
+feat/issue-9-duckdb-inmemory
 
 ## PR
-Pendiente de creación
+https://github.com/mzaragozaserrano/poker-ai-web/pull/20
+
+## Archivos Creados/Modificados
+- `backend/db/src/memory_monitor.rs` - Monitoreo de memoria en tiempo real (356 líneas)
+- `backend/db/src/parquet_loader.rs` - Carga de archivos Parquet (308 líneas)
+- `backend/db/src/inmemory.rs` - Optimizaciones in-memory (332 líneas)
+- `backend/db/src/lib.rs` - Exportar nuevos módulos
+- `backend/db/tests/integration_tests.rs` - Tests de integración (103 líneas)
