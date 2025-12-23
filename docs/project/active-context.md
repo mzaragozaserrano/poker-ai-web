@@ -1,31 +1,32 @@
-# TAREA ACTIVA: ISSUE #9
+# TAREA ACTIVA: ISSUE #11
 
 ## Título
-1.3.3 Configuración de DuckDB para operación in-memory
+1.3.2 Implementación de persistencia en formato Parquet
 
 ## Descripción y Requisitos
-Configurar DuckDB para operar íntegramente en memoria aprovechando los 64GB de RAM. El sistema debe:
-- Configurar DuckDB en modo in-memory con límite de 48GB
-- Optimizar configuración para Ryzen 3800X (16 threads)
-- Implementar estrategia de carga de archivos Parquet
-- Implementar gestión y monitoreo de memoria
+Implementar la capa de persistencia usando Apache Parquet para almacenamiento inmutable y comprimido. El sistema debe:
+- Configurar escritura a Parquet con Arrow y compresión ZSTD/SNAPPY
+- Implementar particionamiento por fecha (year=YYYY/month=MM/day=DD/)
+- Implementar clustering por player_id y ordenamiento temporal
+- Implementar lectura desde Parquet con carga incremental
+- Validar integridad de datos al cargar
 
 ## Estado: COMPLETADO
 
 ## Tareas Completadas
-- [x] Configurar DuckDB en modo in-memory con límite de 48GB
-- [x] Optimizar configuración para Ryzen 3800X (16 threads)
-- [x] Implementar estrategia de carga de Parquet
-- [x] Implementar gestión y monitoreo de memoria
-- [x] Implementar 32 tests unitarios (todos pasando)
-- [x] Implementar 7 tests de integración (todos pasando)
+- [x] Configurar escritura a Parquet con Arrow y compresión ZSTD
+- [x] Implementar particionamiento por fecha en estructura de directorios
+- [x] Implementar clustering por player_id y ordenamiento temporal
+- [x] Implementar lectura desde Parquet con carga incremental
+- [x] Crear tests unitarios e integración (60 tests totales pasando)
+- [x] Validar integridad de datos al cargar
 
 ## Criterios de Aceptación
-- [x] DuckDB opera completamente en memoria sin swapping
-- [x] La configuración aprovecha los 16 hilos del Ryzen 3800X
-- [x] Los datos se cargan eficientemente desde Parquet
-- [x] El sistema puede manejar 10M+ de manos en memoria
-- [x] El uso de memoria se mantiene dentro de límites razonables
+- [x] Los datos se escriben correctamente en formato Parquet
+- [x] El particionamiento por fecha funciona correctamente
+- [x] Los archivos Parquet se pueden leer y consultar en DuckDB
+- [x] La compresión reduce significativamente el tamaño de almacenamiento (1000 manos < 100KB)
+- [x] El clustering mejora el rendimiento de consultas por jugador
 
 ## Arquitectura Planificada
 - **Base de Datos**: DuckDB (In-Memory con 64GB RAM)
@@ -42,14 +43,34 @@ Configurar DuckDB para operar íntegramente en memoria aprovechando los 64GB de 
 - `backend/db/migrations/` - Directorio creado para futuras migraciones
 
 ## Rama
-feat/issue-9-duckdb-inmemory
-
-## PR
-https://github.com/mzaragozaserrano/poker-ai-web/pull/20
+feat/issue-11-parquet-persistence
 
 ## Archivos Creados/Modificados
-- `backend/db/src/memory_monitor.rs` - Monitoreo de memoria en tiempo real (356 líneas)
-- `backend/db/src/parquet_loader.rs` - Carga de archivos Parquet (308 líneas)
-- `backend/db/src/inmemory.rs` - Optimizaciones in-memory (332 líneas)
-- `backend/db/src/lib.rs` - Exportar nuevos módulos
-- `backend/db/tests/integration_tests.rs` - Tests de integración (103 líneas)
+- `backend/db/src/parquet_writer.rs` - Escritura de archivos Parquet con particionamiento (NUEVO - 670 líneas)
+  * Compresión ZSTD con nivel configurable (default: 3)
+  * Particionamiento automático por fecha (year=/month=/day=/)
+  * Clustering por player_id + timestamp
+  * Schema Arrow compatible con DuckDB
+  * Row group size configurable (default: 500K)
+- `backend/db/src/parquet_reader.rs` - Lectura incremental de archivos Parquet (NUEVO - 500 líneas)
+  * Caché de archivos cargados (JSON persistence)
+  * Detección automática de nuevos archivos
+  * Validación de integridad
+  * Filtrado por rango de fechas
+  * Integración directa con DuckDB
+- `backend/db/src/lib.rs` - Exportar nuevos módulos reader/writer
+- `backend/db/Cargo.toml` - Agregar dependencias: zstd 0.13, thiserror 1.0, anyhow 1.0
+- `backend/db/tests/integration_tests.rs` - Agregar 5 tests de integración para Parquet (MODIFICADO)
+  * test_parquet_writer_metadata
+  * test_parquet_writer_actions
+  * test_parquet_reader_creation
+  * test_parquet_writer_partitioning
+  * test_parquet_compression_reduces_size
+
+## Estadísticas de Tests
+- **Tests Unitarios**: 48 tests (todos pasando)
+- **Tests de Integración**: 12 tests (todos pasando)
+- **Cobertura**: Writer (8 tests), Reader (8 tests), Integration (5 tests)
+
+## PR
+https://github.com/mzaragozaserrano/poker-ai-web/pull/21
