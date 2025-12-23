@@ -11,7 +11,9 @@
 //! - Parser basado en bytes sin Regex para máximo rendimiento
 //! - Paralelización con Rayon (16 threads en Ryzen 3800X)
 //! - Soporte para Cash Games NLHE 6-max
-//! - File watching con notificación en tiempo real
+//! - File watching automático con notify (detección en tiempo real)
+//! - Deduplicación con MD5 hash
+//! - Retry logic para archivos bloqueados
 //!
 //! ## Uso básico
 //!
@@ -49,10 +51,12 @@
 
 pub mod bytes_parser;
 pub mod file_reader;
+pub mod file_watcher;
 pub mod fsm;
 pub mod parallel_processor;
 pub mod types;
 
+pub use file_watcher::{FileEvent, FileWatcher, FileWatcherBuilder, WatcherConfig, WatcherError};
 pub use fsm::WinamaxParser;
 pub use parallel_processor::{
     process_files_parallel, process_files_parallel_with_progress, BatchProcessingResult,
