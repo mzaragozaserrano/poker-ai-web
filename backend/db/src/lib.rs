@@ -20,10 +20,9 @@
 // Módulos implementados
 pub mod connection;
 pub mod schema;
-
-// TODO: Implementar módulos restantes (Fase 1.3 según roadmap)
-// pub mod parquet_io;
-// pub mod query;
+pub mod memory_monitor;
+pub mod parquet_loader;
+pub mod inmemory;
 
 // Re-exports principales
 pub use schema::{
@@ -32,5 +31,8 @@ pub use schema::{
 };
 
 pub use connection::{DbConfig, DbConnection, DbStats};
+pub use memory_monitor::{MemoryMonitor, MemoryMetrics, MemoryTrend, MemoryReport};
+pub use parquet_loader::{ParquetLoader, ParquetLoadConfig, LoadResult};
+pub use inmemory::{InMemoryOptimization, QueryOptimizer, MemoryMaintenance, CacheStats};
 
 // pub use parquet_io::{ParquetReader, ParquetWriter};
