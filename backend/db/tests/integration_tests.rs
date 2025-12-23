@@ -5,9 +5,12 @@
 #[cfg(test)]
 mod integration_tests {
     use poker_db::{
-        DbConnection, InMemoryOptimization, MemoryMaintenance, MemoryMonitor, ParquetLoadConfig,
-        ParquetLoader,
+        ActionType, DbConnection, HandAction, HandMetadata, InMemoryOptimization,
+        MemoryMaintenance, MemoryMonitor, ParquetLoadConfig, ParquetLoader, ParquetReadConfig,
+        ParquetReader, ParquetWriteConfig, ParquetWriter, Street,
     };
+    use std::collections::HashMap;
+    use tempfile::TempDir;
 
     #[test]
     fn test_inmemory_configuration_initialization() {
@@ -117,5 +120,175 @@ mod integration_tests {
         // Schema init debe ser < 1 segundo en máquina moderna
         println!("Schema initialization: {:?}", duration);
         assert!(duration.as_millis() < 5000, "Schema init took too long");
+    }
+
+    #[test]
+    fn test_parquet_writer_metadata() {
+        let temp_dir = TempDir::new().expect("Failed to create temp dir");
+        let config = ParquetWriteConfig::new(temp_dir.path());
+        let writer = ParquetWriter::new(config);
+
+        // Crear metadata de prueba
+        let metadata = vec![
+            HandMetadata::new_cash(
+                "hand_001".to_string(),
+                "session_001".to_string(),
+                "2024-03-15T14:30:00Z".to_string(),
+                "NL10".to_string(),
+                "Table 1".to_string(),
+                5,
+                0,
+            ),
+            HandMetadata::new_cash(
+                "hand_002".to_string(),
+                "session_001".to_string(),
+                "2024-03-15T14:35:00Z".to_string(),
+                "NL10".to_string(),
+                "Table 1".to_string(),
+                5,
+                1,
+            ),
+        ];
+
+        // Escribir a Parquet
+        let result = writer.write_hands_metadata(metadata);
+        assert!(result.is_ok(), "Failed to write metadata");
+
+        // Verificar que el archivo fue creado
+        let path = result.unwrap();
+        assert!(path.exists(), "Parquet file was not created");
+    }
+
+    #[test]
+    fn test_parquet_writer_actions() {
+        let temp_dir = TempDir::new().expect("Failed to create temp dir");
+        let config = ParquetWriteConfig::new(temp_dir.path());
+        let writer = ParquetWriter::new(config);
+
+        // Crear acciones de prueba
+        let actions = vec![
+            HandAction::new(
+                "hand_001".to_string(),
+                "player_001".to_string(),
+                Street::Preflop,
+                ActionType::Raise,
+                200,
+                true,
+                1,
+            ),
+            HandAction::new(
+                "hand_001".to_string(),
+                "player_002".to_string(),
+                Street::Preflop,
+                ActionType::Call,
+                200,
+                false,
+                2,
+            ),
+        ];
+
+        // Crear mapa de timestamps
+        let mut timestamps = HashMap::new();
+        timestamps.insert(
+            "hand_001".to_string(),
+            chrono::NaiveDateTime::parse_from_str("2024-03-15 14:30:00", "%Y-%m-%d %H:%M:%S")
+                .unwrap(),
+        );
+
+        // Escribir a Parquet
+        let result = writer.write_hands_actions(actions, &timestamps);
+        assert!(result.is_ok(), "Failed to write actions");
+
+        // Verificar que el archivo fue creado
+        let path = result.unwrap();
+        assert!(path.exists(), "Parquet file was not created");
+    }
+
+    #[test]
+    fn test_parquet_reader_creation() {
+        let temp_dir = TempDir::new().expect("Failed to create temp dir");
+        let config = ParquetReadConfig::new(temp_dir.path());
+
+        let reader = ParquetReader::new(config);
+        assert!(reader.is_ok(), "Failed to create reader");
+    }
+
+    #[test]
+    fn test_parquet_writer_partitioning() {
+        let temp_dir = TempDir::new().expect("Failed to create temp dir");
+        let config = ParquetWriteConfig::new(temp_dir.path());
+        let writer = ParquetWriter::new(config);
+
+        // Crear metadata con diferentes fechas
+        let metadata = vec![
+            HandMetadata::new_cash(
+                "hand_001".to_string(),
+                "session_001".to_string(),
+                "2024-03-15T14:30:00Z".to_string(),
+                "NL10".to_string(),
+                "Table 1".to_string(),
+                5,
+                0,
+            ),
+            HandMetadata::new_cash(
+                "hand_002".to_string(),
+                "session_001".to_string(),
+                "2024-03-16T14:30:00Z".to_string(),
+                "NL10".to_string(),
+                "Table 1".to_string(),
+                5,
+                1,
+            ),
+        ];
+
+        // Escribir a Parquet
+        let result = writer.write_hands_metadata(metadata);
+        assert!(result.is_ok(), "Failed to write metadata");
+
+        // Verificar que se crearon directorios particionados
+        let base_path = temp_dir.path();
+        let year_2024 = base_path.join("year=2024");
+        assert!(year_2024.exists(), "Year partition not created");
+
+        // Al menos un mes debe existir
+        let month_03 = year_2024.join("month=03");
+        assert!(month_03.exists(), "Month partition not created");
+    }
+
+    #[test]
+    fn test_parquet_compression_reduces_size() {
+        let temp_dir = TempDir::new().expect("Failed to create temp dir");
+
+        // Crear muchas manos duplicadas para probar compresión
+        let mut metadata = Vec::new();
+        for i in 0..1000 {
+            metadata.push(HandMetadata::new_cash(
+                format!("hand_{:04}", i),
+                "session_001".to_string(),
+                "2024-03-15T14:30:00Z".to_string(),
+                "NL10".to_string(),
+                "Table 1".to_string(),
+                5,
+                0,
+            ));
+        }
+
+        let config = ParquetWriteConfig::new(temp_dir.path()).with_compression_level(3);
+        let writer = ParquetWriter::new(config);
+
+        let result = writer.write_hands_metadata(metadata);
+        assert!(result.is_ok(), "Failed to write metadata");
+
+        // Verificar que el archivo tiene tamaño razonable
+        let path = result.unwrap();
+        let file_size = std::fs::metadata(&path).unwrap().len();
+
+        // 1000 manos comprimidas deberían ocupar menos de 100KB
+        assert!(
+            file_size < 100_000,
+            "Compressed file too large: {} bytes",
+            file_size
+        );
+        println!("Compressed 1000 hands to {} bytes", file_size);
     }
 }
