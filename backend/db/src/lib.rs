@@ -17,12 +17,20 @@
 //! Los 64GB de RAM disponibles permiten mantener toda la base de datos
 //! "caliente" en memoria para latencia cero.
 
-// TODO: Implementar módulos (Fase 1.3 según roadmap)
-// pub mod schema;
-// pub mod connection;
+// Módulos implementados
+pub mod schema;
+pub mod connection;
+
+// TODO: Implementar módulos restantes (Fase 1.3 según roadmap)
 // pub mod parquet_io;
 // pub mod query;
 
-// pub use connection::DbConnection;
-// pub use schema::{HandAction, PlayerStatFlat};
+// Re-exports principales
+pub use schema::{
+    ActionType, CashSession, GameFormat, HandAction, HandMetadata, HandMetadataBuilder, Player,
+    PlayerAlias, SiteName, Street, Tournament, TournamentResult,
+};
+
+pub use connection::{DbConfig, DbConnection, DbStats};
+
 // pub use parquet_io::{ParquetReader, ParquetWriter};
