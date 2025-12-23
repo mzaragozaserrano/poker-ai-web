@@ -1,37 +1,30 @@
-name: CI - Rust Backend
+name: Release
 
 on:
   push:
     branches: [main, develop]
     paths:
       - 'backend/**'
-      - '.github/workflows/ci-rust.yml'
-  pull_request:
-    branches: [main, develop]
-    paths:
-      - 'backend/**'
-      - '.github/workflows/ci-rust.yml'
+      - '.github/workflows/release.yml'
+  workflow_dispatch:
 
 env:
   CARGO_TERM_COLOR: always
   RUST_BACKTRACE: 1
 
 jobs:
-  test:
-    name: Test Rust Workspace
+  test-windows:
+    name: Test on Windows
     runs-on: windows-latest
-    
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
       
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: stable
           components: rustfmt, clippy
       
-      - name: Cache Cargo dependencies
+      - name: Cache Cargo
         uses: actions/cache@v4
         with:
           path: |
@@ -44,13 +37,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-cargo-
       
-      - name: Build workspace
+      - name: Run all tests
         working-directory: backend
-        run: cargo build --workspace --verbose
-      
-      - name: Run tests
-        working-directory: backend
-        run: cargo test --workspace --verbose
+        run: cargo test --workspace --verbose --all-features
       
       - name: Check formatting
         working-directory: backend
@@ -59,22 +48,19 @@ jobs:
       - name: Run Clippy
         working-directory: backend
         run: cargo clippy --workspace --all-targets --all-features -- -D warnings
-  
+
   build-release:
-    name: Build Release (Optimized)
+    name: Build Release
     runs-on: windows-latest
-    needs: test
-    
+    if: github.ref == 'refs/heads/main'
+    needs: test-windows
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
       
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
-        with:
-          toolchain: stable
       
-      - name: Cache Cargo dependencies
+      - name: Cache Cargo
         uses: actions/cache@v4
         with:
           path: |
@@ -83,11 +69,18 @@ jobs:
             ~/.cargo/registry/index/
             ~/.cargo/registry/cache/
             ~/.cargo/git/db/
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          key: ${{ runner.os }}-cargo-release-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-cargo-
       
       - name: Build release
         working-directory: backend
         run: cargo build --release --workspace --verbose
+      
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: poker-ai-release-windows
+          path: backend/target/release/*.exe
+          retention-days: 7
 
