@@ -1,78 +1,44 @@
-# TAREA ACTIVA: ISSUE #7
+# TAREA ACTIVA: ISSUE #8
 
 ## Título
-1.2.4 Sistema de detección de archivos con crate notify
+1.3.1 Diseño del Esquema Star en DuckDB
 
 ## Descripción y Requisitos
-Implementar file watching para detectar nuevos historiales automáticamente. El sistema debe:
-- Configurar crate notify para file watching en Windows
-- Detectar eventos Create y Modify de archivos .txt
-- Evitar procesamiento duplicado usando hash MD5
-- Manejar archivos en escritura parcial
-- Integrar con sistema de parsing paralelo de Rayon
+Diseñar e implementar el esquema Star Schema optimizado para consultas analíticas. El sistema debe:
+- Crear tabla hands_metadata (Dimension Table) con campos definidos en db-schema.md
+- Crear tabla hands_actions (Fact Table) con campos definidos en db-schema.md
+- Crear tablas adicionales: players, player_aliases, cash_sessions
+- Crear índices optimizados para consultas analíticas
+- Usar tipos de datos apropiados (VARCHAR, TIMESTAMP, ENUM, BIGINT)
 
-## Estado: COMPLETADO
+## Estado: EN PROGRESO
 
-## Ruta de Monitoreo
-`C:\Users\Miguel\AppData\Roaming\winamax\documents\accounts\thesmoy\history`
+## Tareas Pendientes
+- [ ] Crear tabla hands_metadata (Dimension Table)
+- [ ] Crear tabla hands_actions (Fact Table)
+- [ ] Crear tablas adicionales (players, player_aliases, cash_sessions)
+- [ ] Crear índices optimizados
+- [ ] Validar esquema contra especificaciones
 
-## Tareas Completadas
-- [x] Crear módulo file_watcher.rs con notify::Watcher
-- [x] Implementar detección de eventos Create/Modify
-- [x] Implementar sistema de deduplicación con MD5
-- [x] Crear cola de procesamiento con mpsc::channel
-- [x] Implementar retry logic para archivos bloqueados
-- [x] Integrar con ParallelProcessor de Rayon
-- [x] Crear tests unitarios del watcher (5 tests)
-- [x] Crear ejemplos de uso (file_watcher_demo y file_watcher_simple)
+## Criterios de Aceptación
+- [ ] El esquema Star está correctamente implementado en DuckDB
+- [ ] Los tipos de datos son apropiados para análisis analítico
+- [ ] Los índices mejoran significativamente el rendimiento de consultas
+- [ ] El esquema sigue las especificaciones de db-schema.md
 
-## Criterios de Aceptación - TODOS SATISFECHOS
-- [x] El sistema detecta automáticamente nuevos archivos de historial
-- [x] No se procesan archivos duplicados (deduplicación con MD5)
-- [x] Se manejan correctamente archivos en escritura (retry con backoff exponencial)
-- [x] El file watcher funciona correctamente en Windows (RecommendedWatcher)
+## Arquitectura Planificada
+- **Base de Datos**: DuckDB (In-Memory con 64GB RAM)
+- **Persistencia**: Apache Parquet (Particionado por fecha)
+- **Índices**: B-Tree (timestamp), Hash (hand_id), Compuesto (player_id, street)
+- **Optimización**: Vectorización SIMD para operaciones columnar
 
-## Arquitectura Implementada
-- **Watcher**: notify::RecommendedWatcher con RecursiveMode::NonRecursive
-- **Filtrado**: Solo archivos .txt mediante extensión
-- **Deduplicación**: HashSet<String> con MD5 hashes en Arc<Mutex>
-- **Cola**: mpsc::channel para comunicación entre threads
-- **Retry**: Máximo 3 intentos con backoff exponencial (100ms, 200ms, 400ms)
-- **Threads**: 2 threads (1 para eventos notify, 1 para procesamiento)
-
-## Archivos Creados/Modificados
-- `backend/parsers/src/file_watcher.rs` - Módulo principal (NUEVO)
-- `backend/parsers/src/lib.rs` - Exportar nuevo módulo
-- `backend/parsers/Cargo.toml` - Agregar dependencia md5
-- `backend/parsers/examples/file_watcher_demo.rs` - Ejemplo con ParallelProcessor (NUEVO)
-- `backend/parsers/examples/file_watcher_simple.rs` - Ejemplo con callback (NUEVO)
-- `backend/parsers/FILE_WATCHER.md` - Documentación completa (NUEVO)
-
-## API Principal
-```rust
-// Uso con callback personalizado
-let watcher = FileWatcherBuilder::new()
-    .watch_path(PathBuf::from(r"C:\Users\Miguel\..."))
-    .max_retries(3)
-    .retry_delay_ms(100)
-    .build();
-
-watcher.start(|file_path| {
-    println!("Nuevo archivo: {:?}", file_path);
-}).unwrap();
-
-// Uso con ParallelProcessor integrado
-let processor = ParallelProcessor::new(ProcessingConfig::default());
-watcher.start_with_processor(processor).unwrap();
-```
-
-## Tests Ejecutados
-- 30 tests unitarios pasados (5 nuevos del file_watcher)
-- 17 doc tests pasados
-- Ejemplos compilados exitosamente
+## Archivos a Crear/Modificar
+- `backend/database/` - Nuevo directorio para esquema DuckDB
+- `backend/database/schema.sql` - Definiciones de tablas e índices (NUEVO)
+- `backend/database/migrations/` - Sistema de migraciones (NUEVO)
 
 ## Rama
-feat/issue-7-file-watcher
+feat/issue-8-star-schema
 
 ## PR
 Pendiente de creación
