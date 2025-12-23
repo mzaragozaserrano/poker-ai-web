@@ -9,7 +9,7 @@ use std::path::PathBuf;
 
 fn main() {
     // Intentar diferentes rutas posibles
-    let possible_paths = vec![
+    let possible_paths = [
         PathBuf::from("docs/winamax/example_winamax.txt"), // Desde raíz del proyecto
         PathBuf::from("../docs/winamax/example_winamax.txt"), // Desde backend/
         PathBuf::from("../../docs/winamax/example_winamax.txt"), // Desde backend/parsers/
