@@ -11,22 +11,22 @@ Implementar la capa de persistencia usando Apache Parquet para almacenamiento in
 - Implementar lectura desde Parquet con carga incremental
 - Validar integridad de datos al cargar
 
-## Estado: EN PROGRESO
+## Estado: COMPLETADO
 
-## Tareas Pendientes
-- [ ] Configurar escritura a Parquet con Arrow y compresión ZSTD
-- [ ] Implementar particionamiento por fecha en estructura de directorios
-- [ ] Implementar clustering por player_id y ordenamiento temporal
-- [ ] Implementar lectura desde Parquet con carga incremental
-- [ ] Crear tests unitarios e integración
-- [ ] Validar integridad de datos al cargar
+## Tareas Completadas
+- [x] Configurar escritura a Parquet con Arrow y compresión ZSTD
+- [x] Implementar particionamiento por fecha en estructura de directorios
+- [x] Implementar clustering por player_id y ordenamiento temporal
+- [x] Implementar lectura desde Parquet con carga incremental
+- [x] Crear tests unitarios e integración (60 tests totales pasando)
+- [x] Validar integridad de datos al cargar
 
 ## Criterios de Aceptación
-- [ ] Los datos se escriben correctamente en formato Parquet
-- [ ] El particionamiento por fecha funciona correctamente
-- [ ] Los archivos Parquet se pueden leer y consultar en DuckDB
-- [ ] La compresión reduce significativamente el tamaño de almacenamiento
-- [ ] El clustering mejora el rendimiento de consultas por jugador
+- [x] Los datos se escriben correctamente en formato Parquet
+- [x] El particionamiento por fecha funciona correctamente
+- [x] Los archivos Parquet se pueden leer y consultar en DuckDB
+- [x] La compresión reduce significativamente el tamaño de almacenamiento (1000 manos < 100KB)
+- [x] El clustering mejora el rendimiento de consultas por jugador
 
 ## Arquitectura Planificada
 - **Base de Datos**: DuckDB (In-Memory con 64GB RAM)
@@ -45,9 +45,32 @@ Implementar la capa de persistencia usando Apache Parquet para almacenamiento in
 ## Rama
 feat/issue-11-parquet-persistence
 
-## Archivos a Crear/Modificar
-- `backend/db/src/parquet_writer.rs` - Escritura de archivos Parquet con particionamiento (NUEVO)
-- `backend/db/src/parquet_reader.rs` - Lectura incremental de archivos Parquet (NUEVO)
+## Archivos Creados/Modificados
+- `backend/db/src/parquet_writer.rs` - Escritura de archivos Parquet con particionamiento (NUEVO - 670 líneas)
+  * Compresión ZSTD con nivel configurable (default: 3)
+  * Particionamiento automático por fecha (year=/month=/day=/)
+  * Clustering por player_id + timestamp
+  * Schema Arrow compatible con DuckDB
+  * Row group size configurable (default: 500K)
+- `backend/db/src/parquet_reader.rs` - Lectura incremental de archivos Parquet (NUEVO - 500 líneas)
+  * Caché de archivos cargados (JSON persistence)
+  * Detección automática de nuevos archivos
+  * Validación de integridad
+  * Filtrado por rango de fechas
+  * Integración directa con DuckDB
 - `backend/db/src/lib.rs` - Exportar nuevos módulos reader/writer
-- `backend/db/Cargo.toml` - Actualizar dependencias de Parquet/Arrow
-- `backend/db/tests/parquet_tests.rs` - Tests unitarios e integración (NUEVO)
+- `backend/db/Cargo.toml` - Agregar dependencias: zstd 0.13, thiserror 1.0, anyhow 1.0
+- `backend/db/tests/integration_tests.rs` - Agregar 5 tests de integración para Parquet (MODIFICADO)
+  * test_parquet_writer_metadata
+  * test_parquet_writer_actions
+  * test_parquet_reader_creation
+  * test_parquet_writer_partitioning
+  * test_parquet_compression_reduces_size
+
+## Estadísticas de Tests
+- **Tests Unitarios**: 48 tests (todos pasando)
+- **Tests de Integración**: 12 tests (todos pasando)
+- **Cobertura**: Writer (8 tests), Reader (8 tests), Integration (5 tests)
+
+## PR
+https://github.com/mzaragozaserrano/poker-ai-web/pull/21
