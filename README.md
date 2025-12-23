@@ -73,54 +73,48 @@ La aplicación opera íntegramente de forma local para garantizar la privacidad 
 
 ## Instalación
 
-> **Nota**: El proyecto está en desarrollo activo. Consulta el [Roadmap](docs/project/roadmap.md) para el estado actual de implementación.
-
 ### Prerrequisitos
 
-- Rust (última versión estable)
-- Python 3.11+
-- Node.js 18+ y npm/pnpm
+- **Rust 1.70+** (última versión estable)
+- Python 3.11+ (para Fase 2 - API)
+- Node.js 18+ y npm/pnpm (para Fase 3 - Frontend)
 - DuckDB (se instala automáticamente vía dependencias)
 
-### Pasos de Instalación
+### Pasos de Instalación (Fase 1)
 
 ```powershell
 # Clonar el repositorio
-git clone <repository-url>
+git clone https://github.com/mzaragozaserrano/poker-ai-web.git
 cd poker-ai-web
 
-# Configurar Rust (core-backend)
-cd core-backend
+# Configurar Rust backend
+cd backend
 cargo build --release
 
-# Configurar Python (server-api)
-cd ../server-api
-python -m venv venv
-.\venv\Scripts\Activate.ps1
-pip install -r requirements.txt
+# Ejecutar tests para verificar instalación
+cargo test --workspace
 
-# Configurar Frontend
-cd ../frontend
-npm install
+# Probar parser con archivo real
+cargo run --example parse_real_file
 ```
+
+> **Nota**: Python (server-api) y React (frontend) se configurarán en las Fases 2 y 3 respectivamente.
 
 ## Uso
 
-### Iniciar el Servidor API
+### Probar el Parser (Fase 1)
 
 ```powershell
-cd server-api
-.\venv\Scripts\Activate.ps1
-python app/main.py
-```
+cd backend
 
-La API estará disponible en `http://127.0.0.1:8000/api/v1`
+# Ejecutar tests completos
+cargo test --workspace
 
-### Iniciar el Frontend
+# Probar con archivo real de Winamax
+cargo run --example parse_real_file
 
-```powershell
-cd frontend
-npm run dev
+# Ejecutar benchmarks de rendimiento
+cargo bench -p poker-parsers
 ```
 
 ### Configuración de Rutas
@@ -130,44 +124,50 @@ El sistema detecta automáticamente los historiales de Winamax en:
 C:\Users\Miguel\AppData\Roaming\winamax\documents\accounts\thesmoy\history
 ```
 
-## API Endpoints
+> **Nota**: La API (FastAPI) y el Frontend (React) estarán disponibles en las Fases 2 y 3.
 
-### `GET /api/v1/stats/{player_name}`
+## Verificación de la Fase 1
 
-Obtiene las métricas agregadas de un jugador.
+### Tests Disponibles
 
-**Query Parameters:**
-- `start_date` (ISO-8601): Fecha inicio del filtrado
-- `end_date` (ISO-8601): Fecha fin del filtrado
-- `stake` (string): Nivel de ciegas (ej: 'NL2')
-- `game_type` (enum): 'NLHE' o 'PLO'
-- `min_hands` (int): Tamaño de muestra mínimo (default: 1)
+```powershell
+cd backend
 
-**Ejemplo de Respuesta:**
-```json
-{
-  "player": "thesmoy",
-  "is_hero": true,
-  "summary": {
-    "hands": 1540,
-    "vpip": 24.5,
-    "pfr": 20.1,
-    "three_bet": 8.2,
-    "wtsd": 28.4,
-    "af": 2.5,
-    "net_won_cents": 4500,
-    "bb_100": 15.2,
-    "ev_bb_100": 12.8
-  },
-  "positional": {
-    "BTN": { "vpip": 45.0, "pfr": 38.0, "hands": 250 },
-    "SB": { "vpip": 32.0, "pfr": 28.0, "hands": 250 },
-    "BB": { "vpip": 12.0, "pfr": 0.0, "hands": 250 },
-    "MP": { "vpip": 18.0, "pfr": 15.0, "hands": 250 },
-    "CO": { "vpip": 26.0, "pfr": 22.0, "hands": 250 }
-  }
-}
+# Tests del parser (FSM, file watcher, bytes parser)
+cargo test -p poker-parsers --lib
+
+# Tests de DuckDB (schema, conexión, in-memory)
+cargo test -p poker-db --lib
+
+# Tests de integración (Parquet, persistencia completa)
+cargo test -p poker-db --test integration_tests
+
+# Benchmark de rendimiento
+cargo bench -p poker-parsers
 ```
+
+### Ejemplos Ejecutables
+
+```powershell
+# Parser con archivo real (145 manos de Winamax)
+cargo run --example parse_real_file
+
+# File watcher simple con callback
+cargo run --example file_watcher_simple
+
+# File watcher con procesador paralelo integrado
+cargo run --example file_watcher_demo
+```
+
+### Métricas de Éxito Fase 1
+
+- ✓ **145 manos parseadas** sin errores desde archivo real
+- ✓ **60+ tests pasando** (48 unitarios + 12 integración)
+- ✓ **Compresión Parquet**: 1000 manos < 100KB
+- ✓ **Schema init**: < 5 segundos
+- ✓ **Particionamiento**: Estructura `year=YYYY/month=MM/day=DD/` operativa
+
+> **Nota**: Los endpoints REST estarán disponibles en la Fase 2 (Motor Matemático y API).
 
 ## Estructura de Datos
 
@@ -216,7 +216,17 @@ Ver [LICENSE](LICENSE) para más detalles.
 
 ## Estado del Proyecto
 
-Este proyecto está en desarrollo activo. Consulta el [Roadmap](docs/project/roadmap.md) para conocer el estado actual de las fases de implementación.
+**Fase 1 Completada** ✓ - El núcleo e infraestructura de datos está operativo.
+
+### Componentes Implementados
+
+- **Parser Winamax FSM**: Parsing completo de historiales con 145 manos reales procesadas sin errores
+- **File Watcher**: Detección automática de nuevos archivos con deduplicación MD5
+- **DuckDB In-Memory**: Base de datos analítica configurada para operaciones 100% en RAM
+- **Persistencia Parquet**: Almacenamiento comprimido con particionamiento por fecha (1000 manos < 100KB)
+- **Tests**: 60+ tests pasando (48 unitarios + 12 integración)
+
+Consulta el [Roadmap](docs/project/roadmap.md) para conocer el estado actual de las fases de implementación.
 
 ## Contribuciones
 
