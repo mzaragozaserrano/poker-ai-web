@@ -187,12 +187,17 @@ impl ParquetReader {
 
         Ok(Self { config, cache })
     }
+}
 
-    /// Crea un reader con configuración por defecto
-    pub fn default() -> Result<Self> {
+impl Default for ParquetReader {
+    fn default() -> Self {
+        // Usamos unwrap aquí porque la configuración por defecto siempre debe funcionar
         Self::new(ParquetReadConfig::default())
+            .expect("Failed to create ParquetReader with default config")
     }
+}
 
+impl ParquetReader {
     /// Carga todos los archivos Parquet nuevos en DuckDB
     ///
     /// # Arguments
@@ -398,7 +403,7 @@ impl ParquetReader {
             .conn()
             .prepare(&count_query)
             .context("Failed to prepare count query")?;
-        
+
         let count: i64 = stmt
             .query_row([], |row| row.get(0))
             .context("Failed to count rows")?;
@@ -537,4 +542,3 @@ mod tests {
         assert_eq!(stats.total_files_loaded, 0);
     }
 }
-

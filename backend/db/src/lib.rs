@@ -36,5 +36,7 @@ pub use connection::{DbConfig, DbConnection, DbStats};
 pub use inmemory::{CacheStats, InMemoryOptimization, MemoryMaintenance, QueryOptimizer};
 pub use memory_monitor::{MemoryMetrics, MemoryMonitor, MemoryReport, MemoryTrend};
 pub use parquet_loader::{LoadResult, ParquetLoadConfig, ParquetLoader};
-pub use parquet_reader::{CacheStats as ReaderCacheStats, ParquetReadConfig, ParquetReader, ReadResult};
+pub use parquet_reader::{
+    CacheStats as ReaderCacheStats, ParquetReadConfig, ParquetReader, ReadResult,
+};
 pub use parquet_writer::{DatePartition, ParquetWriteConfig, ParquetWriter};

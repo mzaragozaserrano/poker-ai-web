@@ -193,12 +193,15 @@ impl ParquetWriter {
     pub fn new(config: ParquetWriteConfig) -> Self {
         Self { config }
     }
+}
 
-    /// Crea un writer con configuración por defecto
-    pub fn default() -> Self {
+impl Default for ParquetWriter {
+    fn default() -> Self {
         Self::new(ParquetWriteConfig::default())
     }
+}
 
+impl ParquetWriter {
     /// Escribe un lote de metadata de manos a Parquet
     ///
     /// # Arguments
@@ -216,8 +219,8 @@ impl ParquetWriter {
 
         // Procesar cada grupo (una partición por fecha)
         let mut written_files = Vec::new();
-        for (partition, mut batch) in grouped.drain(..) {
-            let path = self.write_metadata_partition(&partition, &mut batch)?;
+        for (partition, batch) in grouped.drain(..) {
+            let path = self.write_metadata_partition(&partition, &batch)?;
             written_files.push(path);
         }
 
@@ -247,8 +250,8 @@ impl ParquetWriter {
 
         // Procesar cada grupo
         let mut written_files = Vec::new();
-        for (partition, mut batch) in grouped.drain(..) {
-            let path = self.write_actions_partition(&partition, &mut batch)?;
+        for (partition, batch) in grouped.drain(..) {
+            let path = self.write_actions_partition(&partition, &batch)?;
             written_files.push(path);
         }
 
@@ -276,7 +279,7 @@ impl ParquetWriter {
             if let Ok(dt) = chrono::DateTime::parse_from_rfc3339(&meta.timestamp) {
                 let naive_dt = dt.naive_utc();
                 let partition = DatePartition::from_timestamp(&naive_dt);
-                groups.entry(partition).or_insert_with(Vec::new).push(meta);
+                groups.entry(partition).or_default().push(meta);
             }
         }
 
@@ -303,10 +306,7 @@ impl ParquetWriter {
         for action in actions {
             if let Some(ts) = timestamps.get(&action.hand_id) {
                 let partition = DatePartition::from_timestamp(ts);
-                groups
-                    .entry(partition)
-                    .or_insert_with(Vec::new)
-                    .push(action);
+                groups.entry(partition).or_default().push(action);
             }
         }
 
@@ -325,8 +325,9 @@ impl ParquetWriter {
     ) -> Result<PathBuf> {
         // Construir path completo
         let partition_dir = self.config.base_path.join(partition.to_path());
-        fs::create_dir_all(&partition_dir)
-            .with_context(|| format!("Failed to create partition directory: {:?}", partition_dir))?;
+        fs::create_dir_all(&partition_dir).with_context(|| {
+            format!("Failed to create partition directory: {:?}", partition_dir)
+        })?;
 
         let file_path = partition_dir.join(partition.to_filename());
 
@@ -347,8 +348,9 @@ impl ParquetWriter {
     ) -> Result<PathBuf> {
         // Construir path completo
         let partition_dir = self.config.base_path.join(partition.to_path());
-        fs::create_dir_all(&partition_dir)
-            .with_context(|| format!("Failed to create partition directory: {:?}", partition_dir))?;
+        fs::create_dir_all(&partition_dir).with_context(|| {
+            format!("Failed to create partition directory: {:?}", partition_dir)
+        })?;
 
         let file_path = partition_dir.join(partition.to_filename());
 
@@ -368,8 +370,8 @@ impl ParquetWriter {
         batch: RecordBatch,
         schema: Arc<Schema>,
     ) -> Result<()> {
-        let file = File::create(path)
-            .with_context(|| format!("Failed to create file: {:?}", path))?;
+        let file =
+            File::create(path).with_context(|| format!("Failed to create file: {:?}", path))?;
 
         // Configurar propiedades de escritura
         let props = WriterProperties::builder()
@@ -377,9 +379,7 @@ impl ParquetWriter {
                 self.config.compression_level,
             )?))
             .set_max_row_group_size(self.config.row_group_size)
-            .set_statistics_enabled(
-                parquet::file::properties::EnabledStatistics::Chunk,
-            )
+            .set_statistics_enabled(parquet::file::properties::EnabledStatistics::Chunk)
             .set_dictionary_enabled(self.config.enable_dictionary)
             .set_writer_version(parquet::file::properties::WriterVersion::PARQUET_2_0)
             .build();
@@ -403,12 +403,14 @@ impl ParquetWriter {
 
     /// Convierte metadata a RecordBatch Arrow
     fn metadata_to_record_batch(&self, metadata: &[HandMetadata]) -> Result<RecordBatch> {
-
         // Construir arrays
-        let hand_ids: Vec<Option<String>> = metadata.iter().map(|m| Some(m.hand_id.clone())).collect();
-        let session_ids: Vec<Option<String>> = metadata.iter().map(|m| m.session_id.clone()).collect();
-        let tournament_ids: Vec<Option<String>> = metadata.iter().map(|m| m.tournament_id.clone()).collect();
-        
+        let hand_ids: Vec<Option<String>> =
+            metadata.iter().map(|m| Some(m.hand_id.clone())).collect();
+        let session_ids: Vec<Option<String>> =
+            metadata.iter().map(|m| m.session_id.clone()).collect();
+        let tournament_ids: Vec<Option<String>> =
+            metadata.iter().map(|m| m.tournament_id.clone()).collect();
+
         let timestamps: Vec<i64> = metadata
             .iter()
             .map(|m| {
@@ -417,10 +419,16 @@ impl ParquetWriter {
                     .unwrap_or(0)
             })
             .collect();
-        
+
         let stakes: Vec<Option<String>> = metadata.iter().map(|m| Some(m.stake.clone())).collect();
-        let formats: Vec<Option<String>> = metadata.iter().map(|m| Some(m.format.to_string())).collect();
-        let table_names: Vec<Option<String>> = metadata.iter().map(|m| Some(m.table_name.clone())).collect();
+        let formats: Vec<Option<String>> = metadata
+            .iter()
+            .map(|m| Some(m.format.to_string()))
+            .collect();
+        let table_names: Vec<Option<String>> = metadata
+            .iter()
+            .map(|m| Some(m.table_name.clone()))
+            .collect();
         let blind_levels: Vec<i64> = metadata.iter().map(|m| m.blind_level).collect();
         let button_seats: Vec<u8> = metadata.iter().map(|m| m.button_seat).collect();
 
@@ -460,15 +468,22 @@ impl ParquetWriter {
         let n = actions.len();
 
         // Construir arrays
-        let action_ids: Vec<Option<String>> = actions.iter().map(|a| Some(a.action_id.clone())).collect();
-        let hand_ids: Vec<Option<String>> = actions.iter().map(|a| Some(a.hand_id.clone())).collect();
-        let player_ids: Vec<Option<String>> = actions.iter().map(|a| Some(a.player_id.clone())).collect();
-        let streets: Vec<Option<String>> = actions.iter().map(|a| Some(a.street.to_string())).collect();
-        let action_types: Vec<Option<String>> = actions.iter().map(|a| Some(a.action_type.to_string())).collect();
+        let action_ids: Vec<Option<String>> =
+            actions.iter().map(|a| Some(a.action_id.clone())).collect();
+        let hand_ids: Vec<Option<String>> =
+            actions.iter().map(|a| Some(a.hand_id.clone())).collect();
+        let player_ids: Vec<Option<String>> =
+            actions.iter().map(|a| Some(a.player_id.clone())).collect();
+        let streets: Vec<Option<String>> =
+            actions.iter().map(|a| Some(a.street.to_string())).collect();
+        let action_types: Vec<Option<String>> = actions
+            .iter()
+            .map(|a| Some(a.action_type.to_string()))
+            .collect();
         let amount_cents: Vec<i64> = actions.iter().map(|a| a.amount_cents).collect();
         let is_hero_actions: Vec<bool> = actions.iter().map(|a| a.is_hero_action).collect();
         let ev_cents: Vec<Option<i64>> = actions.iter().map(|a| a.ev_cents).collect();
-        
+
         // Para timestamp, usamos el actual como placeholder (en producción vendría del metadata)
         let now = chrono::Utc::now().timestamp_micros();
         let timestamps: Vec<i64> = vec![now; n];
@@ -592,4 +607,3 @@ mod tests {
         assert!(result.is_err());
     }
 }
-
