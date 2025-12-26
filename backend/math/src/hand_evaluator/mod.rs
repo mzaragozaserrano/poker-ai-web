@@ -96,9 +96,6 @@ mod tests {
     }
 
     fn cards_from_str(s: &str) -> Vec<Card> {
-        s.split_whitespace()
-            .filter_map(Card::from_str)
-            .collect()
+        s.split_whitespace().filter_map(Card::from_str).collect()
     }
 }
-

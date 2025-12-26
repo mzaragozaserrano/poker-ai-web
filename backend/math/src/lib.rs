@@ -22,8 +22,8 @@ pub mod hand_evaluator;
 
 // Re-exports para conveniencia
 pub use hand_evaluator::{
-    evaluate, evaluate_5cards, evaluate_6cards, evaluate_7cards, evaluate_from_strings,
-    Card, Deck, HandCategory, HandRank, Rank, Suit,
+    evaluate, evaluate_5cards, evaluate_6cards, evaluate_7cards, evaluate_from_strings, Card, Deck,
+    HandCategory, HandRank, Rank, Suit,
 };
 
 // TODO: Implementar módulos adicionales (Fase 2.1 según roadmap)

@@ -464,4 +464,3 @@ mod tests {
         assert!(!is_valid_suit(b'x'));
     }
 }
-

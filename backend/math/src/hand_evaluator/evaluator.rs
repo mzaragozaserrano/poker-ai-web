@@ -41,8 +41,11 @@ pub fn evaluate_5cards(cards: &[Card; 5]) -> HandRank {
         | cards[4].rank_bit();
 
     // Calcular AND de suit bits para detección de flush
-    let suit_and = cards[0].suit_bit() & cards[1].suit_bit() & cards[2].suit_bit()
-        & cards[3].suit_bit() & cards[4].suit_bit();
+    let suit_and = cards[0].suit_bit()
+        & cards[1].suit_bit()
+        & cards[2].suit_bit()
+        & cards[3].suit_bit()
+        & cards[4].suit_bit();
 
     // Si todos los suits son iguales (suit_and != 0), es flush
     if suit_and != 0 {
@@ -459,9 +462,7 @@ mod tests {
     use super::*;
 
     fn cards_from_str(s: &str) -> Vec<Card> {
-        s.split_whitespace()
-            .filter_map(Card::from_str)
-            .collect()
+        s.split_whitespace().filter_map(Card::from_str).collect()
     }
 
     #[test]
@@ -474,7 +475,11 @@ mod tests {
             Card::from_str("Ts").unwrap(),
         ];
         let rank = evaluate_5cards(&cards);
-        assert!(rank.is_royal_flush(), "Expected Royal Flush, got {:?}", rank);
+        assert!(
+            rank.is_royal_flush(),
+            "Expected Royal Flush, got {:?}",
+            rank
+        );
         assert_eq!(rank.value(), 1);
     }
 
@@ -572,7 +577,11 @@ mod tests {
             Card::from_str("As").unwrap(),
         ];
         let rank = evaluate_5cards(&cards);
-        assert!(rank.is_straight(), "Expected Straight (Wheel), got {:?}", rank);
+        assert!(
+            rank.is_straight(),
+            "Expected Straight (Wheel), got {:?}",
+            rank
+        );
     }
 
     #[test]
@@ -640,7 +649,11 @@ mod tests {
             Card::from_str("3d").unwrap(),
         ];
         let rank = evaluate_7cards(&cards);
-        assert!(rank.is_flush(), "Expected Flush from 7 cards, got {:?}", rank);
+        assert!(
+            rank.is_flush(),
+            "Expected Flush from 7 cards, got {:?}",
+            rank
+        );
     }
 
     #[test]
@@ -656,7 +669,11 @@ mod tests {
             Card::from_str("Kd").unwrap(),
         ];
         let rank = evaluate_7cards(&cards);
-        assert!(rank.is_straight_flush(), "Expected Straight Flush from 7 cards, got {:?}", rank);
+        assert!(
+            rank.is_straight_flush(),
+            "Expected Straight Flush from 7 cards, got {:?}",
+            rank
+        );
     }
 
     #[test]
@@ -683,4 +700,3 @@ mod tests {
         assert!(royal_rank > pair_rank, "Royal Flush should beat One Pair");
     }
 }
-

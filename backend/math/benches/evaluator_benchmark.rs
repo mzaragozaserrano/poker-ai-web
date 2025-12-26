@@ -8,8 +8,8 @@
 //! cargo bench --package poker-math
 //! ```
 
-use criterion::{black_box, criterion_group, criterion_main, Criterion, BenchmarkId};
-use poker_math::hand_evaluator::{Card, Deck, evaluate_5cards, evaluate_7cards};
+use criterion::{black_box, criterion_group, criterion_main, BenchmarkId, Criterion};
+use poker_math::hand_evaluator::{evaluate_5cards, evaluate_7cards, Card, Deck};
 
 /// Genera manos aleatorias para benchmarking
 fn generate_random_5card_hands(count: usize) -> Vec<[Card; 5]> {
@@ -82,17 +82,13 @@ fn bench_batch_evaluation(c: &mut Criterion) {
     for size in [100, 1000, 10000].iter() {
         let hands = generate_random_7card_hands(*size);
 
-        group.bench_with_input(
-            BenchmarkId::new("7cards", size),
-            &hands,
-            |b, hands| {
-                b.iter(|| {
-                    for hand in hands {
-                        black_box(evaluate_7cards(black_box(hand)));
-                    }
-                })
-            },
-        );
+        group.bench_with_input(BenchmarkId::new("7cards", size), &hands, |b, hands| {
+            b.iter(|| {
+                for hand in hands {
+                    black_box(evaluate_7cards(black_box(hand)));
+                }
+            })
+        });
     }
 
     group.finish();
@@ -170,4 +166,3 @@ criterion_group!(
 );
 
 criterion_main!(benches);
-

@@ -194,7 +194,6 @@ const fn generate_unique5_table() -> [u16; 8192] {
     table
 }
 
-
 /// Evalúa una mano de 5 cartas flush (todas del mismo palo)
 #[inline]
 pub fn evaluate_flush(rank_bits: u32) -> HandRank {
@@ -220,7 +219,6 @@ pub fn evaluate_unique(rank_bits: u32) -> HandRank {
 pub const fn count_bits(x: u32) -> u32 {
     x.count_ones()
 }
-
 
 /// Calcula el producto de primos desde los valores de las cartas
 #[inline]
@@ -286,4 +284,3 @@ mod tests {
         assert_eq!(product, 1681);
     }
 }
-

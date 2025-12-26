@@ -10,15 +10,15 @@ use std::fmt;
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 #[repr(u8)]
 pub enum HandCategory {
-    StraightFlush = 1,  // Incluye Royal Flush
-    FourOfAKind = 2,    // Poker
-    FullHouse = 3,      // Full
-    Flush = 4,          // Color
-    Straight = 5,       // Escalera
-    ThreeOfAKind = 6,   // Trío
-    TwoPair = 7,        // Doble pareja
-    OnePair = 8,        // Pareja
-    HighCard = 9,       // Carta alta
+    StraightFlush = 1, // Incluye Royal Flush
+    FourOfAKind = 2,   // Poker
+    FullHouse = 3,     // Full
+    Flush = 4,         // Color
+    Straight = 5,      // Escalera
+    ThreeOfAKind = 6,  // Trío
+    TwoPair = 7,       // Doble pareja
+    OnePair = 8,       // Pareja
+    HighCard = 9,      // Carta alta
 }
 
 impl HandCategory {
@@ -250,10 +250,7 @@ mod tests {
     #[test]
     fn test_category_boundaries() {
         // Straight Flush: 1-10
-        assert_eq!(
-            HandRank::new(10).category(),
-            HandCategory::StraightFlush
-        );
+        assert_eq!(HandRank::new(10).category(), HandCategory::StraightFlush);
         assert_eq!(HandRank::new(11).category(), HandCategory::FourOfAKind);
 
         // Four of a Kind: 11-166
@@ -281,4 +278,3 @@ mod tests {
         assert_eq!(HandCategory::FullHouse.name_es(), "Full");
     }
 }
-

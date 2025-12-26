@@ -514,4 +514,3 @@ mod tests {
         assert_eq!(ace_spades.prime(), 41);
     }
 }
-
