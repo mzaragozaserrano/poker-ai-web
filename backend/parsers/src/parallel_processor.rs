@@ -494,3 +494,4 @@ Total pot 0.03€ | No rake
         assert_eq!(result.failed_files, 2);
     }
 }
+

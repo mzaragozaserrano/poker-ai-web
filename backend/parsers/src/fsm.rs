@@ -845,3 +845,4 @@ Seat 2: thesmoy (button) won 0.32€
         assert_eq!(card.suit, 'h');
     }
 }
+

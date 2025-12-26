@@ -18,3 +18,5 @@ $env:DEBUG = "true"
 poetry run uvicorn app.main:app --host $Host --port $Port --reload
 
 Write-Host "Server stopped." -ForegroundColor Yellow
+
+

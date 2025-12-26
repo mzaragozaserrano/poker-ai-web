@@ -187,3 +187,5 @@ rayon = "1.7"   # Paralelización (integración)
 - [ ] Integración con WebSocket para notificar a la UI en tiempo real
 - [ ] Modo "catch-up" para procesar archivos existentes al inicio
 
+
+

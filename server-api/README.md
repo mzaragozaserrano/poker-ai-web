@@ -131,3 +131,5 @@ See `docs/specs/ffi-contract.md` for the interface specification between Python 
 - Parquet files are used for persistent storage
 - The API is designed for a single local user (127.0.0.1 only)
 - Data never leaves the local machine
+
+

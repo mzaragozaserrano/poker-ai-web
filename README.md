@@ -184,10 +184,18 @@ Los datos se persisten en formato Parquet con particionamiento por fecha para op
 
 La documentación completa del proyecto se encuentra en el directorio `docs/`:
 
-- **[Arquitectura](docs/project/architecture.md)**: Especificaciones técnicas y estructura del proyecto
+### Visión General y Diseño
 - **[Project Brief](docs/project/project-brief.md)**: Visión general y objetivos del proyecto
 - **[Roadmap](docs/project/roadmap.md)**: Plan de implementación detallado
-- **[UI Foundations](docs/project/ui-foundations.md)**: Guía de diseño y paleta de colores
+
+### Arquitectura
+- **[Arquitectura General](docs/project/architecture.md)**: Especificaciones técnicas y estructura del sistema
+- **[Arquitectura Frontend](docs/project/frontend-architecture.md)**: Organización interna del módulo React
+
+### Especificaciones de Diseño
+- **[UI Foundations](docs/project/ui-foundations.md)**: Guía de diseño, paleta de colores y componentes visuales
+
+### Especificaciones Técnicas
 - **[API Specification](docs/specs/api-spec.md)**: Contratos de endpoints REST
 - **[DB Schema](docs/specs/db-schema.md)**: Esquema completo de base de datos
 - **[Winamax Spec](docs/winamax/winamax-spec.md)**: Especificación del formato de historiales Winamax
