@@ -208,7 +208,6 @@ impl Card {
 
         Card(prime | rank_bits | suit_bit | rank_bit)
     }
-
 }
 
 impl std::str::FromStr for Card {
@@ -227,7 +226,6 @@ impl std::str::FromStr for Card {
 }
 
 impl Card {
-
     /// Crea una carta desde un índice (0-51)
     #[inline]
     pub const fn from_index(index: u8) -> Option<Card> {
