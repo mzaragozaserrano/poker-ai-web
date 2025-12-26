@@ -9,7 +9,9 @@
 //! ```
 
 use criterion::{black_box, criterion_group, criterion_main, BenchmarkId, Criterion};
-use poker_math::hand_evaluator::{evaluate_5cards, evaluate_7cards, Card, Deck};
+use poker_math::hand_evaluator::{
+    evaluate_5cards, evaluate_7cards, evaluate_7cards_lookup, is_lookup_table_loaded, Card, Deck,
+};
 
 /// Genera manos aleatorias para benchmarking
 fn generate_random_5card_hands(count: usize) -> Vec<[Card; 5]> {
@@ -156,10 +158,57 @@ fn bench_throughput(c: &mut Criterion) {
     });
 }
 
+/// Benchmark de evaluación de 7 cartas con lookup table O(1)
+fn bench_evaluate_7cards_lookup(c: &mut Criterion) {
+    let hands = generate_random_7card_hands(1000);
+
+    // Verificar si la tabla está cargada
+    let table_loaded = is_lookup_table_loaded();
+    println!(
+        "\n[INFO] Lookup table cargada: {} (si es false, usa fallback iterativo)",
+        table_loaded
+    );
+
+    c.bench_function("evaluate_7cards_lookup", |b| {
+        b.iter(|| {
+            for hand in &hands {
+                black_box(evaluate_7cards_lookup(black_box(hand)));
+            }
+        })
+    });
+}
+
+/// Benchmark comparativo: iterativo vs lookup
+fn bench_7cards_comparison(c: &mut Criterion) {
+    let hands = generate_random_7card_hands(1000);
+
+    let mut group = c.benchmark_group("7cards_comparison");
+
+    group.bench_function("iterative", |b| {
+        b.iter(|| {
+            for hand in &hands {
+                black_box(evaluate_7cards(black_box(hand)));
+            }
+        })
+    });
+
+    group.bench_function("lookup", |b| {
+        b.iter(|| {
+            for hand in &hands {
+                black_box(evaluate_7cards_lookup(black_box(hand)));
+            }
+        })
+    });
+
+    group.finish();
+}
+
 criterion_group!(
     benches,
     bench_evaluate_5cards,
     bench_evaluate_7cards,
+    bench_evaluate_7cards_lookup,
+    bench_7cards_comparison,
     bench_batch_evaluation,
     bench_specific_hands,
     bench_throughput,

@@ -36,11 +36,16 @@ mod cards;
 mod evaluator;
 mod hand_rank;
 mod lookup;
+pub mod lookup_7cards;
 
 // Re-exports públicos
 pub use cards::{Card, Deck, Rank, Suit, CARDS, PRIMES};
 pub use evaluator::{evaluate, evaluate_5cards, evaluate_6cards, evaluate_7cards};
 pub use hand_rank::{HandCategory, HandRank};
+pub use lookup_7cards::{
+    cards_to_index, evaluate_7cards_lookup, generate_lookup_table, index_to_cards,
+    is_lookup_table_loaded, TOTAL_7CARD_COMBOS,
+};
 
 /// Evalúa una mano desde strings de cartas
 ///

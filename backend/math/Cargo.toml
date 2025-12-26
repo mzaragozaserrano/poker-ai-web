@@ -21,6 +21,11 @@ ndarray-stats = "0.5"
 # Generacion de numeros aleatorios
 rand = "0.8"
 
+# Perfect Hash Table de 7 cartas
+once_cell = "1.19"
+memmap2 = "0.9"
+bytemuck = { version = "1.14", features = ["derive"] }
+
 [dev-dependencies]
 criterion = "0.5"
 rand_chacha = "0.3"
@@ -28,4 +33,8 @@ rand_chacha = "0.3"
 [[bench]]
 name = "evaluator_benchmark"
 harness = false
+
+[[bin]]
+name = "generate_table"
+path = "src/bin/generate_table.rs"
 
