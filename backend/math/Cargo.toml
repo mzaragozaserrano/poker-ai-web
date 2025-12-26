@@ -20,6 +20,7 @@ ndarray-stats = "0.5"
 
 # Generacion de numeros aleatorios
 rand = "0.8"
+rand_chacha = "0.3"
 
 # Perfect Hash Table de 7 cartas
 once_cell = "1.19"
