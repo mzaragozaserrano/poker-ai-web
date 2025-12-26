@@ -260,11 +260,9 @@ fn rank_trips(product: u32) -> HandRank {
             let remaining = product / p3;
             // Encontrar los dos kickers
             for (j, &pj) in PRIMES.iter().enumerate() {
-                if remaining % pj == 0 && j != i {
-                    if k_idx < 2 {
-                        kickers[k_idx] = j;
-                        k_idx += 1;
-                    }
+                if remaining % pj == 0 && j != i && k_idx < 2 {
+                    kickers[k_idx] = j;
+                    k_idx += 1;
                 }
             }
             break;
@@ -337,11 +335,9 @@ fn evaluate_4_unique(prime_product: u32) -> HandRank {
         let p2 = p * p;
         if prime_product % p2 == 0 {
             pair_rank = i;
-        } else if prime_product % p == 0 {
-            if k_idx < 3 {
-                kickers[k_idx] = i;
-                k_idx += 1;
-            }
+        } else if prime_product % p == 0 && k_idx < 3 {
+            kickers[k_idx] = i;
+            k_idx += 1;
         }
     }
 
@@ -461,18 +457,14 @@ pub fn evaluate(cards: &[Card]) -> Option<HandRank> {
 mod tests {
     use super::*;
 
-    fn cards_from_str(s: &str) -> Vec<Card> {
-        s.split_whitespace().filter_map(Card::from_str).collect()
-    }
-
     #[test]
     fn test_royal_flush() {
         let cards: [Card; 5] = [
-            Card::from_str("As").unwrap(),
-            Card::from_str("Ks").unwrap(),
-            Card::from_str("Qs").unwrap(),
-            Card::from_str("Js").unwrap(),
-            Card::from_str("Ts").unwrap(),
+            "As".parse().unwrap(),
+            "Ks".parse().unwrap(),
+            "Qs".parse().unwrap(),
+            "Js".parse().unwrap(),
+            "Ts".parse().unwrap(),
         ];
         let rank = evaluate_5cards(&cards);
         assert!(
@@ -487,11 +479,11 @@ mod tests {
     fn test_straight_flush() {
         // 9-high straight flush
         let cards: [Card; 5] = [
-            Card::from_str("9h").unwrap(),
-            Card::from_str("8h").unwrap(),
-            Card::from_str("7h").unwrap(),
-            Card::from_str("6h").unwrap(),
-            Card::from_str("5h").unwrap(),
+            "9h".parse().unwrap(),
+            "8h".parse().unwrap(),
+            "7h".parse().unwrap(),
+            "6h".parse().unwrap(),
+            "5h".parse().unwrap(),
         ];
         let rank = evaluate_5cards(&cards);
         assert!(rank.is_straight_flush());
@@ -502,11 +494,11 @@ mod tests {
     fn test_steel_wheel() {
         // A-2-3-4-5 flush (steel wheel)
         let cards: [Card; 5] = [
-            Card::from_str("5d").unwrap(),
-            Card::from_str("4d").unwrap(),
-            Card::from_str("3d").unwrap(),
-            Card::from_str("2d").unwrap(),
-            Card::from_str("Ad").unwrap(),
+            "5d".parse().unwrap(),
+            "4d".parse().unwrap(),
+            "3d".parse().unwrap(),
+            "2d".parse().unwrap(),
+            "Ad".parse().unwrap(),
         ];
         let rank = evaluate_5cards(&cards);
         assert!(rank.is_straight_flush());
@@ -516,11 +508,11 @@ mod tests {
     #[test]
     fn test_four_of_a_kind() {
         let cards: [Card; 5] = [
-            Card::from_str("Ah").unwrap(),
-            Card::from_str("As").unwrap(),
-            Card::from_str("Ad").unwrap(),
-            Card::from_str("Ac").unwrap(),
-            Card::from_str("Kh").unwrap(),
+            "Ah".parse().unwrap(),
+            "As".parse().unwrap(),
+            "Ad".parse().unwrap(),
+            "Ac".parse().unwrap(),
+            "Kh".parse().unwrap(),
         ];
         let rank = evaluate_5cards(&cards);
         assert!(rank.is_four_of_a_kind(), "Expected Quads, got {:?}", rank);
@@ -529,11 +521,11 @@ mod tests {
     #[test]
     fn test_full_house() {
         let cards: [Card; 5] = [
-            Card::from_str("Kh").unwrap(),
-            Card::from_str("Ks").unwrap(),
-            Card::from_str("Kd").unwrap(),
-            Card::from_str("Qc").unwrap(),
-            Card::from_str("Qh").unwrap(),
+            "Kh".parse().unwrap(),
+            "Ks".parse().unwrap(),
+            "Kd".parse().unwrap(),
+            "Qc".parse().unwrap(),
+            "Qh".parse().unwrap(),
         ];
         let rank = evaluate_5cards(&cards);
         assert!(rank.is_full_house(), "Expected Full House, got {:?}", rank);
@@ -542,11 +534,11 @@ mod tests {
     #[test]
     fn test_flush() {
         let cards: [Card; 5] = [
-            Card::from_str("Ah").unwrap(),
-            Card::from_str("Jh").unwrap(),
-            Card::from_str("8h").unwrap(),
-            Card::from_str("5h").unwrap(),
-            Card::from_str("2h").unwrap(),
+            "Ah".parse().unwrap(),
+            "Jh".parse().unwrap(),
+            "8h".parse().unwrap(),
+            "5h".parse().unwrap(),
+            "2h".parse().unwrap(),
         ];
         let rank = evaluate_5cards(&cards);
         assert!(rank.is_flush(), "Expected Flush, got {:?}", rank);
@@ -556,11 +548,11 @@ mod tests {
     fn test_straight() {
         // Broadway straight (no flush)
         let cards: [Card; 5] = [
-            Card::from_str("As").unwrap(),
-            Card::from_str("Kh").unwrap(),
-            Card::from_str("Qd").unwrap(),
-            Card::from_str("Jc").unwrap(),
-            Card::from_str("Ts").unwrap(),
+            "As".parse().unwrap(),
+            "Kh".parse().unwrap(),
+            "Qd".parse().unwrap(),
+            "Jc".parse().unwrap(),
+            "Ts".parse().unwrap(),
         ];
         let rank = evaluate_5cards(&cards);
         assert!(rank.is_straight(), "Expected Straight, got {:?}", rank);
@@ -570,11 +562,11 @@ mod tests {
     fn test_wheel_straight() {
         // A-2-3-4-5 (no flush)
         let cards: [Card; 5] = [
-            Card::from_str("5s").unwrap(),
-            Card::from_str("4h").unwrap(),
-            Card::from_str("3d").unwrap(),
-            Card::from_str("2c").unwrap(),
-            Card::from_str("As").unwrap(),
+            "5s".parse().unwrap(),
+            "4h".parse().unwrap(),
+            "3d".parse().unwrap(),
+            "2c".parse().unwrap(),
+            "As".parse().unwrap(),
         ];
         let rank = evaluate_5cards(&cards);
         assert!(
@@ -587,11 +579,11 @@ mod tests {
     #[test]
     fn test_three_of_a_kind() {
         let cards: [Card; 5] = [
-            Card::from_str("Qh").unwrap(),
-            Card::from_str("Qs").unwrap(),
-            Card::from_str("Qd").unwrap(),
-            Card::from_str("7c").unwrap(),
-            Card::from_str("2h").unwrap(),
+            "Qh".parse().unwrap(),
+            "Qs".parse().unwrap(),
+            "Qd".parse().unwrap(),
+            "7c".parse().unwrap(),
+            "2h".parse().unwrap(),
         ];
         let rank = evaluate_5cards(&cards);
         assert!(rank.is_three_of_a_kind(), "Expected Trips, got {:?}", rank);
@@ -600,11 +592,11 @@ mod tests {
     #[test]
     fn test_two_pair() {
         let cards: [Card; 5] = [
-            Card::from_str("Ah").unwrap(),
-            Card::from_str("As").unwrap(),
-            Card::from_str("Kd").unwrap(),
-            Card::from_str("Kc").unwrap(),
-            Card::from_str("Qh").unwrap(),
+            "Ah".parse().unwrap(),
+            "As".parse().unwrap(),
+            "Kd".parse().unwrap(),
+            "Kc".parse().unwrap(),
+            "Qh".parse().unwrap(),
         ];
         let rank = evaluate_5cards(&cards);
         assert!(rank.is_two_pair(), "Expected Two Pair, got {:?}", rank);
@@ -613,11 +605,11 @@ mod tests {
     #[test]
     fn test_one_pair() {
         let cards: [Card; 5] = [
-            Card::from_str("Jh").unwrap(),
-            Card::from_str("Js").unwrap(),
-            Card::from_str("9d").unwrap(),
-            Card::from_str("5c").unwrap(),
-            Card::from_str("2h").unwrap(),
+            "Jh".parse().unwrap(),
+            "Js".parse().unwrap(),
+            "9d".parse().unwrap(),
+            "5c".parse().unwrap(),
+            "2h".parse().unwrap(),
         ];
         let rank = evaluate_5cards(&cards);
         assert!(rank.is_one_pair(), "Expected One Pair, got {:?}", rank);
@@ -626,11 +618,11 @@ mod tests {
     #[test]
     fn test_high_card() {
         let cards: [Card; 5] = [
-            Card::from_str("Ah").unwrap(),
-            Card::from_str("Ks").unwrap(),
-            Card::from_str("9d").unwrap(),
-            Card::from_str("5c").unwrap(),
-            Card::from_str("2h").unwrap(),
+            "Ah".parse().unwrap(),
+            "Ks".parse().unwrap(),
+            "9d".parse().unwrap(),
+            "5c".parse().unwrap(),
+            "2h".parse().unwrap(),
         ];
         let rank = evaluate_5cards(&cards);
         assert!(rank.is_high_card(), "Expected High Card, got {:?}", rank);
@@ -640,13 +632,13 @@ mod tests {
     fn test_evaluate_7cards() {
         // 7 cartas que incluyen un flush
         let cards: [Card; 7] = [
-            Card::from_str("Ah").unwrap(),
-            Card::from_str("Kh").unwrap(),
-            Card::from_str("Qh").unwrap(),
-            Card::from_str("Jh").unwrap(),
-            Card::from_str("9h").unwrap(),
-            Card::from_str("2c").unwrap(),
-            Card::from_str("3d").unwrap(),
+            "Ah".parse().unwrap(),
+            "Kh".parse().unwrap(),
+            "Qh".parse().unwrap(),
+            "Jh".parse().unwrap(),
+            "9h".parse().unwrap(),
+            "2c".parse().unwrap(),
+            "3d".parse().unwrap(),
         ];
         let rank = evaluate_7cards(&cards);
         assert!(
@@ -660,13 +652,13 @@ mod tests {
     fn test_evaluate_7cards_finds_best() {
         // 7 cartas con straight flush escondido
         let cards: [Card; 7] = [
-            Card::from_str("9s").unwrap(),
-            Card::from_str("8s").unwrap(),
-            Card::from_str("7s").unwrap(),
-            Card::from_str("6s").unwrap(),
-            Card::from_str("5s").unwrap(),
-            Card::from_str("Ah").unwrap(),
-            Card::from_str("Kd").unwrap(),
+            "9s".parse().unwrap(),
+            "8s".parse().unwrap(),
+            "7s".parse().unwrap(),
+            "6s".parse().unwrap(),
+            "5s".parse().unwrap(),
+            "Ah".parse().unwrap(),
+            "Kd".parse().unwrap(),
         ];
         let rank = evaluate_7cards(&cards);
         assert!(
@@ -679,19 +671,19 @@ mod tests {
     #[test]
     fn test_hand_comparison() {
         let royal: [Card; 5] = [
-            Card::from_str("As").unwrap(),
-            Card::from_str("Ks").unwrap(),
-            Card::from_str("Qs").unwrap(),
-            Card::from_str("Js").unwrap(),
-            Card::from_str("Ts").unwrap(),
+            "As".parse().unwrap(),
+            "Ks".parse().unwrap(),
+            "Qs".parse().unwrap(),
+            "Js".parse().unwrap(),
+            "Ts".parse().unwrap(),
         ];
 
         let pair: [Card; 5] = [
-            Card::from_str("Ah").unwrap(),
-            Card::from_str("As").unwrap(),
-            Card::from_str("Kd").unwrap(),
-            Card::from_str("Qc").unwrap(),
-            Card::from_str("Jh").unwrap(),
+            "Ah".parse().unwrap(),
+            "As".parse().unwrap(),
+            "Kd".parse().unwrap(),
+            "Qc".parse().unwrap(),
+            "Jh".parse().unwrap(),
         ];
 
         let royal_rank = evaluate_5cards(&royal);

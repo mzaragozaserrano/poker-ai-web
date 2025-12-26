@@ -10,6 +10,7 @@
 
 use criterion::{black_box, criterion_group, criterion_main, BenchmarkId, Criterion};
 use poker_math::hand_evaluator::{evaluate_5cards, evaluate_7cards, Card, Deck};
+use std::str::FromStr;
 
 /// Genera manos aleatorias para benchmarking
 fn generate_random_5card_hands(count: usize) -> Vec<[Card; 5]> {
@@ -98,29 +99,29 @@ fn bench_batch_evaluation(c: &mut Criterion) {
 fn bench_specific_hands(c: &mut Criterion) {
     // Royal Flush
     let royal_flush: [Card; 5] = [
-        Card::from_str("As").unwrap(),
-        Card::from_str("Ks").unwrap(),
-        Card::from_str("Qs").unwrap(),
-        Card::from_str("Js").unwrap(),
-        Card::from_str("Ts").unwrap(),
+        "As".parse().unwrap(),
+        "Ks".parse().unwrap(),
+        "Qs".parse().unwrap(),
+        "Js".parse().unwrap(),
+        "Ts".parse().unwrap(),
     ];
 
     // Pair
     let pair: [Card; 5] = [
-        Card::from_str("Ah").unwrap(),
-        Card::from_str("As").unwrap(),
-        Card::from_str("Kd").unwrap(),
-        Card::from_str("Qc").unwrap(),
-        Card::from_str("Jh").unwrap(),
+        "Ah".parse().unwrap(),
+        "As".parse().unwrap(),
+        "Kd".parse().unwrap(),
+        "Qc".parse().unwrap(),
+        "Jh".parse().unwrap(),
     ];
 
     // High Card
     let high_card: [Card; 5] = [
-        Card::from_str("Ah").unwrap(),
-        Card::from_str("Ks").unwrap(),
-        Card::from_str("9d").unwrap(),
-        Card::from_str("5c").unwrap(),
-        Card::from_str("2h").unwrap(),
+        "Ah".parse().unwrap(),
+        "Ks".parse().unwrap(),
+        "9d".parse().unwrap(),
+        "5c".parse().unwrap(),
+        "2h".parse().unwrap(),
     ];
 
     let mut group = c.benchmark_group("specific_hands");

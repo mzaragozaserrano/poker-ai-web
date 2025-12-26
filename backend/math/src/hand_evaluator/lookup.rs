@@ -106,11 +106,9 @@ const fn generate_flush_table() -> [u16; 8192] {
     // Usamos un enfoque más simple: iterar todas las combinaciones
     loop {
         // Encontrar la siguiente combinación de 5 bits
-        if popcount(bits) == 5 && !is_straight(bits) {
-            if table[bits as usize] == 0 {
-                table[bits as usize] = flush_rank;
-                flush_rank += 1;
-            }
+        if popcount(bits) == 5 && !is_straight(bits) && table[bits as usize] == 0 {
+            table[bits as usize] = flush_rank;
+            flush_rank += 1;
         }
 
         if bits >= 0x1FFF {
@@ -166,11 +164,9 @@ const fn generate_unique5_table() -> [u16; 8192] {
     let mut bits: u32 = 0b11111;
 
     loop {
-        if popcount(bits) == 5 && !is_straight(bits) {
-            if table[bits as usize] == 0 {
-                table[bits as usize] = high_rank;
-                high_rank += 1;
-            }
+        if popcount(bits) == 5 && !is_straight(bits) && table[bits as usize] == 0 {
+            table[bits as usize] = high_rank;
+            high_rank += 1;
         }
 
         if bits >= 0x1FFF {

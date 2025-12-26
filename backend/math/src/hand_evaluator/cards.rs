@@ -209,17 +209,24 @@ impl Card {
         Card(prime | rank_bits | suit_bit | rank_bit)
     }
 
-    /// Crea una carta desde un string ("As", "Kh", "2c", etc.)
-    pub fn from_str(s: &str) -> Option<Self> {
+}
+
+impl std::str::FromStr for Card {
+    type Err = ();
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
         let mut chars = s.chars();
-        let rank_char = chars.next()?;
-        let suit_char = chars.next()?;
+        let rank_char = chars.next().ok_or(())?;
+        let suit_char = chars.next().ok_or(())?;
 
-        let rank = Rank::from_char(rank_char)?;
-        let suit = Suit::from_char(suit_char)?;
+        let rank = Rank::from_char(rank_char).ok_or(())?;
+        let suit = Suit::from_char(suit_char).ok_or(())?;
 
-        Some(Card::new(rank, suit))
+        Ok(Card::new(rank, suit))
     }
+}
+
+impl Card {
 
     /// Crea una carta desde un índice (0-51)
     #[inline]
@@ -449,15 +456,15 @@ mod tests {
 
     #[test]
     fn test_card_from_str() {
-        let card = Card::from_str("As").unwrap();
+        let card: Card = "As".parse().unwrap();
         assert_eq!(card.rank(), Rank::Ace);
         assert_eq!(card.suit(), Suit::Spades);
 
-        let card = Card::from_str("2c").unwrap();
+        let card: Card = "2c".parse().unwrap();
         assert_eq!(card.rank(), Rank::Two);
         assert_eq!(card.suit(), Suit::Clubs);
 
-        let card = Card::from_str("Th").unwrap();
+        let card: Card = "Th".parse().unwrap();
         assert_eq!(card.rank(), Rank::Ten);
         assert_eq!(card.suit(), Suit::Hearts);
     }
@@ -498,8 +505,7 @@ mod tests {
     #[test]
     fn test_cards_lookup() {
         // Verificar que la lookup table tiene todas las cartas
-        for i in 0..52 {
-            let card = CARDS[i];
+        for (i, card) in CARDS.iter().enumerate() {
             assert_eq!(card.index(), i as u8);
         }
     }

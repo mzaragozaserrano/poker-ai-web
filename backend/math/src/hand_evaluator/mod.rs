@@ -14,11 +14,11 @@
 //!
 //! // Crear cartas
 //! let cards: [Card; 5] = [
-//!     Card::from_str("As").unwrap(),
-//!     Card::from_str("Ks").unwrap(),
-//!     Card::from_str("Qs").unwrap(),
-//!     Card::from_str("Js").unwrap(),
-//!     Card::from_str("Ts").unwrap(),
+//!     "As".parse().unwrap(),
+//!     "Ks".parse().unwrap(),
+//!     "Qs".parse().unwrap(),
+//!     "Js".parse().unwrap(),
+//!     "Ts".parse().unwrap(),
 //! ];
 //!
 //! // Evaluar
@@ -60,7 +60,7 @@ pub use hand_rank::{HandCategory, HandRank};
 pub fn evaluate_from_strings(cards_str: &str) -> Option<HandRank> {
     let cards: Vec<Card> = cards_str
         .split_whitespace()
-        .filter_map(Card::from_str)
+        .filter_map(|s| s.parse().ok())
         .collect();
 
     evaluate(&cards)
@@ -96,6 +96,8 @@ mod tests {
     }
 
     fn cards_from_str(s: &str) -> Vec<Card> {
-        s.split_whitespace().filter_map(Card::from_str).collect()
+        s.split_whitespace()
+            .filter_map(|s| s.parse().ok())
+            .collect()
     }
 }
