@@ -287,10 +287,10 @@ fn run_monte_carlo_parallel(
             }
 
             // Completar las manos con las cartas del runout
-            for i in 0..cards_needed {
-                let card_idx = board.len() + 2 + i;
-                hero_hand[card_idx] = deck[i];
-                villain_hand[card_idx] = deck[i];
+            for (idx, card) in deck.iter().take(cards_needed).enumerate() {
+                let card_idx = board.len() + 2 + idx;
+                hero_hand[card_idx] = *card;
+                villain_hand[card_idx] = *card;
             }
 
             // Evaluar manos
@@ -394,10 +394,10 @@ pub fn simulate_single<R: Rng>(
         villain_hand[i + 2] = card;
     }
 
-    for i in 0..cards_needed {
-        let card_idx = board.len() + 2 + i;
-        hero_hand[card_idx] = remaining_deck[i];
-        villain_hand[card_idx] = remaining_deck[i];
+    for (idx, card) in remaining_deck.iter().take(cards_needed).enumerate() {
+        let card_idx = board.len() + 2 + idx;
+        hero_hand[card_idx] = *card;
+        villain_hand[card_idx] = *card;
     }
 
     let hero_rank = evaluator.evaluate_7cards(&hero_hand);

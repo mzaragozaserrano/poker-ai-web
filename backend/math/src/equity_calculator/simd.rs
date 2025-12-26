@@ -221,10 +221,11 @@ impl SimdEvaluator {
 
         // Procesar elementos restantes
         let remaining_start = chunks * 16;
-        for i in remaining_start..rankings.len() {
-            if rankings[i] > global_max {
-                global_max = rankings[i];
-                global_idx = i;
+        for (i, &rank) in rankings.iter().skip(remaining_start).enumerate() {
+            let actual_idx = remaining_start + i;
+            if rank > global_max {
+                global_max = rank;
+                global_idx = actual_idx;
             }
         }
 
@@ -234,6 +235,10 @@ impl SimdEvaluator {
     /// Cuenta victorias en paralelo usando SIMD
     ///
     /// Dado un array de resultados (-1, 0, 1), cuenta cuántos son positivos.
+    ///
+    /// # Safety
+    /// Esta función requiere AVX2. El llamador debe verificar que AVX2 está disponible
+    /// usando `is_avx2_available()` antes de llamar esta función.
     #[cfg(target_arch = "x86_64")]
     #[target_feature(enable = "avx2")]
     pub unsafe fn count_wins_simd(&self, results: &[i8]) -> (u64, u64, u64) {
@@ -305,8 +310,7 @@ pub unsafe fn shuffle_deck_partial_simd(
     // porque los swaps son dependientes del índice aleatorio.
     // Sin embargo, podemos optimizar la generación de índices.
 
-    for i in 0..num_cards.min(random_indices.len()) {
-        let j = random_indices[i];
+    for (i, &j) in random_indices.iter().take(num_cards).enumerate() {
         if j < deck.len() && i < deck.len() {
             deck.swap(i, j);
         }

@@ -345,10 +345,11 @@ fn evaluate_4_unique(prime_product: u32) -> HandRank {
     kickers.sort_by(|a, b| b.cmp(a));
 
     // Calcular offset (simplificado)
-    let pair_offset = 12 - pair_rank;
-    let k1 = 11 - kickers[0];
-    let k2 = 10 - kickers[1];
-    let k3 = 9 - kickers[2];
+    // Usar saturating_sub para prevenir overflow si kickers están fuera de rango
+    let pair_offset = 12usize.saturating_sub(pair_rank);
+    let k1 = 11usize.saturating_sub(kickers[0]);
+    let k2 = 10usize.saturating_sub(kickers[1]);
+    let k3 = 9usize.saturating_sub(kickers[2]);
 
     let rank = 3326 + pair_offset * 220 + k1 * 55 + k2 * 10 + k3;
     HandRank::new(rank.min(6185) as u16)
