@@ -171,11 +171,12 @@ fn rank_quads(product: u32) -> HandRank {
     // Base = 11
     // Inversión: (12 - quad_rank) * 12 + (12 - kicker_rank) - ajuste
 
-    let quad_offset = 12 - quad_rank;
+    // Usar saturating_sub para prevenir overflow
+    let quad_offset = 12usize.saturating_sub(quad_rank);
     let kicker_offset = if kicker_rank > quad_rank {
-        12 - kicker_rank
+        12usize.saturating_sub(kicker_rank)
     } else {
-        12 - kicker_rank - 1
+        12usize.saturating_sub(kicker_rank).saturating_sub(1)
     };
 
     let rank = 11 + quad_offset * 12 + kicker_offset;
@@ -212,11 +213,12 @@ fn rank_full_house(product: u32) -> HandRank {
     // AAAKK es el mejor (rank 167), 22233 es el peor (rank 322)
     // Ordenados por: trips_rank DESC, pair_rank DESC
 
-    let trips_offset = 12 - trips_rank;
+    // Usar saturating_sub para prevenir overflow
+    let trips_offset = 12usize.saturating_sub(trips_rank);
     let pair_offset = if pair_rank > trips_rank {
-        12 - pair_rank
+        12usize.saturating_sub(pair_rank)
     } else {
-        12 - pair_rank - 1
+        12usize.saturating_sub(pair_rank).saturating_sub(1)
     };
 
     let rank = 167 + trips_offset * 12 + pair_offset;
@@ -275,9 +277,10 @@ fn rank_trips(product: u32) -> HandRank {
     }
 
     // Calcular offset
-    let trips_offset = 12 - trips_rank;
-    let kicker1_offset = 11 - kickers[0];
-    let kicker2_offset = 10 - kickers[1];
+    // Usar saturating_sub para prevenir overflow si valores están fuera de rango
+    let trips_offset = 12usize.saturating_sub(trips_rank);
+    let kicker1_offset = 11usize.saturating_sub(kickers[0]);
+    let kicker2_offset = 10usize.saturating_sub(kickers[1]);
 
     let rank = 1610 + trips_offset * 66 + kicker1_offset * 11 + kicker2_offset;
     HandRank::new(rank.min(2467) as u16)
@@ -312,9 +315,10 @@ fn rank_two_pair(product: u32) -> HandRank {
     }
 
     // Calcular offset
-    let high_pair = 12 - pairs[0];
-    let low_pair = 11 - pairs[1];
-    let kicker_offset = 10 - kicker;
+    // Usar saturating_sub para prevenir overflow si valores están fuera de rango
+    let high_pair = 12usize.saturating_sub(pairs[0]);
+    let low_pair = 11usize.saturating_sub(pairs[1]);
+    let kicker_offset = 10usize.saturating_sub(kicker);
 
     let rank = 2468 + high_pair * 78 + low_pair * 11 + kicker_offset;
     HandRank::new(rank.min(3325) as u16)
@@ -345,10 +349,11 @@ fn evaluate_4_unique(prime_product: u32) -> HandRank {
     kickers.sort_by(|a, b| b.cmp(a));
 
     // Calcular offset (simplificado)
-    let pair_offset = 12 - pair_rank;
-    let k1 = 11 - kickers[0];
-    let k2 = 10 - kickers[1];
-    let k3 = 9 - kickers[2];
+    // Usar saturating_sub para prevenir overflow si kickers están fuera de rango
+    let pair_offset = 12usize.saturating_sub(pair_rank);
+    let k1 = 11usize.saturating_sub(kickers[0]);
+    let k2 = 10usize.saturating_sub(kickers[1]);
+    let k3 = 9usize.saturating_sub(kickers[2]);
 
     let rank = 3326 + pair_offset * 220 + k1 * 55 + k2 * 10 + k3;
     HandRank::new(rank.min(6185) as u16)
