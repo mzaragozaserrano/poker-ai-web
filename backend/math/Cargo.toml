@@ -23,4 +23,9 @@ rand = "0.8"
 
 [dev-dependencies]
 criterion = "0.5"
+rand_chacha = "0.3"
+
+[[bench]]
+name = "evaluator_benchmark"
+harness = false
 
