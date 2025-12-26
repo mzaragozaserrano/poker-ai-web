@@ -207,10 +207,7 @@ fn bench_7cards_comparison(c: &mut Criterion) {
 /// Benchmark de Monte Carlo para cálculo de equity
 fn bench_monte_carlo_equity(c: &mut Criterion) {
     println!("\n[INFO] AVX2 disponible: {}", is_avx2_available());
-    println!(
-        "[INFO] Lookup table cargada: {}",
-        is_lookup_table_loaded()
-    );
+    println!("[INFO] Lookup table cargada: {}", is_lookup_table_loaded());
 
     let mut group = c.benchmark_group("monte_carlo");
 

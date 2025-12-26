@@ -33,5 +33,3 @@ pub use monte_carlo::{
     calculate_equity, calculate_equity_multiway, simulate_single, EquityResult, MonteCarloConfig,
 };
 pub use simd::{is_avx2_available, SimdEvaluator};
-
-

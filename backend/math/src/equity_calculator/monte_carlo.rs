@@ -134,18 +134,12 @@ pub fn calculate_equity_with_config(
     config: &MonteCarloConfig,
 ) -> EquityResult {
     // Parsear cartas
-    let hero: Vec<Card> = hero_cards
-        .iter()
-        .filter_map(|s| s.parse().ok())
-        .collect();
+    let hero: Vec<Card> = hero_cards.iter().filter_map(|s| s.parse().ok()).collect();
     let villain: Vec<Card> = villain_cards
         .iter()
         .filter_map(|s| s.parse().ok())
         .collect();
-    let board: Vec<Card> = board_cards
-        .iter()
-        .filter_map(|s| s.parse().ok())
-        .collect();
+    let board: Vec<Card> = board_cards.iter().filter_map(|s| s.parse().ok()).collect();
 
     // Validar input
     if hero.len() != 2 || villain.len() != 2 {
@@ -482,8 +476,7 @@ pub fn calculate_equity_multiway(
         let mut local_ties = 0u64;
 
         // Buffers para manos
-        let mut player_hands: Vec<[Card; 7]> =
-            vec![[Card::from_index(0).unwrap(); 7]; num_players];
+        let mut player_hands: Vec<[Card; 7]> = vec![[Card::from_index(0).unwrap(); 7]; num_players];
 
         // Copiar hole cards y board
         for (i, hand) in parsed_hands.iter().enumerate() {
@@ -681,11 +674,8 @@ mod tests {
     #[test]
     fn test_multiway_three_players() {
         // Test con 3 jugadores
-        let equities = calculate_equity_multiway(
-            &[&["As", "Ah"], &["Ks", "Kh"], &["Qs", "Qh"]],
-            &[],
-            30_000,
-        );
+        let equities =
+            calculate_equity_multiway(&[&["As", "Ah"], &["Ks", "Kh"], &["Qs", "Qh"]], &[], 30_000);
 
         assert_eq!(equities.len(), 3);
 
@@ -723,4 +713,3 @@ mod tests {
         );
     }
 }
-

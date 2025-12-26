@@ -12,9 +12,7 @@
 //!
 //! Si AVX2 no está disponible, se usa la evaluación estándar.
 
-use crate::hand_evaluator::{
-    evaluate_7cards_lookup, is_lookup_table_loaded, Card, HandRank,
-};
+use crate::hand_evaluator::{evaluate_7cards_lookup, is_lookup_table_loaded, Card, HandRank};
 
 #[cfg(target_arch = "x86_64")]
 use std::arch::x86_64::*;
@@ -542,4 +540,3 @@ mod tests {
         }
     }
 }
-
