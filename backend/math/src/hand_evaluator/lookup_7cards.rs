@@ -287,13 +287,13 @@ mod tests {
         assert_eq!(binomial[52][7], TOTAL_7CARD_COMBOS as u64);
 
         // C(n,0) = 1
-        for n in 0..=52 {
-            assert_eq!(binomial[n][0], 1);
+        for row in binomial.iter().take(53) {
+            assert_eq!(row[0], 1);
         }
 
         // C(n,1) = n
-        for n in 1..=52 {
-            assert_eq!(binomial[n][1], n as u64);
+        for (n, row) in binomial.iter().enumerate().take(53).skip(1) {
+            assert_eq!(row[1], n as u64);
         }
 
         // C(7,7) = 1
