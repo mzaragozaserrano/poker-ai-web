@@ -53,3 +53,7 @@ __pycache__/
 backend/target/
 **/*.rs.bk
 # Cargo.lock se incluye para garantizar builds reproducibles
+
+# Perfect Hash Table de 7 cartas (muy grande, se genera con cargo run --bin generate_table)
+backend/math/data/lookup_7cards.bin
+**/lookup_7cards.bin
