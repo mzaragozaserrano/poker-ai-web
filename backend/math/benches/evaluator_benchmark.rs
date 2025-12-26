@@ -10,7 +10,6 @@
 
 use criterion::{black_box, criterion_group, criterion_main, BenchmarkId, Criterion};
 use poker_math::hand_evaluator::{evaluate_5cards, evaluate_7cards, Card, Deck};
-use std::str::FromStr;
 
 /// Genera manos aleatorias para benchmarking
 fn generate_random_5card_hands(count: usize) -> Vec<[Card; 5]> {
