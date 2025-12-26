@@ -107,9 +107,8 @@ impl LookupTable {
 
         // Convertir a slice de u16
         // SAFETY: El archivo fue generado con u16 little-endian alineados
-        let data: &[u16] = unsafe {
-            std::slice::from_raw_parts(mmap.as_ptr() as *const u16, TOTAL_7CARD_COMBOS)
-        };
+        let data: &[u16] =
+            unsafe { std::slice::from_raw_parts(mmap.as_ptr() as *const u16, TOTAL_7CARD_COMBOS) };
 
         // Extender lifetime a 'static para el lazy static
         // SAFETY: La tabla vive tanto como el programa
@@ -218,10 +217,7 @@ pub fn is_lookup_table_loaded() -> bool {
 pub fn generate_lookup_table<P: AsRef<Path>>(output_path: P) -> std::io::Result<()> {
     use rayon::prelude::*;
 
-    println!(
-        "Generando tabla de {} combinaciones...",
-        TOTAL_7CARD_COMBOS
-    );
+    println!("Generando tabla de {} combinaciones...", TOTAL_7CARD_COMBOS);
 
     // Crear buffer para toda la tabla
     let mut rankings: Vec<u16> = vec![0u16; TOTAL_7CARD_COMBOS];
@@ -307,16 +303,21 @@ mod tests {
     #[test]
     fn test_index_roundtrip() {
         // Probar algunas combinaciones conocidas
-        let test_indices = [0, 1, 100, 1000, 10000, 100000, 1000000, TOTAL_7CARD_COMBOS - 1];
+        let test_indices = [
+            0,
+            1,
+            100,
+            1000,
+            10000,
+            100000,
+            1000000,
+            TOTAL_7CARD_COMBOS - 1,
+        ];
 
         for &idx in &test_indices {
             let cards = index_to_cards(idx);
             let recovered_idx = cards_to_index(&cards);
-            assert_eq!(
-                idx, recovered_idx,
-                "Roundtrip falló para índice {}",
-                idx
-            );
+            assert_eq!(idx, recovered_idx, "Roundtrip falló para índice {}", idx);
         }
     }
 
@@ -408,7 +409,11 @@ mod tests {
             "3d".parse().unwrap(),
         ];
         let rank = evaluate_7cards_lookup(&royal_flush);
-        assert!(rank.is_royal_flush(), "Expected Royal Flush, got {:?}", rank);
+        assert!(
+            rank.is_royal_flush(),
+            "Expected Royal Flush, got {:?}",
+            rank
+        );
 
         // Straight Flush
         let straight_flush: [Card; 7] = [
@@ -421,7 +426,11 @@ mod tests {
             "Kd".parse().unwrap(),
         ];
         let rank = evaluate_7cards_lookup(&straight_flush);
-        assert!(rank.is_straight_flush(), "Expected Straight Flush, got {:?}", rank);
+        assert!(
+            rank.is_straight_flush(),
+            "Expected Straight Flush, got {:?}",
+            rank
+        );
 
         // Full House
         let full_house: [Card; 7] = [
@@ -473,4 +482,3 @@ mod tests {
         }
     }
 }
-
