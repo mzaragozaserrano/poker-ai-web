@@ -8,7 +8,8 @@
 //! cargo bench --package poker-math
 //! ```
 
-use criterion::{black_box, criterion_group, criterion_main, BenchmarkId, Criterion};
+use criterion::{black_box, criterion_group, criterion_main, BenchmarkId, Criterion, Throughput};
+use poker_math::equity_calculator::{calculate_equity, is_avx2_available, SimdEvaluator};
 use poker_math::hand_evaluator::{
     evaluate_5cards, evaluate_7cards, evaluate_7cards_lookup, is_lookup_table_loaded, Card, Deck,
 };
@@ -203,6 +204,93 @@ fn bench_7cards_comparison(c: &mut Criterion) {
     group.finish();
 }
 
+/// Benchmark de Monte Carlo para cálculo de equity
+fn bench_monte_carlo_equity(c: &mut Criterion) {
+    println!("\n[INFO] AVX2 disponible: {}", is_avx2_available());
+    println!("[INFO] Lookup table cargada: {}", is_lookup_table_loaded());
+
+    let mut group = c.benchmark_group("monte_carlo");
+
+    // Diferentes números de simulaciones
+    for &num_sims in &[1000u32, 10000, 50000, 100000] {
+        group.throughput(Throughput::Elements(num_sims as u64));
+
+        group.bench_with_input(
+            BenchmarkId::new("aa_vs_kk", num_sims),
+            &num_sims,
+            |b, &sims| {
+                b.iter(|| {
+                    let result = calculate_equity(
+                        black_box(&["As", "Ah"]),
+                        black_box(&["Ks", "Kh"]),
+                        black_box(&[]),
+                        black_box(sims),
+                    );
+                    black_box(result.hero_equity)
+                })
+            },
+        );
+    }
+
+    group.finish();
+}
+
+/// Benchmark de Monte Carlo con board parcial
+fn bench_monte_carlo_with_board(c: &mut Criterion) {
+    let mut group = c.benchmark_group("monte_carlo_board");
+
+    // Preflop (5 cartas por simular)
+    group.bench_function("preflop", |b| {
+        b.iter(|| {
+            calculate_equity(
+                black_box(&["As", "Ah"]),
+                black_box(&["Ks", "Kh"]),
+                black_box(&[]),
+                black_box(10000),
+            )
+        })
+    });
+
+    // Flop (2 cartas por simular)
+    group.bench_function("flop", |b| {
+        b.iter(|| {
+            calculate_equity(
+                black_box(&["As", "Ah"]),
+                black_box(&["Ks", "Kh"]),
+                black_box(&["2c", "5d", "9h"]),
+                black_box(10000),
+            )
+        })
+    });
+
+    // Turn (1 carta por simular)
+    group.bench_function("turn", |b| {
+        b.iter(|| {
+            calculate_equity(
+                black_box(&["As", "Ah"]),
+                black_box(&["Ks", "Kh"]),
+                black_box(&["2c", "5d", "9h", "3c"]),
+                black_box(10000),
+            )
+        })
+    });
+
+    group.finish();
+}
+
+/// Benchmark de evaluación batch con SIMD
+fn bench_simd_batch_evaluation(c: &mut Criterion) {
+    let hands = generate_random_7card_hands(1000);
+    let evaluator = SimdEvaluator::new();
+
+    c.bench_function("simd_batch_1000", |b| {
+        b.iter(|| {
+            let results = evaluator.evaluate_batch(black_box(&hands));
+            black_box(results)
+        })
+    });
+}
+
 criterion_group!(
     benches,
     bench_evaluate_5cards,
@@ -212,6 +300,9 @@ criterion_group!(
     bench_batch_evaluation,
     bench_specific_hands,
     bench_throughput,
+    bench_monte_carlo_equity,
+    bench_monte_carlo_with_board,
+    bench_simd_batch_evaluation,
 );
 
 criterion_main!(benches);
