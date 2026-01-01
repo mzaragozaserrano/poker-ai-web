@@ -3,10 +3,10 @@
 ## Estado General
 La Fase 2 (Motor Matemático y Capa de Servicio) continúa. Puente FFI Rust-Python completado.
 
-## Tarea Actual: ISSUE #26
-2.2.2 Crear puente FFI Rust-Python con PyO3
+## Tarea Actual: ISSUE #27
+2.2.3 Implementar endpoints REST en FastAPI para estadísticas
 
-## Estado: COMPLETADO
+## Estado: EN PROGRESO
 
 ## Contexto
 - Fase 2.2: Orquestación y API
