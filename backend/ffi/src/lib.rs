@@ -595,7 +595,6 @@ pub struct PyWatcherConfig {
     pub retry_delay_ms: u64,
 }
 
-#[allow(clippy::non_local_definitions)]
 #[pymethods]
 impl PyWatcherConfig {
     #[new]
@@ -631,7 +630,6 @@ pub struct PyFileEvent {
     pub timestamp_secs: u64,
 }
 
-#[allow(clippy::non_local_definitions)]
 #[pymethods]
 impl PyFileEvent {
     fn __repr__(&self) -> String {

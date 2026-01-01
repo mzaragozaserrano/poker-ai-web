@@ -8,6 +8,12 @@ license.workspace = true
 repository.workspace = true
 description = "FFI bridge for Python via PyO3 - exposes Rust poker functions"
 
+[lints.clippy]
+# PyO3's #[pymethods] macro generates code that triggers non_local_definitions
+# This is a known limitation of the macro system, see:
+# https://github.com/PyO3/pyo3/issues/3762
+non-local-definitions = "allow"
+
 [lib]
 name = "poker_ffi"
 crate-type = ["cdylib", "rlib"]
