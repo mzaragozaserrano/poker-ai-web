@@ -81,7 +81,8 @@ jobs:
       
       - name: Run tests
         working-directory: backend
-        run: cargo test --workspace --lib --bins --verbose
+        # Excluir poker-ffi de tests (requiere Python para linkear)
+        run: cargo test --workspace --exclude poker-ffi --lib --bins --verbose
 
   build:
     name: Build Check
