@@ -595,8 +595,8 @@ pub struct PyWatcherConfig {
     pub retry_delay_ms: u64,
 }
 
+#[allow(clippy::non_local_definitions)]
 #[pymethods]
-#[allow(non_local_definitions)]
 impl PyWatcherConfig {
     #[new]
     #[pyo3(signature = (watch_path, max_retries = 3, retry_delay_ms = 100))]
@@ -631,8 +631,8 @@ pub struct PyFileEvent {
     pub timestamp_secs: u64,
 }
 
+#[allow(clippy::non_local_definitions)]
 #[pymethods]
-#[allow(non_local_definitions)]
 impl PyFileEvent {
     fn __repr__(&self) -> String {
         format!(
