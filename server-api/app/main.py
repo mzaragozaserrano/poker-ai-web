@@ -11,8 +11,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config.settings import Settings
-from app.routes import stats, hands, equity
+from app.routes import stats, hands, equity, websocket
 from app.bridge import is_ffi_available, get_system_info
+from app.services.file_watcher_service import get_file_watcher_service
 
 # Initialize settings from environment
 settings = Settings()
@@ -28,9 +29,30 @@ async def lifespan(app: FastAPI) -> Any:
     print(f"FFI Module available: {is_ffi_available()}")
     if is_ffi_available():
         print(f"System info:\n{get_system_info()}")
+    
+    # Iniciar file watcher si FFI está disponible
+    file_watcher = None
+    if is_ffi_available() and settings.winamax_history_path.exists():
+        try:
+            print(f"Starting file watcher on: {settings.winamax_history_path}")
+            file_watcher = get_file_watcher_service(str(settings.winamax_history_path))
+            file_watcher.start()
+            print("File watcher started successfully")
+        except Exception as e:
+            print(f"Warning: Could not start file watcher: {e}")
+    else:
+        if not is_ffi_available():
+            print("Warning: FFI not available, file watcher disabled")
+        if not settings.winamax_history_path.exists():
+            print(f"Warning: History path does not exist: {settings.winamax_history_path}")
+    
     yield
+    
     # Shutdown
     print("Shutting down Poker AI API")
+    if file_watcher and file_watcher.is_running:
+        file_watcher.stop()
+        print("File watcher stopped")
 
 
 # Create FastAPI application
@@ -62,6 +84,7 @@ app.add_middleware(
 app.include_router(stats.router)
 app.include_router(hands.router)
 app.include_router(equity.router)
+app.include_router(websocket.router)
 
 
 @app.get("/health")
