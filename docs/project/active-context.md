@@ -1,35 +1,46 @@
 # FASE 2 EN PROGRESO - Orquestación y API
 
 ## Estado General
-La Fase 2 (Motor Matemático y Capa de Servicio) continúa. Configurando entorno Python con Poetry y PyO3.
+La Fase 2 (Motor Matemático y Capa de Servicio) continúa. Creando puente FFI Rust-Python con PyO3.
 
-## Tarea Actual: ISSUE #25
-2.2.1 Configurar entorno Python con Poetry y PyO3
+## Tarea Actual: ISSUE #26
+2.2.2 Crear puente FFI Rust-Python con PyO3
 
 ## Estado: EN PROGRESO
 
 ## Contexto
 - Fase 2.2: Orquestación y API
-- Base para la capa de servicio FastAPI
-- Puente FFI con Rust mediante PyO3/maturin
+- Exponer funciones Rust a Python sin overhead de serialización
+- Zero-copy con Apache Arrow cuando sea posible
 
 ## Tareas
-- [x] Inicializar proyecto Python con Poetry en server-api/
-- [x] Configurar dependencias: FastAPI, Uvicorn, PyO3/maturin
-- [x] Crear estructura de carpetas (app/, bridge/, config/, routes/)
-- [x] Configurar pyproject.toml con versiones específicas
-- [x] Documentar setup en README del servidor
-- [x] Crear carpeta tests/ con conftest.py
-- [x] Crear archivo .env.example
+- [ ] Crear crate poker-ffi en workspace de Rust
+- [ ] Configurar Cargo.toml con PyO3 y crate-type = [cdylib]
+- [ ] Exponer función de parsing de archivos Winamax
+- [ ] Exponer función de cálculo de equity
+- [ ] Exponer función de consulta a DuckDB
+- [ ] Crear módulo Python de ejemplo para testing
+- [ ] Documentar contrato FFI en docs/specs/ffi-contract.md
 
 ## Criterios de Aceptación
-- [x] poetry install funciona sin errores
-- [x] Python 3.11+ configurado correctamente
-- [x] Estructura de proyecto lista para desarrollo
-- [x] Documentación clara del setup
+- [ ] Las funciones Rust son llamables desde Python
+- [ ] Overhead de FFI < 1ms para operaciones típicas
+- [ ] Manejo correcto de errores entre lenguajes
+- [ ] Tests de integración Python-Rust pasan
 
 ## Rama
-feat/issue-25-python-poetry-pyo3
+feat/issue-26-ffi-pyo3-bridge
+
+---
+
+## Issue #25 Completado (Resumen)
+
+### Componentes Implementados
+- Entorno Python con Poetry en server-api/
+- Dependencias: FastAPI, Uvicorn, PyO3/maturin
+- Estructura de carpetas (app/, bridge/, config/, routes/)
+- Tests con pytest y conftest.py
+- Archivo .env.example
 
 ---
 
