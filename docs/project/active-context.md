@@ -6,7 +6,54 @@ La Fase 2 (Motor Matemático y Capa de Servicio) continúa. Puente FFI Rust-Pyth
 ## Tarea Actual: ISSUE #27
 2.2.3 Implementar endpoints REST en FastAPI para estadísticas
 
-## Estado: EN PROGRESO
+## Estado: COMPLETADO
+
+## Contexto
+- Fase 2.2: Orquestación y API
+- Entry point: server-api/app/main.py
+- Consume funciones Rust vía FFI
+
+## Tareas Completadas
+- [x] Crear modelos Pydantic para validación de requests/responses
+- [x] Implementar endpoint GET /stats/player/{name} (VPIP, PFR, 3Bet)
+- [x] Implementar endpoint GET /hands/recent (últimas N manos)
+- [x] Implementar endpoint GET /hands/{hand_id} (detalle de mano)
+- [x] Implementar endpoint POST /equity/calculate (cálculo Monte Carlo)
+- [x] Implementar endpoint POST /equity/calculate/multiway (3+ jugadores)
+- [x] Configurar CORS para localhost only (seguridad)
+- [x] Documentación automática con OpenAPI/Swagger
+- [x] Tests de integración con pytest
+
+## Endpoints Implementados
+- GET /health - Health check con estado FFI
+- GET /api/v1/config - Configuración del servidor
+- GET /api/v1/stats/player/{name} - Estadísticas de jugador con filtros
+- GET /api/v1/hands/recent - Listado de manos recientes con paginación
+- GET /api/v1/hands/{hand_id} - Detalle completo de una mano
+- POST /api/v1/equity/calculate - Cálculo de equity 2 jugadores
+- POST /api/v1/equity/calculate/multiway - Cálculo multiway
+
+## Documentación
+- Swagger UI disponible en /docs
+- ReDoc disponible en /redoc
+- OpenAPI JSON en /api/v1/openapi.json
+
+## Rama
+feat/issue-27-rest-endpoints
+
+## Archivos Creados/Modificados
+- `server-api/app/models/__init__.py` - Módulo de modelos
+- `server-api/app/models/stats.py` - Modelos de estadísticas
+- `server-api/app/models/hands.py` - Modelos de manos
+- `server-api/app/models/equity.py` - Modelos de equity
+- `server-api/app/routes/__init__.py` - Módulo de rutas actualizado
+- `server-api/app/routes/stats.py` - Router de estadísticas
+- `server-api/app/routes/hands.py` - Router de manos
+- `server-api/app/routes/equity.py` - Router de equity
+- `server-api/app/main.py` - Actualizado con routers y CORS
+- `server-api/tests/test_api_endpoints.py` - Tests de integración
+
+---
 
 ## Contexto
 - Fase 2.2: Orquestación y API
