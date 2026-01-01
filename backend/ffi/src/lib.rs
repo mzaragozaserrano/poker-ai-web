@@ -28,14 +28,14 @@
 //! equity = poker_ffi.calculate_equity("AhKd", "QQ+,AKs", "Qh7s2c", 100000)
 //! ```
 
-use pyo3::prelude::*;
 use pyo3::exceptions::{PyIOError, PyRuntimeError, PyValueError};
+use pyo3::prelude::*;
 use std::path::PathBuf;
 use std::time::{Duration, Instant};
 
 // Re-exports de crates internos
-use poker_parsers::{process_files_parallel, BatchProcessingResult, ParsedHand, Action};
 use poker_math::{calculate_equity as rust_calculate_equity, EquityResult};
+use poker_parsers::{process_files_parallel, BatchProcessingResult, ParsedHand};
 
 // ============================================================================
 // CÓDIGOS DE ERROR FFI (según docs/specs/ffi-contract.md)
@@ -192,8 +192,11 @@ impl PyDbStats {
     fn __repr__(&self) -> String {
         format!(
             "DbStats(players={}, hands={}, actions={}, sessions={}, tournaments={})",
-            self.player_count, self.hand_count, self.action_count,
-            self.session_count, self.tournament_count
+            self.player_count,
+            self.hand_count,
+            self.action_count,
+            self.session_count,
+            self.tournament_count
         )
     }
 }
@@ -378,19 +381,14 @@ fn calculate_equity(
     let board_refs: Vec<&str> = board_cards.iter().map(|s| s.as_str()).collect();
 
     // Calcular equity
-    let result: EquityResult = rust_calculate_equity(
-        &hero_refs,
-        &villain_refs,
-        &board_refs,
-        iterations,
-    );
+    let result: EquityResult =
+        rust_calculate_equity(&hero_refs, &villain_refs, &board_refs, iterations);
 
     // Verificar timeout
     if start.elapsed() > timeout {
         return Err(PyRuntimeError::new_err(format!(
             "[{}] Simulación excedió el tiempo límite de {}ms",
-            ERR_SIM_TIMEOUT,
-            SIM_TIMEOUT_MS
+            ERR_SIM_TIMEOUT, SIM_TIMEOUT_MS
         )));
     }
 
@@ -422,7 +420,7 @@ fn calculate_equity_multiway(
 ) -> PyResult<Vec<f64>> {
     if hands.len() < 2 {
         return Err(PyValueError::new_err(
-            "Se necesitan al menos 2 manos para calcular equity multiway"
+            "Se necesitan al menos 2 manos para calcular equity multiway",
         ));
     }
 
@@ -478,8 +476,14 @@ fn system_info() -> PyResult<String> {
          - Threads disponibles: {}\n\
          - Timeout simulación: {}ms",
         env!("CARGO_PKG_VERSION"),
-        if poker_math::is_avx2_available() { "Habilitado" } else { "No disponible" },
-        std::thread::available_parallelism().map(|p| p.get()).unwrap_or(1),
+        if poker_math::is_avx2_available() {
+            "Habilitado"
+        } else {
+            "No disponible"
+        },
+        std::thread::available_parallelism()
+            .map(|p| p.get())
+            .unwrap_or(1),
         SIM_TIMEOUT_MS
     );
     Ok(info)
@@ -500,8 +504,7 @@ fn parse_cards(cards_str: &str) -> PyResult<Vec<String>> {
     if trimmed.len() % 2 != 0 {
         return Err(PyValueError::new_err(format!(
             "[{}] Formato de cartas inválido: '{}'. Debe ser pares de RankSuit (ej: AhKd)",
-            ERR_INVALID_RANGE,
-            cards_str
+            ERR_INVALID_RANGE, cards_str
         )));
     }
 
@@ -516,8 +519,7 @@ fn parse_cards(cards_str: &str) -> PyResult<Vec<String>> {
         if !is_valid_card(card) {
             return Err(PyValueError::new_err(format!(
                 "[{}] Carta inválida: '{}'. Formato: RankSuit (ej: Ah, Kd, 2c)",
-                ERR_INVALID_RANGE,
-                card
+                ERR_INVALID_RANGE, card
             )));
         }
     }
@@ -528,7 +530,7 @@ fn parse_cards(cards_str: &str) -> PyResult<Vec<String>> {
 /// Parsea el board (puede tener 0, 3, 4 o 5 cartas)
 fn parse_board(board_str: &str) -> PyResult<Vec<String>> {
     let cards = parse_cards(board_str)?;
-    
+
     if !cards.is_empty() && cards.len() != 3 && cards.len() != 4 && cards.len() != 5 {
         return Err(PyValueError::new_err(format!(
             "[{}] Board debe tener 0, 3, 4 o 5 cartas, recibido: {}",
@@ -550,7 +552,9 @@ fn is_valid_card(card: &str) -> bool {
     let rank = chars[0];
     let suit = chars[1];
 
-    let valid_ranks = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'];
+    let valid_ranks = [
+        'A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2',
+    ];
     let valid_suits = ['h', 'd', 'c', 's'];
 
     valid_ranks.contains(&rank) && valid_suits.contains(&suit)
@@ -559,11 +563,6 @@ fn is_valid_card(card: &str) -> bool {
 /// Convierte una mano parseada a PyHandSummary
 fn convert_hand_to_summary(hand: &ParsedHand) -> PyHandSummary {
     let hero_played = hand.players.iter().any(|p| p.name == "thesmoy");
-    
-    // Calcular pot total sumando los pots
-    let total_pot_cents = hand.pots.iter()
-        .map(|p| p.amount_cents)
-        .sum::<i64>();
 
     PyHandSummary {
         hand_id: hand.hand_id.clone(),
@@ -571,7 +570,7 @@ fn convert_hand_to_summary(hand: &ParsedHand) -> PyHandSummary {
         table_name: hand.table_name.clone(),
         player_count: hand.players.len(),
         hero_played,
-        total_pot_cents,
+        total_pot_cents: hand.pot.total_cents,
     }
 }
 
@@ -586,7 +585,7 @@ fn convert_hand_to_summary(hand: &ParsedHand) -> PyHandSummary {
 /// - Cálculo de equity Monte Carlo (SIMD AVX2)
 /// - Consultas a DuckDB
 #[pymodule]
-fn poker_ffi(m: &Bound<'_, PyModule>) -> PyResult<()> {
+fn poker_ffi(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
     // Funciones de parsing
     m.add_function(wrap_pyfunction!(parse_winamax_files, m)?)?;
     m.add_function(wrap_pyfunction!(parse_winamax_with_details, m)?)?;
@@ -670,4 +669,3 @@ mod tests {
         assert!(result.is_err());
     }
 }
-
