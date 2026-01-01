@@ -37,17 +37,32 @@ El objetivo es establecer la tubería de ingesta de datos de Winamax y la persis
 
 ---
 
-## Fase 2: Motor Matemático y Capa de Servicio (Semanas 5-8)
+## Fase 2: Motor Matemático y Capa de Servicio ✓ COMPLETADA
 Desarrollo de la lógica de negocio crítica y la comunicación entre lenguajes.
 
-### 2.1 Motor de Evaluación de Manos (Rust)
-- [ ] Implementación del algoritmo de evaluación (Cactus Kev o variante OMPEval).
-- [ ] Pre-calculado de la **Perfect Hash Table** de 7 cartas en RAM (aprox. 133M de combinaciones) para búsquedas $O(1)$.
-- [ ] Desarrollo del simulador **Monte Carlo** utilizando intrínsecos **SIMD AVX2** del procesador Ryzen.
+### 2.1 Motor de Evaluación de Manos (Rust) ✓
+- [x] Implementación del algoritmo de evaluación (Cactus Kev híbrido).
+- [x] Pre-calculado de la **Perfect Hash Table** de 7 cartas en RAM (133M combinaciones) para búsquedas $O(1)$.
+- [x] Desarrollo del simulador **Monte Carlo** utilizando intrínsecos **SIMD AVX2** del procesador Ryzen.
 
-### 2.2 Orquestación y API (FastAPI + PyO3)
-- [ ] Creación del puente **FFI** para exponer las funciones de Rust a Python sin sobrecarga de serialización.
-- [ ] Desarrollo de endpoints REST de FastAPI para consultas de estadísticas (`VPIP`, `PFR`, `3Bet`) y datos históricos.
+**Resultados:**
+- Algoritmo Cactus Kev híbrido con evaluador de 5, 6 y 7 cartas
+- Perfect Hash Table generada en 24 segundos con Rayon (267MB en disco)
+- Búsquedas O(1) en 19.4ns, evaluaciones < 100ns
+- Monte Carlo con AVX2 y early stopping (convergencia < 0.1%)
+
+### 2.2 Orquestación y API (FastAPI + PyO3) ✓
+- [x] Creación del puente **FFI** para exponer las funciones de Rust a Python sin sobrecarga de serialización.
+- [x] Desarrollo de endpoints REST de FastAPI para consultas de estadísticas (`VPIP`, `PFR`, `3Bet`) y datos históricos.
+- [x] Sistema WebSocket para push de nuevas manos en tiempo real.
+
+**Resultados:**
+- Entorno Python con Poetry configurado (FastAPI, Uvicorn, PyO3/maturin)
+- Crate `poker-ffi` con PyO3 (overhead < 1ms)
+- Endpoints REST: /stats/player, /hands/recent, /hands/{id}, /equity/calculate
+- WebSocket /ws con heartbeat automático y notificación < 500ms
+- File Watcher integrado: Rust (notify) -> Python FFI -> WebSocket -> Clientes
+- Tests de integración completos (pytest)
 
 ---
 
@@ -55,14 +70,28 @@ Desarrollo de la lógica de negocio crítica y la comunicación entre lenguajes.
 Construcción de la experiencia visual en **Modo Oscuro** y el reproductor de alto rendimiento.
 
 ### 3.1 Base de la SPA (React)
+- [ ] Configuración del proyecto React con Vite + TypeScript.
 - [ ] Implementación del sistema de diseño en **Modo Oscuro** (Slate-950/800).
+- [ ] Creación de componentes base (Button, Card, Modal, Navbar).
+- [ ] Configuración de Tailwind CSS con paleta de colores de poker.
+- [ ] Integración de React Query para estado del servidor.
+- [ ] Configuración de WebSocket hook para conexión con backend.
 - [ ] Creación de dashboards para estadísticas agregadas y gráficas de beneficios con Recharts.
 
 ### 3.2 Hand Replayer (HTML5 Canvas) - Análisis Post-Juego
 - [ ] Desarrollo del reproductor de manos históricas utilizando **React-Konva** para renderizado por GPU.
 - [ ] Implementación de la máquina de estados para animaciones fluidas a **60 FPS**.
+- [ ] Renderizado de mesa de poker 6-max con posiciones correctas.
+- [ ] Sistema de renderizado de cartas (sprites o canvas).
 - [ ] Controles de reproducción (Play, Pause, Step-by-step, velocidad ajustable) para análisis detallado de decisiones pasadas.
+- [ ] Toggle de formato de cantidades (Big Blinds vs Monedas).
 - [ ] Visualización de **Matrices de Rangos 13x13** con mapas de calor dinámicos basados en la posición para contexto analítico.
+
+### 3.3 Feature Stats - Estadísticas y Análisis
+- [ ] Vista de estadísticas por jugador con filtros de posición y stake.
+- [ ] Gráficos de evolución de bankroll con ECharts/Recharts.
+- [ ] Comparación de acciones reales vs rangos GTO.
+- [ ] Detección visual de leaks (acciones con frecuencia 0.0 en rangos).
 
 ---
 

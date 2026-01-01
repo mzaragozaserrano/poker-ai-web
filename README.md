@@ -117,18 +117,40 @@ cargo run --example parse_real_file
 cargo bench -p poker-parsers
 ```
 
-### Configuración de Rutas
+### Iniciar la API (Fase 2)
 
-El sistema detecta automáticamente los historiales de Winamax en:
+```powershell
+cd server-api
+
+# Instalar dependencias
+poetry install
+
+# Compilar modulo FFI de Rust
+cd ../backend/ffi
+maturin develop --release
+cd ../../server-api
+
+# Iniciar servidor FastAPI
+poetry run uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+```
+
+Una vez iniciado:
+- **Swagger UI**: http://127.0.0.1:8000/docs
+- **ReDoc**: http://127.0.0.1:8000/redoc
+- **WebSocket**: ws://127.0.0.1:8000/ws
+
+### Configuracion de Rutas
+
+El sistema detecta automaticamente los historiales de Winamax en:
 ```
 C:\Users\Miguel\AppData\Roaming\winamax\documents\accounts\thesmoy\history
 ```
 
-> **Nota**: La API (FastAPI) y el Frontend (React) estarán disponibles en las Fases 2 y 3.
+> **Nota**: El Frontend (React) estara disponible en la Fase 3.
 
-## Verificación de la Fase 1
+## Verificacion
 
-### Tests Disponibles
+### Tests Fase 1 (Rust Backend)
 
 ```powershell
 cd backend
@@ -136,19 +158,39 @@ cd backend
 # Tests del parser (FSM, file watcher, bytes parser)
 cargo test -p poker-parsers --lib
 
-# Tests de DuckDB (schema, conexión, in-memory)
+# Tests de DuckDB (schema, conexion, in-memory)
 cargo test -p poker-db --lib
 
-# Tests de integración (Parquet, persistencia completa)
+# Tests de integracion (Parquet, persistencia completa)
 cargo test -p poker-db --test integration_tests
 
 # Benchmark de rendimiento
 cargo bench -p poker-parsers
 ```
 
+### Tests Fase 2 (API Python)
+
+```powershell
+cd server-api
+
+# Tests de integracion FFI
+poetry run pytest tests/test_ffi_integration.py -v
+
+# Tests de endpoints REST
+poetry run pytest tests/test_api_endpoints.py -v
+
+# Tests de WebSocket
+poetry run pytest tests/test_websocket_integration.py -v
+
+# Todos los tests
+poetry run pytest -v
+```
+
 ### Ejemplos Ejecutables
 
 ```powershell
+cd backend
+
 # Parser con archivo real (145 manos de Winamax)
 cargo run --example parse_real_file
 
@@ -159,15 +201,20 @@ cargo run --example file_watcher_simple
 cargo run --example file_watcher_demo
 ```
 
-### Métricas de Éxito Fase 1
+### Metricas de Exito
 
-- ✓ **145 manos parseadas** sin errores desde archivo real
-- ✓ **60+ tests pasando** (48 unitarios + 12 integración)
-- ✓ **Compresión Parquet**: 1000 manos < 100KB
-- ✓ **Schema init**: < 5 segundos
-- ✓ **Particionamiento**: Estructura `year=YYYY/month=MM/day=DD/` operativa
+#### Fase 1
+- **145 manos parseadas** sin errores desde archivo real
+- **60+ tests pasando** (48 unitarios + 12 integracion)
+- **Compresion Parquet**: 1000 manos < 100KB
+- **Schema init**: < 5 segundos
 
-> **Nota**: Los endpoints REST estarán disponibles en la Fase 2 (Motor Matemático y API).
+#### Fase 2
+- **Evaluacion de manos**: < 100ns por mano
+- **Perfect Hash lookups**: O(1) en 19.4ns
+- **FFI overhead**: < 1ms por llamada
+- **WebSocket latency**: < 500ms para notificaciones
+- **Monte Carlo**: > 100K simulaciones/segundo
 
 ## Estructura de Datos
 
@@ -224,17 +271,32 @@ Ver [LICENSE](LICENSE) para más detalles.
 
 ## Estado del Proyecto
 
-**Fase 1 Completada** ✓ - El núcleo e infraestructura de datos está operativo.
+**Fase 1 Completada** ✓ - Nucleo e infraestructura de datos operativo.
+**Fase 2 Completada** ✓ - Motor matematico y capa de servicio operativo.
 
 ### Componentes Implementados
 
+#### Fase 1: Nucleo de Datos
 - **Parser Winamax FSM**: Parsing completo de historiales con 145 manos reales procesadas sin errores
-- **File Watcher**: Detección automática de nuevos archivos con deduplicación MD5
-- **DuckDB In-Memory**: Base de datos analítica configurada para operaciones 100% en RAM
+- **File Watcher**: Deteccion automatica de nuevos archivos con deduplicacion MD5
+- **DuckDB In-Memory**: Base de datos analitica configurada para operaciones 100% en RAM
 - **Persistencia Parquet**: Almacenamiento comprimido con particionamiento por fecha (1000 manos < 100KB)
-- **Tests**: 60+ tests pasando (48 unitarios + 12 integración)
 
-Consulta el [Roadmap](docs/project/roadmap.md) para conocer el estado actual de las fases de implementación.
+#### Fase 2: Motor Matematico y API
+- **Evaluador Cactus Kev**: Algoritmo hibrido para 5, 6 y 7 cartas (< 100ns por evaluacion)
+- **Perfect Hash Table**: 133M combinaciones, busquedas O(1) en 19.4ns
+- **Monte Carlo SIMD**: Simulador con AVX2 y Rayon (16 threads), early stopping < 0.1%
+- **Puente FFI PyO3**: Funciones Rust expuestas a Python (overhead < 1ms)
+- **API REST FastAPI**: Endpoints para estadisticas, manos y calculo de equity
+- **WebSocket Push**: Notificacion en tiempo real de nuevas manos (< 500ms)
+- **File Watcher Service**: Integracion completa Rust -> Python -> WebSocket
+
+### Tests
+- 60+ tests de Fase 1 (48 unitarios + 12 integracion)
+- Tests de integracion Python-Rust (pytest)
+- Tests de WebSocket (conexion, heartbeat, broadcasting)
+
+Consulta el [Roadmap](docs/project/roadmap.md) para conocer el estado actual de las fases de implementacion.
 
 ## Contribuciones
 
