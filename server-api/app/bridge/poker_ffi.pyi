@@ -7,7 +7,7 @@ estático como mypy, pyright, etc.
 El módulo real es compilado desde Rust con PyO3/maturin.
 """
 
-from typing import List
+from typing import List, Callable
 
 
 class PyParseResult:
@@ -101,6 +101,43 @@ class PyDbStats:
     
     tournament_count: int
     """Número de torneos."""
+    
+    def __repr__(self) -> str: ...
+
+
+class PyWatcherConfig:
+    """Configuración del file watcher."""
+    
+    watch_path: str
+    """Ruta del directorio a monitorear."""
+    
+    max_retries: int
+    """Número máximo de reintentos para archivos bloqueados."""
+    
+    retry_delay_ms: int
+    """Delay inicial para retry en milisegundos."""
+    
+    def __init__(
+        self,
+        watch_path: str,
+        max_retries: int = 3,
+        retry_delay_ms: int = 100
+    ) -> None: ...
+    
+    def __repr__(self) -> str: ...
+
+
+class PyFileEvent:
+    """Evento de archivo detectado por el watcher."""
+    
+    path: str
+    """Ruta del archivo detectado."""
+    
+    hash: str
+    """Hash MD5 del archivo."""
+    
+    timestamp_secs: int
+    """Timestamp UNIX de detección."""
     
     def __repr__(self) -> str: ...
 
@@ -214,6 +251,62 @@ def system_info() -> str:
     
     Returns:
         String con información detallada del sistema
+    """
+    ...
+
+
+# Funciones de file watcher
+
+def start_file_watcher(
+    config: PyWatcherConfig,
+    callback: Callable[[PyFileEvent], None]
+) -> None:
+    """
+    Inicia el file watcher con un callback Python.
+    
+    Esta función NO bloquea. Inicia el watcher en un thread separado
+    y retorna inmediatamente. El callback se ejecutará cuando se detecten
+    nuevos archivos.
+    
+    Args:
+        config: Configuración del watcher
+        callback: Función que se llamará con cada archivo detectado
+        
+    Raises:
+        IOError: Si el directorio no existe (código 101)
+        
+    Example:
+        >>> def on_file(event: PyFileEvent):
+        ...     print(f"Detectado: {event.path}")
+        >>> config = PyWatcherConfig("/path/to/history")
+        >>> start_file_watcher(config, on_file)
+    """
+    ...
+
+
+def start_file_watcher_with_parsing(
+    config: PyWatcherConfig,
+    callback: Callable[[List[PyHandSummary]], None]
+) -> None:
+    """
+    Inicia el file watcher con auto-procesamiento.
+    
+    Similar a start_file_watcher pero procesa automáticamente los archivos
+    usando el parser de Rust y llama al callback con los resúmenes de manos.
+    
+    Args:
+        config: Configuración del watcher
+        callback: Función que recibe lista de PyHandSummary
+        
+    Raises:
+        IOError: Si el directorio no existe (código 101)
+        
+    Example:
+        >>> def on_hands(hands: List[PyHandSummary]):
+        ...     for hand in hands:
+        ...         print(f"Hand {hand.hand_id}")
+        >>> config = PyWatcherConfig("/path/to/history")
+        >>> start_file_watcher_with_parsing(config, on_hands)
     """
     ...
 

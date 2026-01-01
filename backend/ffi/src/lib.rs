@@ -35,7 +35,9 @@ use std::time::{Duration, Instant};
 
 // Re-exports de crates internos
 use poker_math::{calculate_equity as rust_calculate_equity, EquityResult};
-use poker_parsers::{process_files_parallel, BatchProcessingResult, ParsedHand};
+use poker_parsers::{
+    process_files_parallel, BatchProcessingResult, FileWatcher, ParsedHand, WatcherConfig,
+};
 
 // ============================================================================
 // CÓDIGOS DE ERROR FFI (según docs/specs/ffi-contract.md)
@@ -575,6 +577,221 @@ fn convert_hand_to_summary(hand: &ParsedHand) -> PyHandSummary {
 }
 
 // ============================================================================
+// FILE WATCHER CON CALLBACK PYTHON
+// ============================================================================
+
+/// Configuración del file watcher expuesta a Python
+#[pyclass]
+#[derive(Clone)]
+pub struct PyWatcherConfig {
+    /// Ruta del directorio a monitorear
+    #[pyo3(get, set)]
+    pub watch_path: String,
+    /// Número máximo de reintentos para archivos bloqueados
+    #[pyo3(get, set)]
+    pub max_retries: u32,
+    /// Delay inicial para retry en milisegundos
+    #[pyo3(get, set)]
+    pub retry_delay_ms: u64,
+}
+
+#[pymethods]
+impl PyWatcherConfig {
+    #[new]
+    #[pyo3(signature = (watch_path, max_retries = 3, retry_delay_ms = 100))]
+    fn new(watch_path: String, max_retries: u32, retry_delay_ms: u64) -> Self {
+        Self {
+            watch_path,
+            max_retries,
+            retry_delay_ms,
+        }
+    }
+
+    fn __repr__(&self) -> String {
+        format!(
+            "WatcherConfig(path='{}', retries={}, delay={}ms)",
+            self.watch_path, self.max_retries, self.retry_delay_ms
+        )
+    }
+}
+
+/// Evento de archivo detectado expuesto a Python
+#[pyclass]
+#[derive(Clone)]
+pub struct PyFileEvent {
+    /// Ruta del archivo
+    #[pyo3(get)]
+    pub path: String,
+    /// Hash MD5 del archivo
+    #[pyo3(get)]
+    pub hash: String,
+    /// Timestamp UNIX de detección
+    #[pyo3(get)]
+    pub timestamp_secs: u64,
+}
+
+#[pymethods]
+impl PyFileEvent {
+    fn __repr__(&self) -> String {
+        format!(
+            "FileEvent(path='{}', hash='{}', ts={})",
+            self.path, self.hash, self.timestamp_secs
+        )
+    }
+}
+
+/// Inicia el file watcher con un callback Python.
+///
+/// Esta función es NO bloqueante. Inicia el watcher en un thread separado
+/// y retorna inmediatamente. El callback se ejecutará en un thread de Rust
+/// cuando se detecten nuevos archivos.
+///
+/// # Argumentos
+/// * `config` - Configuración del watcher
+/// * `callback` - Función Python que se llamará cuando se detecten archivos
+///
+/// # Callback Signature
+/// ```python
+/// def on_new_file(event: PyFileEvent) -> None:
+///     print(f"Nuevo archivo: {event.path}")
+/// ```
+///
+/// # Ejemplo
+/// ```python
+/// def on_file_detected(event):
+///     print(f"Detectado: {event.path}")
+///
+/// config = PyWatcherConfig("/path/to/history")
+/// start_file_watcher(config, on_file_detected)
+/// ```
+///
+/// # Nota
+/// Esta función NO bloquea el hilo principal de Python. El watcher corre
+/// en background. Para detenerlo, el proceso debe terminarse.
+#[pyfunction]
+#[pyo3(signature = (config, callback))]
+fn start_file_watcher(config: PyWatcherConfig, callback: PyObject) -> PyResult<()> {
+    use std::thread;
+
+    let watch_path = PathBuf::from(&config.watch_path);
+
+    // Verificar que el directorio existe
+    if !watch_path.exists() {
+        return Err(PyIOError::new_err(format!(
+            "[{}] El directorio no existe: {}",
+            ERR_IO_ERROR, config.watch_path
+        )));
+    }
+
+    // Crear configuración Rust
+    let rust_config = WatcherConfig {
+        watch_path: watch_path.clone(),
+        max_retries: config.max_retries,
+        retry_delay_ms: config.retry_delay_ms,
+        use_exponential_backoff: true,
+    };
+
+    // Iniciar watcher en thread separado
+    thread::spawn(move || {
+        let watcher = FileWatcher::new(rust_config);
+
+        // Callback que se ejecuta cuando se detecta un archivo
+        let result = watcher.start(move |file_path| {
+            // Crear evento Python
+            let py_event = PyFileEvent {
+                path: file_path.to_string_lossy().to_string(),
+                hash: "".to_string(), // El hash está interno en el watcher
+                timestamp_secs: std::time::SystemTime::now()
+                    .duration_since(std::time::UNIX_EPOCH)
+                    .unwrap()
+                    .as_secs(),
+            };
+
+            // Llamar al callback Python
+            Python::with_gil(|py| {
+                if let Err(e) = callback.call1(py, (py_event,)) {
+                    eprintln!("Error en callback Python: {:?}", e);
+                }
+            });
+        });
+
+        if let Err(e) = result {
+            eprintln!("Error en file watcher: {:?}", e);
+        }
+    });
+
+    Ok(())
+}
+
+/// Inicia el file watcher con auto-procesamiento.
+///
+/// Similar a `start_file_watcher` pero procesa automáticamente los archivos
+/// usando el parser de Rust y llama al callback con los resúmenes de manos.
+///
+/// # Argumentos
+/// * `config` - Configuración del watcher
+/// * `callback` - Función Python que recibe lista de PyHandSummary
+///
+/// # Callback Signature
+/// ```python
+/// def on_hands_parsed(hands: List[PyHandSummary]) -> None:
+///     for hand in hands:
+///         print(f"Hand {hand.hand_id}: {hand.hero_played}")
+/// ```
+#[pyfunction]
+#[pyo3(signature = (config, callback))]
+fn start_file_watcher_with_parsing(config: PyWatcherConfig, callback: PyObject) -> PyResult<()> {
+    use std::thread;
+
+    let watch_path = PathBuf::from(&config.watch_path);
+
+    if !watch_path.exists() {
+        return Err(PyIOError::new_err(format!(
+            "[{}] El directorio no existe: {}",
+            ERR_IO_ERROR, config.watch_path
+        )));
+    }
+
+    let rust_config = WatcherConfig {
+        watch_path: watch_path.clone(),
+        max_retries: config.max_retries,
+        retry_delay_ms: config.retry_delay_ms,
+        use_exponential_backoff: true,
+    };
+
+    thread::spawn(move || {
+        let watcher = FileWatcher::new(rust_config);
+
+        let result = watcher.start(move |file_path| {
+            // Parsear el archivo detectado
+            let result = process_files_parallel(vec![file_path]);
+
+            // Convertir a PyHandSummary
+            let summaries: Vec<PyHandSummary> = result
+                .results
+                .into_iter()
+                .filter_map(|file_result| file_result.result.ok())
+                .flat_map(|parse_result| parse_result.hands)
+                .map(|hand| convert_hand_to_summary(&hand))
+                .collect();
+
+            // Llamar al callback Python con las manos
+            Python::with_gil(|py| {
+                if let Err(e) = callback.call1(py, (summaries,)) {
+                    eprintln!("Error en callback Python: {:?}", e);
+                }
+            });
+        });
+
+        if let Err(e) = result {
+            eprintln!("Error en file watcher: {:?}", e);
+        }
+    });
+
+    Ok(())
+}
+
+// ============================================================================
 // MÓDULO PYTHON
 // ============================================================================
 
@@ -584,6 +801,7 @@ fn convert_hand_to_summary(hand: &ParsedHand) -> PyHandSummary {
 /// - Parsing de historiales Winamax (16 threads)
 /// - Cálculo de equity Monte Carlo (SIMD AVX2)
 /// - Consultas a DuckDB
+/// - File watching para detección automática de nuevos archivos
 #[pymodule]
 fn poker_ffi(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
     // Funciones de parsing
@@ -593,6 +811,10 @@ fn poker_ffi(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
     // Funciones de equity
     m.add_function(wrap_pyfunction!(calculate_equity, m)?)?;
     m.add_function(wrap_pyfunction!(calculate_equity_multiway, m)?)?;
+
+    // File watcher
+    m.add_function(wrap_pyfunction!(start_file_watcher, m)?)?;
+    m.add_function(wrap_pyfunction!(start_file_watcher_with_parsing, m)?)?;
 
     // Utilidades
     m.add_function(wrap_pyfunction!(is_simd_available, m)?)?;
@@ -604,6 +826,8 @@ fn poker_ffi(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
     m.add_class::<PyEquityResult>()?;
     m.add_class::<PyHandSummary>()?;
     m.add_class::<PyDbStats>()?;
+    m.add_class::<PyWatcherConfig>()?;
+    m.add_class::<PyFileEvent>()?;
 
     Ok(())
 }

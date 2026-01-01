@@ -26,6 +26,12 @@ from .equity import (
     EquityCalculateResponse,
     EquityMultiwayRequest,
 )
+from .websocket import (
+    NewHandMessage,
+    HeartbeatMessage,
+    ErrorMessage,
+    ConnectionAckMessage,
+)
 
 __all__ = [
     # Stats models
@@ -43,5 +49,10 @@ __all__ = [
     "EquityCalculateRequest",
     "EquityCalculateResponse",
     "EquityMultiwayRequest",
+    # WebSocket models
+    "NewHandMessage",
+    "HeartbeatMessage",
+    "ErrorMessage",
+    "ConnectionAckMessage",
 ]
 
