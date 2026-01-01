@@ -1,0 +1,36 @@
+[build-system]
+requires = ["maturin>=1.4,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "poker-ffi"
+version = "0.1.0"
+description = "High-performance Rust FFI bridge for Poker analysis"
+requires-python = ">=3.11"
+classifiers = [
+    "Programming Language :: Rust",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+keywords = ["poker", "ffi", "rust", "pyo3", "performance"]
+
+[tool.maturin]
+# Tipo de bindings PyO3
+bindings = "pyo3"
+
+# Features de Rust a habilitar
+features = ["pyo3/extension-module"]
+
+# Nombre del módulo Python resultante
+module-name = "poker_ffi"
+
+# Compatibilidad con Python
+python-source = false
+
+# Strip symbols en release
+strip = true
+
+# Optimización para Ryzen 3800X
+# RUSTFLAGS será aplicado desde el Cargo.toml del workspace
+

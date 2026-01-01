@@ -1,35 +1,57 @@
 # FASE 2 EN PROGRESO - Orquestación y API
 
 ## Estado General
-La Fase 2 (Motor Matemático y Capa de Servicio) continúa. Configurando entorno Python con Poetry y PyO3.
+La Fase 2 (Motor Matemático y Capa de Servicio) continúa. Puente FFI Rust-Python completado.
 
-## Tarea Actual: ISSUE #25
-2.2.1 Configurar entorno Python con Poetry y PyO3
+## Tarea Actual: ISSUE #26
+2.2.2 Crear puente FFI Rust-Python con PyO3
 
-## Estado: EN PROGRESO
+## Estado: COMPLETADO
 
 ## Contexto
 - Fase 2.2: Orquestación y API
-- Base para la capa de servicio FastAPI
-- Puente FFI con Rust mediante PyO3/maturin
+- Exponer funciones Rust a Python sin overhead de serialización
+- Zero-copy con Apache Arrow cuando sea posible
 
 ## Tareas
-- [x] Inicializar proyecto Python con Poetry en server-api/
-- [x] Configurar dependencias: FastAPI, Uvicorn, PyO3/maturin
-- [x] Crear estructura de carpetas (app/, bridge/, config/, routes/)
-- [x] Configurar pyproject.toml con versiones específicas
-- [x] Documentar setup en README del servidor
-- [x] Crear carpeta tests/ con conftest.py
-- [x] Crear archivo .env.example
+- [x] Crear crate poker-ffi en workspace de Rust
+- [x] Configurar Cargo.toml con PyO3 y crate-type = [cdylib]
+- [x] Exponer función de parsing de archivos Winamax
+- [x] Exponer función de cálculo de equity
+- [x] Exponer función de consulta a DuckDB (estructura preparada)
+- [x] Crear módulo Python de ejemplo para testing
+- [x] Documentar contrato FFI en docs/specs/ffi-contract.md
 
 ## Criterios de Aceptación
-- [x] poetry install funciona sin errores
-- [x] Python 3.11+ configurado correctamente
-- [x] Estructura de proyecto lista para desarrollo
-- [x] Documentación clara del setup
+- [x] Las funciones Rust son llamables desde Python
+- [x] Overhead de FFI < 1ms para operaciones típicas
+- [x] Manejo correcto de errores entre lenguajes
+- [x] Tests de integración Python-Rust pasan
 
 ## Rama
-feat/issue-25-python-poetry-pyo3
+feat/issue-26-ffi-pyo3-bridge
+
+## Archivos Creados/Modificados
+- `backend/ffi/Cargo.toml` - Configuración del crate FFI
+- `backend/ffi/pyproject.toml` - Configuración de maturin
+- `backend/ffi/src/lib.rs` - Implementación PyO3
+- `backend/Cargo.toml` - Añadido ffi al workspace
+- `server-api/app/bridge/__init__.py` - Wrapper Python
+- `server-api/app/bridge/poker_ffi.pyi` - Type stubs
+- `server-api/tests/test_ffi_integration.py` - Tests
+- `server-api/scripts/test_ffi_example.py` - Script demo
+- `docs/specs/ffi-contract.md` - Documentación actualizada
+
+---
+
+## Issue #25 Completado (Resumen)
+
+### Componentes Implementados
+- Entorno Python con Poetry en server-api/
+- Dependencias: FastAPI, Uvicorn, PyO3/maturin
+- Estructura de carpetas (app/, bridge/, config/, routes/)
+- Tests con pytest y conftest.py
+- Archivo .env.example
 
 ---
 

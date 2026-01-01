@@ -1,0 +1,33 @@
+[package]
+name = "poker-ffi"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "FFI bridge for Python via PyO3 - exposes Rust poker functions"
+
+[lib]
+name = "poker_ffi"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+# PyO3 para FFI con Python
+pyo3.workspace = true
+
+# Crates internos del workspace
+poker-parsers = { path = "../parsers" }
+poker-math = { path = "../math" }
+poker-db = { path = "../db" }
+
+# Serialización para estructuras de datos
+serde.workspace = true
+serde_json.workspace = true
+
+# Manejo de tiempo
+chrono.workspace = true
+
+[dev-dependencies]
+tempfile = "3.8"
+
