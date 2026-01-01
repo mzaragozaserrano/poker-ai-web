@@ -596,6 +596,7 @@ pub struct PyWatcherConfig {
 }
 
 #[pymethods]
+#[allow(non_local_definitions)]
 impl PyWatcherConfig {
     #[new]
     #[pyo3(signature = (watch_path, max_retries = 3, retry_delay_ms = 100))]
@@ -631,6 +632,7 @@ pub struct PyFileEvent {
 }
 
 #[pymethods]
+#[allow(non_local_definitions)]
 impl PyFileEvent {
     fn __repr__(&self) -> String {
         format!(
