@@ -607,7 +607,7 @@ mod tests {
             result.hero_equity * 100.0,
             result.villain_equity * 100.0
         );
-        
+
         // Verificar que la equity es razonable (no demasiado extrema)
         assert!(
             result.hero_equity > 0.50 && result.hero_equity < 0.90,
