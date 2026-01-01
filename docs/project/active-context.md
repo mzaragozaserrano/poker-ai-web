@@ -1,53 +1,45 @@
-# FASE 2 EN PROGRESO - Motor Matemático
+# FASE 2 EN PROGRESO - Orquestación y API
 
 ## Estado General
-La Fase 2 (Motor Matemático y Capa de Servicio) continúa. Trabajando en el Simulador Monte Carlo con SIMD AVX2.
+La Fase 2 (Motor Matemático y Capa de Servicio) continúa. Configurando entorno Python con Poetry y PyO3.
 
-## Tarea Actual: ISSUE #24
-2.1.3 Implementar simulador Monte Carlo con SIMD AVX2
+## Tarea Actual: ISSUE #25
+2.2.1 Configurar entorno Python con Poetry y PyO3
 
 ## Estado: EN PROGRESO
 
 ## Contexto
-- Fase 2.1: Motor de Evaluación de Manos
-- Simulador Monte Carlo para cálculo de equities
-- Optimización con intrínsecos SIMD AVX2 del Ryzen 3800X
-- Integración con Rayon para multi-threading (16 hilos)
+- Fase 2.2: Orquestación y API
+- Base para la capa de servicio FastAPI
+- Puente FFI con Rust mediante PyO3/maturin
 
 ## Tareas
-- [ ] Crear módulo equity_calculator en Rust
-- [ ] Implementar simulación Monte Carlo básica
-- [ ] Optimizar con intrínsecos SIMD AVX2 (std::arch::x86_64)
-- [ ] Integrar con Rayon para paralelización en 16 threads
-- [ ] Implementar early stopping cuando convergencia < 0.1%
-- [ ] Benchmarks de rendimiento (objetivo: 100K sims/segundo)
+- [x] Inicializar proyecto Python con Poetry en server-api/
+- [x] Configurar dependencias: FastAPI, Uvicorn, PyO3/maturin
+- [x] Crear estructura de carpetas (app/, bridge/, config/, routes/)
+- [x] Configurar pyproject.toml con versiones específicas
+- [x] Documentar setup en README del servidor
+- [x] Crear carpeta tests/ con conftest.py
+- [x] Crear archivo .env.example
 
 ## Criterios de Aceptación
-- [ ] Calcula equity correctamente para escenarios conocidos (AA vs KK preflop ~ 82%)
-- [ ] Utiliza AVX2 verificable con profiling
-- [ ] Escala linealmente hasta 16 threads
-- [ ] Performance > 100K simulaciones/segundo en hardware objetivo
-
-## Decisiones de Diseño
-
-### Enfoque de Implementación
-- **Algoritmo**: Monte Carlo con muestreo aleatorio del deck restante
-- **SIMD**: Usar `std::arch::x86_64` para intrínsecos AVX2
-- **Paralelización**: Rayon parallel iterators con 16 threads
-- **Early Stopping**: Convergencia basada en varianza de equity < 0.1%
-
-### Estructura del Módulo
-- `equity_calculator/mod.rs`: API pública del calculador
-- `equity_calculator/monte_carlo.rs`: Implementación Monte Carlo
-- `equity_calculator/simd.rs`: Optimizaciones SIMD AVX2
-- Integración con `hand_evaluator` existente para evaluación de manos
+- [x] poetry install funciona sin errores
+- [x] Python 3.11+ configurado correctamente
+- [x] Estructura de proyecto lista para desarrollo
+- [x] Documentación clara del setup
 
 ## Rama
-feat/issue-24-monte-carlo-simd
+feat/issue-25-python-poetry-pyo3
 
-## Referencias Técnicas
-- Rust SIMD: https://doc.rust-lang.org/std/arch/
-- Rayon parallel iterators
+---
+
+## Issue #24 Completado (Resumen)
+
+### Componentes Implementados
+- Módulo equity_calculator con Monte Carlo
+- Optimización SIMD AVX2 para evaluación batch
+- Integración con Rayon para 16 threads
+- Early stopping con convergencia < 0.1%
 
 ---
 
