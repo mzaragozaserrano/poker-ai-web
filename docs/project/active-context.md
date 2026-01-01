@@ -3,10 +3,10 @@
 ## Estado General
 La Fase 2 (Motor Matemático y Capa de Servicio) continúa. Puente FFI Rust-Python completado.
 
-## Tarea Actual: ISSUE #27
-2.2.3 Implementar endpoints REST en FastAPI para estadísticas
+## Tarea Actual: ISSUE #28
+2.2.4 Implementar WebSocket para push de nuevas manos
 
-## Estado: COMPLETADO
+## Estado: EN PROGRESO
 
 ## Contexto
 - Fase 2.2: Orquestación y API
