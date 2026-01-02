@@ -6,4 +6,5 @@ export * from './useEquityCalculation'
 export * from './useWebSocket'
 export * from './useReplayerState'
 export * from './useAmountFormat'
+export * from './useProfitHistory'
 
