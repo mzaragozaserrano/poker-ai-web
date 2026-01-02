@@ -7,7 +7,7 @@ import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useRecentHands } from '../../../hooks/useRecentHands'
 import { useAmountFormat } from '../../../hooks/useAmountFormat'
-import { HandSummary } from '../../../types/api'
+import { formatAmount } from '../../../utils/formatters'
 import { HandsListFilters } from './HandsListFilters'
 
 interface HandsListProps {
@@ -63,7 +63,7 @@ export const HandsList = ({
 }: HandsListProps) => {
   const navigate = useNavigate()
   const { data, isLoading, isError } = useRecentHands({ limit })
-  const { formatAmount } = useAmountFormat()
+  const { format: amountFormat } = useAmountFormat()
 
   // Estado de filtros
   const [selectedStakes, setSelectedStakes] = useState<string[]>([])
@@ -278,7 +278,11 @@ export const HandsList = ({
                     </td>
                     <td className={`py-3 px-4 text-sm font-semibold text-right ${resultColor}`}>
                       {isWin && '+'}
-                      {formatAmount(hand.result)}
+                      {formatAmount(
+                        hand.result,
+                        amountFormat,
+                        Math.round(parseFloat(hand.bigBlind) * 100),
+                      )}
                     </td>
                     <td className="py-3 px-4 text-sm text-slate-500 font-mono text-xs truncate max-w-[120px]">
                       {hand.id}
