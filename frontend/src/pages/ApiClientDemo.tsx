@@ -10,9 +10,11 @@ import {
   useRecentHands,
   useHand,
   useEquityCalculation,
+  useWebSocket,
 } from '../hooks'
 import { Card, Badge, Button, Input } from '../components'
 import { ApiError } from '../utils/api-client'
+import { NewHandMessage } from '../types/api'
 
 export function ApiClientDemo() {
   const [selectedPlayerName, setSelectedPlayerName] = useState('thesmoy')
@@ -21,6 +23,8 @@ export function ApiClientDemo() {
     heroRange: 'AA,KK,AKs',
     villainRange: 'QQ+,AJs',
   })
+  const [wsEnabled, setWsEnabled] = useState(false)
+  const [recentHandNotifications, setRecentHandNotifications] = useState<NewHandMessage[]>([])
 
   // ========== Queries ==========
   const playerStats = usePlayerStats({ playerName: selectedPlayerName })
@@ -29,6 +33,18 @@ export function ApiClientDemo() {
 
   // ========== Mutations ==========
   const equityCalc = useEquityCalculation()
+
+  // ========== WebSocket ==========
+  const websocket = useWebSocket({
+    autoConnect: wsEnabled,
+    onNewHand: (message) => {
+      console.log('Nueva mano detectada:', message)
+      setRecentHandNotifications((prev) => [message, ...prev].slice(0, 10))
+    },
+    onConnectionAck: (message) => {
+      console.log('Conexión WebSocket confirmada:', message.client_id)
+    },
+  })
 
   const handleCalculateEquity = () => {
     equityCalc.mutate({
@@ -246,6 +262,150 @@ export function ApiClientDemo() {
                     </div>
                   </div>
                 )}
+              </div>
+            </div>
+          </Card>
+
+          {/* ========== SECCIÓN 5: WebSocket Real-Time ========== */}
+          <Card className="lg:col-span-2">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-semibold text-white">WebSocket (Tiempo Real)</h2>
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2">
+                    <div
+                      className={`w-3 h-3 rounded-full ${
+                        websocket.status === 'connected'
+                          ? 'bg-green-400 animate-pulse'
+                          : websocket.status === 'connecting' || websocket.status === 'reconnecting'
+                            ? 'bg-yellow-400 animate-pulse'
+                            : 'bg-red-400'
+                      }`}
+                    />
+                    <span className="text-sm text-slate-300">
+                      {websocket.status === 'connected'
+                        ? 'Conectado'
+                        : websocket.status === 'connecting'
+                          ? 'Conectando...'
+                          : websocket.status === 'reconnecting'
+                            ? 'Reconectando...'
+                            : 'Desconectado'}
+                    </span>
+                  </div>
+                  {!wsEnabled ? (
+                    <Button
+                      onClick={() => {
+                        setWsEnabled(true)
+                        websocket.connect()
+                      }}
+                      variant="primary"
+                      size="sm"
+                    >
+                      Conectar
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={() => {
+                        setWsEnabled(false)
+                        websocket.disconnect()
+                      }}
+                      variant="destructive"
+                      size="sm"
+                    >
+                      Desconectar
+                    </Button>
+                  )}
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                {/* Info de conexión */}
+                {websocket.clientId && (
+                  <div className="bg-slate-800 p-3 rounded">
+                    <p className="text-slate-400 text-sm">Client ID:</p>
+                    <p className="text-white font-mono text-xs">{websocket.clientId}</p>
+                  </div>
+                )}
+
+                {/* Notificaciones de nuevas manos */}
+                <div>
+                  <h3 className="text-white font-medium mb-2">
+                    Nuevas Manos Detectadas ({recentHandNotifications.length})
+                  </h3>
+                  {recentHandNotifications.length === 0 ? (
+                    <p className="text-slate-400 text-sm">
+                      {websocket.isConnected
+                        ? 'Esperando nuevas manos...'
+                        : 'Conecta el WebSocket para recibir notificaciones'}
+                    </p>
+                  ) : (
+                    <div className="space-y-2">
+                      {recentHandNotifications.slice(0, 5).map((notification, idx) => (
+                        <div
+                          key={`${notification.hand_id}-${idx}`}
+                          className="bg-slate-800 p-3 rounded flex items-center justify-between"
+                        >
+                          <div className="flex-1">
+                            <p className="text-white text-sm font-medium">
+                              {notification.game_type} - {notification.stakes}
+                            </p>
+                            <p className="text-slate-400 text-xs">
+                              Posición: {notification.hero_position}
+                            </p>
+                            <p className="text-slate-400 text-xs font-mono">
+                              ID: {notification.hand_id.slice(0, 16)}...
+                            </p>
+                          </div>
+                          {notification.hero_result !== null && (
+                            <Badge
+                              variant={notification.hero_result > 0 ? 'success' : 'error'}
+                              className="text-xs"
+                            >
+                              {notification.hero_result > 0 ? '+' : ''}
+                              {(notification.hero_result / 100).toFixed(2)}
+                            </Badge>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Historial de mensajes (debug) */}
+                <details className="bg-slate-800 p-3 rounded">
+                  <summary className="text-slate-300 text-sm cursor-pointer">
+                    Historial de mensajes ({websocket.messageHistory.length})
+                  </summary>
+                  <div className="mt-3 space-y-2 max-h-48 overflow-y-auto">
+                    {websocket.messageHistory.slice(0, 10).map((msg, idx) => (
+                      <div
+                        key={`${msg.timestamp}-${idx}`}
+                        className="bg-slate-900 p-2 rounded text-xs"
+                      >
+                        <div className="flex items-center justify-between mb-1">
+                          <Badge
+                            variant={
+                              msg.type === 'new_hand'
+                                ? 'success'
+                                : msg.type === 'error'
+                                  ? 'error'
+                                  : 'default'
+                            }
+                            className="text-xs"
+                          >
+                            {msg.type}
+                          </Badge>
+                          <span className="text-slate-500 text-xs">
+                            {new Date(msg.timestamp).toLocaleTimeString()}
+                          </span>
+                        </div>
+                        <pre className="text-slate-300 text-xs overflow-x-auto">
+                          {JSON.stringify(msg, null, 2)}
+                        </pre>
+                      </div>
+                    ))}
+                  </div>
+                </details>
               </div>
             </div>
           </Card>

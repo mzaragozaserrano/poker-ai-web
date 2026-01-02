@@ -169,6 +169,48 @@ export interface PostEquityCalculateMultiwayResponse
   extends ApiSuccessResponse<EquityCalculationMultiwayResponse> {}
 
 // ============================================================================
+// WEBSOCKET MESSAGES
+// ============================================================================
+
+export type WebSocketMessageType = 'connection_ack' | 'heartbeat' | 'new_hand' | 'error'
+
+export interface BaseWebSocketMessage {
+  type: WebSocketMessageType
+  timestamp: string
+}
+
+export interface ConnectionAckMessage extends BaseWebSocketMessage {
+  type: 'connection_ack'
+  client_id: string
+}
+
+export interface HeartbeatMessage extends BaseWebSocketMessage {
+  type: 'heartbeat'
+}
+
+export interface NewHandMessage extends BaseWebSocketMessage {
+  type: 'new_hand'
+  hand_id: string
+  hero_result: number | null
+  hero_position: string
+  game_type: string
+  stakes: string
+}
+
+export interface ErrorMessage extends BaseWebSocketMessage {
+  type: 'error'
+  message: string
+}
+
+export type WebSocketMessage =
+  | ConnectionAckMessage
+  | HeartbeatMessage
+  | NewHandMessage
+  | ErrorMessage
+
+export type ConnectionStatus = 'connecting' | 'connected' | 'disconnected' | 'reconnecting'
+
+// ============================================================================
 // TIPOS DE UTILIDAD
 // ============================================================================
 
