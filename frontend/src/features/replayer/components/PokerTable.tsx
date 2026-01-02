@@ -1,5 +1,6 @@
 import { Stage, Layer, Ellipse, Text, Rect, Group } from 'react-konva'
 import type { PokerTableProps } from '../../../lib/canvas'
+import type { AmountFormat } from '../../../hooks/useAmountFormat'
 import { 
   TABLE_COLORS, 
   TABLE_DIMENSIONS,
@@ -14,6 +15,7 @@ import {
   calculateResponsiveScale,
   isValidCard 
 } from '../../../lib/canvas'
+import { formatStack } from '../../../utils/formatters'
 import { PlayerSeat } from './PlayerSeat'
 import { Card } from './Card'
 
@@ -25,7 +27,9 @@ export function PokerTable({
   tableState, 
   width = 800, 
   height = 500,
-  onPlayerClick 
+  onPlayerClick,
+  amountFormat = 'bb',
+  bigBlind = 200
 }: PokerTableProps) {
   const { scale } = calculateResponsiveScale(
     { width, height },
@@ -111,7 +115,7 @@ export function PokerTable({
           {/* Pot amount */}
           {totalPot > 0 && (
             <Text
-              text={formatPot(totalPot)}
+              text={formatStack(totalPot, amountFormat, bigBlind)}
               fontSize={POT_DIMENSIONS.fontSize * scale}
               fontFamily="JetBrains Mono, monospace"
               fontStyle="bold"

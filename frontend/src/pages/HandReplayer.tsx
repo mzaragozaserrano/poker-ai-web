@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom'
 import { useRef, useState, useEffect, useCallback } from 'react'
 import { PokerTable, ReplayerControls, ReplayerTimeline } from '../features/replayer'
-import { useReplayerState } from '../hooks'
+import { useReplayerState, useAmountFormat } from '../hooks'
 import type { TableState, SeatPosition } from '../lib/canvas'
 import type { ReplayerActionStep } from '../types/poker'
 
@@ -205,6 +205,9 @@ export const HandReplayer = () => {
     initialSpeed: 1,
   })
 
+  // Hook para gestionar el formato de cantidades
+  const { format: amountFormat, toggleFormat } = useAmountFormat()
+
   // Combinar estado base con estado de la calle actual
   const tableState: TableState = {
     ...DEMO_TABLE_STATE,
@@ -312,6 +315,8 @@ export const HandReplayer = () => {
           width={dimensions.width}
           height={dimensions.height}
           onPlayerClick={handlePlayerClick}
+          amountFormat={amountFormat}
+          bigBlind={200}
         />
       </div>
 
@@ -321,12 +326,14 @@ export const HandReplayer = () => {
         currentActionIndex={replayer.state.currentActionIndex}
         totalActions={replayer.state.totalActions}
         playbackSpeed={replayer.state.playbackSpeed}
+        amountFormat={amountFormat}
         onPlay={replayer.play}
         onPause={replayer.pause}
         onStop={replayer.stop}
         onStepForward={replayer.stepForward}
         onStepBackward={replayer.stepBackward}
         onSetSpeed={replayer.setSpeed}
+        onToggleAmountFormat={toggleFormat}
       />
 
       {/* Timeline de acciones */}
