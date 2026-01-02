@@ -19,13 +19,21 @@ import {
 } from 'recharts'
 import { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent'
 import { useProfitHistory } from '../../../hooks/useProfitHistory'
-import { useAmountFormat } from '../../../hooks/useAmountFormat'
 
 export interface ProfitChartProps {
   playerName: string
   startDate?: string
   endDate?: string
   height?: number
+}
+
+/**
+ * Formatea una cantidad en centavos a euros para el gráfico de beneficios
+ * El gráfico siempre muestra en EUR ya que es un gráfico de bankroll
+ */
+const formatProfitAmount = (amountCents: number): string => {
+  const euros = amountCents / 100
+  return `€${euros.toFixed(2)}`
 }
 
 /**
@@ -36,7 +44,6 @@ const CustomTooltip = ({
   payload,
   label,
 }: TooltipProps<ValueType, NameType>) => {
-  const { formatAmount } = useAmountFormat()
 
   if (!active || !payload || !payload.length) {
     return null
@@ -59,7 +66,7 @@ const CustomTooltip = ({
             Net Won:
           </span>
           <span className="text-sm font-semibold text-violet-400">
-            {formatAmount(Number(netWon.value))}
+            {formatProfitAmount(Number(netWon.value))}
           </span>
         </div>
       )}
@@ -74,7 +81,7 @@ const CustomTooltip = ({
             All-in EV:
           </span>
           <span className="text-sm font-semibold text-slate-400">
-            {formatAmount(Number(ev.value))}
+            {formatProfitAmount(Number(ev.value))}
           </span>
         </div>
       )}
@@ -93,7 +100,7 @@ const CustomTooltip = ({
                     : 'text-slate-400'
               }`}
             >
-              {formatAmount(Number(netWon.value) - Number(ev.value))}
+              {formatProfitAmount(Number(netWon.value) - Number(ev.value))}
             </span>
           </div>
         </div>
