@@ -28,18 +28,18 @@ La Fase 2 (Motor Matemático y Capa de Servicio) ha sido completada. Se inicia l
 
 ## Próxima Tarea: FASE 3.1 - Base de la SPA
 
-### Contexto (Issue #38)
+### Contexto (Issue #39)
 - Fase 3: Interfaz de Usuario y Visualización
 - Stack: React 18 + Vite + TypeScript + Tailwind CSS
-- Objetivo: Crear componentes base del sistema de diseño (Button, Card, Modal, Navbar, Input, Badge)
-- Status: En progreso - Desarrollando componentes reutilizables del sistema de diseño
+- Objetivo: Configurar React Query para estado del servidor y crear cliente HTTP para la API
+- Status: En progreso - Implementando gestión de estado y comunicación con backend
 
 ### Tareas Planificadas (Fase 3.1)
 - [x] Configurar proyecto React con Vite + TypeScript
 - [x] Configurar Tailwind CSS con paleta de colores de poker (Issue #37)
-- [ ] Crear componentes base (Button, Card, Modal, Navbar, Input, Badge) (Issue #38 - En progreso)
+- [x] Crear componentes base (Button, Card, Modal, Navbar, Input, Badge) (Issue #38)
+- [ ] Integrar React Query para estado del servidor (Issue #39 - En progreso)
 - [ ] Implementar layout principal con sidebar
-- [ ] Integrar React Query para estado del servidor
 - [ ] Crear hook useWebSocket para conexión con backend
 - [ ] Configurar routing con React Router
 
