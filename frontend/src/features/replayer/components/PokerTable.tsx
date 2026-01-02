@@ -4,15 +4,18 @@ import {
   TABLE_COLORS, 
   TABLE_DIMENSIONS,
   SEAT_POSITIONS,
-  POT_DIMENSIONS 
+  POT_DIMENSIONS,
+  CARD_DIMENSIONS 
 } from '../../../lib/canvas'
 import { 
   getAllSeatPositions, 
   getTableCenter, 
   formatPot,
-  calculateResponsiveScale 
+  calculateResponsiveScale,
+  isValidCard 
 } from '../../../lib/canvas'
 import { PlayerSeat } from './PlayerSeat'
+import { Card } from './Card'
 
 /**
  * Componente PokerTable - Mesa de poker 6-max renderizada en Canvas
@@ -121,36 +124,25 @@ export function PokerTable({
           )}
         </Group>
 
-        {/* Community cards placeholder */}
+        {/* Community cards */}
         <Group x={center.x} y={center.y + 50 * scale}>
           {tableState.communityCards.length > 0 ? (
-            // Renderizar cartas comunitarias
-            tableState.communityCards.map((card, index) => (
-              <Group key={card} x={(index - 2) * 45 * scale}>
-                <Rect
-                  x={-18 * scale}
-                  y={-25 * scale}
-                  width={36 * scale}
-                  height={50 * scale}
-                  fill="white"
-                  cornerRadius={4}
-                  shadowColor="black"
-                  shadowBlur={4}
-                  shadowOpacity={0.3}
+            // Renderizar cartas comunitarias usando componente Card
+            tableState.communityCards.map((card, index) => {
+              const cardSpacing = (CARD_DIMENSIONS.width + 5) * scale
+              const totalWidth = tableState.communityCards.length * cardSpacing
+              const startX = -totalWidth / 2 + (CARD_DIMENSIONS.width * scale) / 2
+              
+              return isValidCard(card) ? (
+                <Card
+                  key={`community-${card}-${index}`}
+                  notation={card}
+                  x={startX + index * cardSpacing}
+                  y={-CARD_DIMENSIONS.height * scale / 2}
+                  scale={scale}
                 />
-                <Text
-                  text={card}
-                  fontSize={14 * scale}
-                  fontFamily="JetBrains Mono, monospace"
-                  fontStyle="bold"
-                  fill={card.includes('h') || card.includes('d') ? '#EF4444' : '#1E293B'}
-                  align="center"
-                  width={36 * scale}
-                  x={-18 * scale}
-                  y={-5 * scale}
-                />
-              </Group>
-            ))
+              ) : null
+            })
           ) : (
             // Placeholder cuando no hay cartas
             <Text

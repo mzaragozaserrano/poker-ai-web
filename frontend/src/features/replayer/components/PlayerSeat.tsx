@@ -4,9 +4,12 @@ import {
   PLAYER_COLORS, 
   SEAT_DIMENSIONS, 
   DEALER_BUTTON_COLORS,
-  DEALER_BUTTON_DIMENSIONS 
+  DEALER_BUTTON_DIMENSIONS,
+  CARD_DIMENSIONS,
+  isValidCard 
 } from '../../../lib/canvas'
 import { formatStack } from '../../../lib/canvas'
+import { Card, CardBack } from './Card'
 
 /**
  * Componente PlayerSeat - Renderiza un asiento de jugador en el canvas
@@ -61,6 +64,31 @@ export function PlayerSeat({
         offsetX={scaledRadius}
         offsetY={scaledRadius}
       />
+
+      {/* Hole cards */}
+      {player.cards && player.cards.length === 2 && (
+        <Group x={-CARD_DIMENSIONS.width * scale - 2} y={-scaledRadius - CARD_DIMENSIONS.height * scale - 8}>
+          {player.cards.map((card, index) => {
+            const cardX = index * (CARD_DIMENSIONS.width * scale + 2)
+            return isValidCard(card) ? (
+              <Card
+                key={`${player.id}-card-${index}`}
+                notation={card}
+                x={cardX}
+                y={0}
+                scale={scale * 0.8}
+              />
+            ) : (
+              <CardBack
+                key={`${player.id}-cardback-${index}`}
+                x={cardX}
+                y={0}
+                scale={scale * 0.8}
+              />
+            )
+          })}
+        </Group>
+      )}
 
       {/* Name background */}
       <Rect
