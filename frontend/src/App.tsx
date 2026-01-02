@@ -1,8 +1,10 @@
 import './App.css'
-import { ComponentShowcase } from './pages/ComponentShowcase'
+import { ApiClientDemo } from './pages/ApiClientDemo'
 
 function App() {
-  return <ComponentShowcase />
+  // Para demostración: mostrar ApiClientDemo
+  // TODO: Cambiar a router cuando se implemente routing
+  return <ApiClientDemo />
 }
 
 export default App
