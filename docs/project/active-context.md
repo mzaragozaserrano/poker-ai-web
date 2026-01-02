@@ -4,11 +4,12 @@
 La Fase 2 (Motor Matemático y Capa de Servicio) ha sido completada. Fase 3.1 completada. Iniciando Fase 3.2: Hand Replayer con React-Konva.
 
 ## Current Focus
-- **Issue #47**: Implementar gráfico de beneficios con Recharts - EN PROGRESO
-- Objetivo: Desarrollar gráfico de evolución de beneficios (bankroll) con Recharts
-- Funcionalidades: Net Won y All-in EV, filtrable por rango de fechas
-- Colores Dark Mode: Net Won (accent-violet), All-in EV (slate-400)
-- Implementación de ProfitChart.tsx con zoom/pan y tooltip
+- **Issue #47**: Implementar gráfico de beneficios con Recharts - COMPLETADA
+- Objetivo: Gráfico de evolución de beneficios (bankroll) con Recharts
+- Implementado: ProfitChart.tsx con LineChart, tooltip personalizado, leyenda y Brush
+- Componentes: useProfitHistory hook, líneas Net Won y All-in EV
+- Colores Dark Mode: Net Won (#8B5CF6), All-in EV (#94A3B8)
+- Próximo: Fase 3.3 - Matriz de rangos 13x13 o análisis de leaks
 
 ## Resumen de Fase 2 Completada
 
