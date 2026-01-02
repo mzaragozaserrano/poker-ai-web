@@ -7,7 +7,7 @@ Gestiona las conexiones WebSocket activas y el broadcasting de mensajes.
 import asyncio
 import uuid
 from datetime import datetime
-from typing import Dict, Set
+from typing import Dict, Set, Optional
 from fastapi import WebSocket
 import logging
 
