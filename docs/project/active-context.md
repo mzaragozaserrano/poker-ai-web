@@ -4,19 +4,19 @@
 La Fase 2 (Motor Matemático y Capa de Servicio) ha sido completada. Fase 3.1 completada. Iniciando Fase 3.2: Hand Replayer con React-Konva.
 
 ## Current Focus
-- **Issue #48**: Implementar lista de manos recientes - COMPLETADA
-- Objetivo: Crear componente HandsList.tsx con filtros y navegación al Replayer
-- Implementado:
-  - HandsList.tsx con tabla responsive
-  - HandsListFilters.tsx con filtros por stake, posición y resultado
-  - Búsqueda por hand_id
-  - Paginación (20 manos por página)
-  - Navegación a /hands/:id
-  - Integración con useRecentHands y useAmountFormat hooks
-  - Estados de loading, error y empty
-  - Formateo de fechas relativas
-  - Indicadores visuales de ganancia/pérdida
-- Próximo: Fase 3.3 - Matriz de rangos 13x13 o análisis de leaks
+- **Issue #49**: Implementar matriz de rangos 13x13
+- Objetivo: Crear componente RangeMatrix.tsx con mapas de calor para visualización de starting hands
+- Fase 3.3: Feature Stats - Análisis de Rangos
+- Tareas:
+  - Crear componente RangeMatrix.tsx
+  - Renderizar grid 13x13 con CSS Grid
+  - Implementar colores de calor según frecuencia
+  - Añadir etiquetas de filas/columnas (A, K, Q, ..., 2)
+  - Diferenciar suited (arriba diagonal) vs offsuit (abajo diagonal)
+  - Implementar drag-to-select para selección múltiple
+  - Añadir hover con tooltip de frecuencia
+  - Crear presets de rangos (EP Open, BTN Open, etc.)
+- Status: EN PROGRESO
 
 ## Resumen de Fase 2 Completada
 
@@ -74,7 +74,7 @@ La Fase 2 (Motor Matemático y Capa de Servicio) ha sido completada. Fase 3.1 co
 - [x] Dashboard principal con estadísticas (Issue #46 - COMPLETADA)
 - [x] Gráficos de beneficios con Recharts (Issue #47 - COMPLETADA)
 - [x] Lista de manos recientes con filtros (Issue #48 - COMPLETADA)
-- [ ] Matriz de rangos 13x13
+- [ ] Matriz de rangos 13x13 (Issue #49 - EN PROGRESO)
 - [ ] Vista de análisis de leaks
 
 ---
