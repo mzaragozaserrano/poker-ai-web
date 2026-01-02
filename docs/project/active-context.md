@@ -4,9 +4,9 @@
 La Fase 2 (Motor Matemático y Capa de Servicio) ha sido completada. Fase 3.1 completada. Iniciando Fase 3.2: Hand Replayer con React-Konva.
 
 ## Current Focus
-- **Issue #44**: Implementar controles de reproducción del Hand Replayer (COMPLETADA)
-- Objetivo: Play, Pause, Step, Speed, Timeline visual
-- Componentes: ReplayerControls, ReplayerTimeline, useReplayerState (máquina de estados)
+- **Issue #45**: Implementar toggle de formato de cantidades (BB vs Monedas)
+- Objetivo: Toggle para alternar entre Big Blinds y EUR con persistencia en localStorage
+- Componentes: AmountFormatToggle, useAmountFormat hook, conversión BB <-> EUR
 
 ## Resumen de Fase 2 Completada
 
