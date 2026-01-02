@@ -3,10 +3,17 @@
 ## Estado General
 La Fase 4 (Optimización, Seguridad y Lanzamiento) ha iniciado. Esta fase se enfoca en pruebas de carga masiva, optimización de rendimiento, seguridad y empaquetado de la aplicación.
 
+## Current Focus
+**Issue #64: Implementar generador de manos sintéticas para pruebas de carga**
+- Crear módulo `backend/parsers/src/synthetic_generator.rs`
+- Generación paralela con Rayon (16 threads)
+- Integración con Parquet writer para persistencia
+- Objetivo: 1M manos en < 60 segundos
+
 ## Issues Fase 4 (Creadas)
 
 ### 4.1 Rendimiento y Escalabilidad
-- [ ] #64 - 4.1.1 Implementar generador de manos sintéticas para pruebas de carga
+- [x] #64 - 4.1.1 Implementar generador de manos sintéticas para pruebas de carga (EN PROGRESO)
 - [ ] #65 - 4.1.2 Ejecutar pruebas de carga masiva con 10M de manos
 - [ ] #66 - 4.1.3 Configurar Huge Pages para optimización de memoria
 - [ ] #67 - 4.1.4 Tuning de DuckDB para consultas vectorizadas masivas
