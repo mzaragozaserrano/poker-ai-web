@@ -4,7 +4,7 @@
  */
 
 import { useSimplePlayerStats } from '../hooks/usePlayerStats'
-import { DashboardHeader, StatCard, ProfitChart } from '../features/dashboard'
+import { DashboardHeader, StatCard, ProfitChart, HandsList } from '../features/dashboard'
 
 // Hero por defecto del proyecto
 const HERO_NAME = 'thesmoy'
@@ -143,6 +143,11 @@ export const Dashboard = () => {
       {/* Gráfico de evolución de beneficios */}
       <div className="mt-8">
         <ProfitChart playerName={HERO_NAME} height={400} />
+      </div>
+
+      {/* Lista de manos recientes */}
+      <div className="mt-8">
+        <HandsList limit={50} showFilters={true} showPagination={true} />
       </div>
 
       {/* Sección adicional para futuras features */}

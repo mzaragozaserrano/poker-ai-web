@@ -4,11 +4,18 @@
 La Fase 2 (Motor Matemático y Capa de Servicio) ha sido completada. Fase 3.1 completada. Iniciando Fase 3.2: Hand Replayer con React-Konva.
 
 ## Current Focus
-- **Issue #47**: Implementar gráfico de beneficios con Recharts - COMPLETADA
-- Objetivo: Gráfico de evolución de beneficios (bankroll) con Recharts
-- Implementado: ProfitChart.tsx con LineChart, tooltip personalizado, leyenda y Brush
-- Componentes: useProfitHistory hook, líneas Net Won y All-in EV
-- Colores Dark Mode: Net Won (#8B5CF6), All-in EV (#94A3B8)
+- **Issue #48**: Implementar lista de manos recientes - COMPLETADA
+- Objetivo: Crear componente HandsList.tsx con filtros y navegación al Replayer
+- Implementado:
+  - HandsList.tsx con tabla responsive
+  - HandsListFilters.tsx con filtros por stake, posición y resultado
+  - Búsqueda por hand_id
+  - Paginación (20 manos por página)
+  - Navegación a /hands/:id
+  - Integración con useRecentHands y useAmountFormat hooks
+  - Estados de loading, error y empty
+  - Formateo de fechas relativas
+  - Indicadores visuales de ganancia/pérdida
 - Próximo: Fase 3.3 - Matriz de rangos 13x13 o análisis de leaks
 
 ## Resumen de Fase 2 Completada
@@ -65,7 +72,8 @@ La Fase 2 (Motor Matemático y Capa de Servicio) ha sido completada. Fase 3.1 co
 
 ### Tareas Planificadas (Fase 3.3)
 - [x] Dashboard principal con estadísticas (Issue #46 - COMPLETADA)
-- [ ] Gráficos de beneficios con Recharts/ECharts
+- [x] Gráficos de beneficios con Recharts (Issue #47 - COMPLETADA)
+- [x] Lista de manos recientes con filtros (Issue #48 - COMPLETADA)
 - [ ] Matriz de rangos 13x13
 - [ ] Vista de análisis de leaks
 
