@@ -36,7 +36,7 @@ La Fase 2 (Motor Matemático y Capa de Servicio) ha sido completada. Se inicia l
 
 ### Tareas Planificadas (Fase 3.1)
 - [x] Configurar proyecto React con Vite + TypeScript
-- [ ] Configurar Tailwind CSS con paleta de colores de poker
+- [x] Configurar Tailwind CSS con paleta de colores de poker (Issue #37)
 - [ ] Crear componentes base (Button, Card, Modal, Navbar)
 - [ ] Implementar layout principal con sidebar
 - [ ] Integrar React Query para estado del servidor
