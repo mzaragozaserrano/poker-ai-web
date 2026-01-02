@@ -1,20 +1,162 @@
+/* ============================================
+   ESTILOS GLOBALES - DARK MODE ONLY
+   ============================================
+   Configuración base para todo el tema Dark Mode.
+   Referencia: docs/project/ui-foundations.md
+*/
+
+/* Importar variables CSS personalizadas */
+@import './styles/variables.css';
+
+/* Directivas de Tailwind CSS */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================
+   CONFIGURACIÓN DEL ESQUEMA DE COLOR
+   ============================================ */
 :root {
   color-scheme: dark;
 }
 
+/* ============================================
+   ESTILOS BASE - HTML & BODY
+   ============================================ */
 html,
 body {
   margin: 0;
   padding: 0;
-  background-color: #0f172a;
-  color: #e2e8f0;
+  width: 100%;
+  height: 100%;
+  
+  /* Background principal - Slate 950 */
+  background-color: var(--color-bg-primary);
+  
+  /* Texto principal */
+  color: var(--color-text-primary);
+  
+  /* Tipografía base */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  
+  /* Prevenir scroll innecesario */
+  overflow: hidden;
 }
 
+/* ============================================
+   CONTENEDOR PRINCIPAL
+   ============================================ */
 #root {
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
 }
+
+/* ============================================
+   ESTILOS BASE PARA ELEMENTOS
+   ============================================ */
+
+/* Bordes por defecto */
+* {
+  border-color: var(--color-border);
+}
+
+/* Enlaces con color accent */
+a {
+  color: var(--color-accent-violet);
+  text-decoration: none;
+  
+  &:hover {
+    opacity: 0.8;
+  }
+  
+  &:active {
+    opacity: 0.6;
+  }
+}
+
+/* Inputs con tema dark */
+input,
+textarea,
+select {
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+  
+  &::placeholder {
+    color: var(--color-text-muted);
+  }
+  
+  &:focus {
+    outline: none;
+    border-color: var(--color-accent-violet);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+  }
+}
+
+/* Scrollbar personalizado */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-slate-700);
+  border-radius: 4px;
+  
+  &:hover {
+    background: var(--color-slate-600);
+  }
+}
+
+/* ============================================
+   COMPONENTES TAILWIND PERSONALIZADOS
+   ============================================ */
+
+@layer components {
+  /* Botones base */
+  .btn {
+    @apply px-4 py-2 rounded-md font-medium transition-all duration-200;
+  }
+  
+  .btn-primary {
+    @apply bg-accent-violet text-white hover:opacity-90 active:opacity-75;
+  }
+  
+  /* Tarjetas base */
+  .card {
+    @apply bg-slate-800 border border-slate-700 rounded-lg p-4;
+  }
+  
+  /* Contenedores base */
+  .container-base {
+    @apply bg-slate-950 text-slate-200;
+  }
+  
+  /* Badge para acciones de poker */
+  .badge-raise {
+    @apply inline-block px-2 py-1 rounded bg-poker-raise text-white text-xs font-medium;
+  }
+  
+  .badge-call {
+    @apply inline-block px-2 py-1 rounded bg-poker-call text-white text-xs font-medium;
+  }
+  
+  .badge-fold {
+    @apply inline-block px-2 py-1 rounded bg-poker-fold text-white text-xs font-medium;
+  }
+  
+  .badge-equity {
+    @apply inline-block px-2 py-1 rounded bg-poker-equity-high text-white text-xs font-medium;
+  }
+}
+
