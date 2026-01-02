@@ -4,11 +4,11 @@
 La Fase 2 (Motor Matemático y Capa de Servicio) ha sido completada. Fase 3.1 completada. Iniciando Fase 3.2: Hand Replayer con React-Konva.
 
 ## Current Focus
-- **Issue #46**: Implementar Dashboard principal con KPIs - COMPLETADA
-- Objetivo: Dashboard principal con tarjetas de KPIs y resumen del Hero (thesmoy)
-- Implementado: StatCard, DashboardHeader, lógica de colores y tendencias
-- KPIs: VPIP, PFR, 3Bet, bb/100, WTSD (opcional)
-- Próximo: Issue #47 o features adicionales del dashboard
+- **Issue #47**: Implementar gráfico de beneficios con Recharts - EN PROGRESO
+- Objetivo: Desarrollar gráfico de evolución de beneficios (bankroll) con Recharts
+- Funcionalidades: Net Won y All-in EV, filtrable por rango de fechas
+- Colores Dark Mode: Net Won (accent-violet), All-in EV (slate-400)
+- Implementación de ProfitChart.tsx con zoom/pan y tooltip
 
 ## Resumen de Fase 2 Completada
 
