@@ -6,12 +6,66 @@ import type { TableState, SeatPosition } from '../lib/canvas'
 // Estado de ejemplo para demostrar la mesa
 const DEMO_TABLE_STATE: TableState = {
   players: [
-    { id: '1', name: 'thesmoy', stack: 10250, position: 'BTN', isHero: true, isFolded: false, isActive: true },
-    { id: '2', name: 'Villain1', stack: 8500, position: 'SB', isHero: false, isFolded: false, isActive: false, currentBet: 50 },
-    { id: '3', name: 'Player3', stack: 15000, position: 'BB', isHero: false, isFolded: false, isActive: false, currentBet: 100 },
-    { id: '4', name: 'FishyMcFish', stack: 5200, position: 'UTG', isHero: false, isFolded: true, isActive: false },
-    { id: '5', name: 'RegPlayer', stack: 12000, position: 'MP', isHero: false, isFolded: false, isActive: false },
-    { id: '6', name: 'NitKing', stack: 9800, position: 'CO', isHero: false, isFolded: false, isActive: false },
+    { 
+      id: '1', 
+      name: 'thesmoy', 
+      stack: 10250, 
+      position: 'BTN', 
+      isHero: true, 
+      isFolded: false, 
+      isActive: true,
+      cards: ['As', 'Kh'] // Hero siempre ve sus cartas
+    },
+    { 
+      id: '2', 
+      name: 'Villain1', 
+      stack: 8500, 
+      position: 'SB', 
+      isHero: false, 
+      isFolded: false, 
+      isActive: false, 
+      currentBet: 50,
+      cards: ['??', '??'] // Cartas no visibles
+    },
+    { 
+      id: '3', 
+      name: 'Player3', 
+      stack: 15000, 
+      position: 'BB', 
+      isHero: false, 
+      isFolded: false, 
+      isActive: false, 
+      currentBet: 100,
+      cards: ['Qd', 'Jc'] // Visible en showdown
+    },
+    { 
+      id: '4', 
+      name: 'FishyMcFish', 
+      stack: 5200, 
+      position: 'UTG', 
+      isHero: false, 
+      isFolded: true, 
+      isActive: false 
+    },
+    { 
+      id: '5', 
+      name: 'RegPlayer', 
+      stack: 12000, 
+      position: 'MP', 
+      isHero: false, 
+      isFolded: false, 
+      isActive: false,
+      cards: ['??', '??']
+    },
+    { 
+      id: '6', 
+      name: 'NitKing', 
+      stack: 9800, 
+      position: 'CO', 
+      isHero: false, 
+      isFolded: false, 
+      isActive: false 
+    },
   ],
   pot: { main: 150 },
   dealerPosition: 'BTN' as SeatPosition,
