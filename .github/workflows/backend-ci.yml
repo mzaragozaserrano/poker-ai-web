@@ -1,11 +1,11 @@
-name: CI
+name: Backend CI
 
 on:
   pull_request:
     branches: [main, develop]
     paths:
       - 'backend/**'
-      - '.github/workflows/ci.yml'
+      - '.github/workflows/backend-ci.yml'
 
 env:
   CARGO_TERM_COLOR: always
@@ -110,6 +110,4 @@ jobs:
       - name: Build workspace (debug)
         working-directory: backend
         run: cargo build --workspace --verbose
-
-
 
