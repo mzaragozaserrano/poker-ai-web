@@ -1,0 +1,86 @@
+/* ============================================
+   VARIABLES CSS - PALETA DARK MODE POKER
+   ============================================
+   Definición centralizada de variables CSS para la paleta de colores.
+   Referencia: docs/project/ui-foundations.md
+*/
+
+:root {
+  /* ========== PALETA BASE - SLATE ==========
+     Colores de fondo y superficies primarias */
+  --color-slate-950: #0f172a;
+  --color-slate-800: #1e293b;
+  --color-slate-700: #334155;
+  --color-slate-600: #475569;
+  --color-slate-500: #64748b;
+
+  /* ========== COLORES DE ACCIONES POKER ==========
+     Indicadores visuales de acciones en la mesa */
+  
+  /* RAISE - Agresividad (Rojo) */
+  --color-poker-raise: #ef4444;
+  
+  /* CALL - Pasividad (Azul) */
+  --color-poker-call: #3b82f6;
+  
+  /* FOLD - Descarte (Gris) */
+  --color-poker-fold: #64748b;
+  
+  /* EQUITY HIGH - Probabilidad alta (Verde) */
+  --color-poker-equity-high: #10b981;
+
+  /* ========== ACENTO ==========
+     Color para acciones primarias y Hero */
+  --color-accent-violet: #8b5cf6;
+
+  /* ========== TEXTO Y BORDES ==========
+     Colores derivados para texto y divisores */
+  --color-text-primary: #e2e8f0;
+  --color-text-secondary: #cbd5e1;
+  --color-text-muted: #94a3b8;
+  
+  --color-border: #334155;
+  --color-border-light: #475569;
+
+  /* ========== SUPERFICIES ==========
+     Capas de profundidad */
+  --color-bg-primary: #0f172a;    /* Background principal */
+  --color-bg-secondary: #1e293b;  /* Tarjetas, paneles */
+  --color-bg-tertiary: #334155;   /* Elementos terciarios */
+
+  /* ========== ALIAS PARA ACCIONES ==========
+     Atajos para componentes comunes */
+  --action-raise-bg: var(--color-poker-raise);
+  --action-raise-text: #ffffff;
+  
+  --action-call-bg: var(--color-poker-call);
+  --action-call-text: #ffffff;
+  
+  --action-fold-bg: var(--color-poker-fold);
+  --action-fold-text: #ffffff;
+}
+
+/* ============================================
+   EJEMPLOS DE USO EN COMPONENTES
+   ============================================
+   
+   Ejemplo 1: Botón de Raise
+   .button-raise {
+     background-color: var(--color-poker-raise);
+     color: var(--action-raise-text);
+   }
+   
+   Ejemplo 2: Card/Panel
+   .card {
+     background-color: var(--color-bg-secondary);
+     border-color: var(--color-border);
+     color: var(--color-text-primary);
+   }
+   
+   Ejemplo 3: Badge de Hero (Accent)
+   .badge-hero {
+     background-color: var(--color-accent-violet);
+     color: #ffffff;
+   }
+*/
+
