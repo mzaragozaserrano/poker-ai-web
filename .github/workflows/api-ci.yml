@@ -36,10 +36,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-poetry-
       
+      - name: Regenerate lock file
+        run: poetry lock
+      
       - name: Install dependencies
-        run: |
-          poetry lock --no-update || true
-          poetry install --extras dev
+        run: poetry install --extras dev
       
       - name: Lint with Ruff
         run: |
