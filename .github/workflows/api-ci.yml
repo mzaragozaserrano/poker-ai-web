@@ -37,7 +37,9 @@ jobs:
             ${{ runner.os }}-poetry-
       
       - name: Install dependencies
-        run: poetry install --extras dev
+        run: |
+          poetry lock --no-update || true
+          poetry install --extras dev
       
       - name: Lint with Ruff
         run: |
