@@ -125,12 +125,29 @@ Backend (FastAPI/Rust)
 - **Canvas Rendering**: 60 FPS
 - **Build Size**: <200KB (gzipped)
 
-## Próximas Fases
+## Estado de Implementación
 
-1. **Fase 1.2**: Componentes base (Button, Card, Navbar, Modal)
-2. **Fase 1.3**: Setup de WebSocket y comunicación con backend
-3. **Fase 2**: Feature Replayer
-4. **Fase 3**: Feature Stats
-5. **Fase 4**: Feature Dashboard
+✓ **Fase 3.1**: Componentes base y configuración
+  - React 18 + Vite + TypeScript
+  - Tailwind CSS con modo oscuro
+  - Button, Card, Navbar, Modal, Input, Badge
+  - React Query y API client
+  - WebSocket hook con reconexión automática
+  - Layout principal con sidebar
+  - React Router con 8 páginas
 
+✓ **Fase 3.2**: Feature Replayer
+  - Hand Replayer con React-Konva
+  - Mesa 6-max con renderizado Canvas (60 FPS)
+  - Sistema de cartas con sprites SVG
+  - Controles de reproducción completos
+  - Toggle de formato BB/Moneda
+
+✓ **Fase 3.3**: Feature Stats y Dashboard
+  - Dashboard principal con StatCards
+  - Gráficos de beneficios con Recharts
+  - Lista de manos recientes
+  - Matriz de rangos 13x13
+  - Presets de rangos GTO 6-max
+  - Comparación con rangos estratégicos
 

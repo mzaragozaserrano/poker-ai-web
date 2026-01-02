@@ -80,25 +80,30 @@ La aplicación opera íntegramente de forma local para garantizar la privacidad 
 - Node.js 18+ y npm/pnpm (para Fase 3 - Frontend)
 - DuckDB (se instala automáticamente vía dependencias)
 
-### Pasos de Instalación (Fase 1)
+### Pasos de Instalación
 
 ```powershell
 # Clonar el repositorio
 git clone https://github.com/mzaragozaserrano/poker-ai-web.git
 cd poker-ai-web
 
-# Configurar Rust backend
+# 1. Configurar Rust backend (Fase 1)
 cd backend
 cargo build --release
-
-# Ejecutar tests para verificar instalación
 cargo test --workspace
 
-# Probar parser con archivo real
-cargo run --example parse_real_file
-```
+# 2. Configurar Python API (Fase 2)
+cd ../server-api
+poetry install
 
-> **Nota**: Python (server-api) y React (frontend) se configurarán en las Fases 2 y 3 respectivamente.
+# Compilar módulo FFI de Rust
+cd ../backend/ffi
+maturin develop --release
+
+# 3. Configurar Frontend (Fase 3)
+cd ../../frontend
+npm install
+```
 
 ## Uso
 
@@ -139,14 +144,30 @@ Una vez iniciado:
 - **ReDoc**: http://127.0.0.1:8000/redoc
 - **WebSocket**: ws://127.0.0.1:8000/ws
 
+### Iniciar el Frontend (Fase 3)
+
+```powershell
+cd frontend
+
+# Instalar dependencias
+npm install
+
+# Iniciar servidor de desarrollo
+npm run dev
+```
+
+Una vez iniciado:
+- **Aplicación Web**: http://localhost:5173
+- **Dashboard**: Panel principal con estadísticas
+- **Replayer**: Visualización de manos históricas
+- **Stats**: Análisis de rangos y estadísticas por posición
+
 ### Configuracion de Rutas
 
 El sistema detecta automaticamente los historiales de Winamax en:
 ```
 C:\Users\Miguel\AppData\Roaming\winamax\documents\accounts\thesmoy\history
 ```
-
-> **Nota**: El Frontend (React) estara disponible en la Fase 3.
 
 ## Verificacion
 
@@ -216,6 +237,14 @@ cargo run --example file_watcher_demo
 - **WebSocket latency**: < 500ms para notificaciones
 - **Monte Carlo**: > 100K simulaciones/segundo
 
+#### Fase 3
+- **Componentes React**: 6 componentes base + 20+ componentes de features
+- **Build TypeScript**: 0 errores de tipado
+- **Canvas FPS**: 60 FPS target en Hand Replayer
+- **React Query**: Cache configurado con staleTime optimizado
+- **Bundle Size**: Optimizado con code splitting automático
+- **Responsive Design**: Mobile (>380px), Tablet (>768px), Desktop
+
 ## Estructura de Datos
 
 ### Esquema Star Schema (DuckDB)
@@ -273,6 +302,7 @@ Ver [LICENSE](LICENSE) para más detalles.
 
 **Fase 1 Completada** ✓ - Nucleo e infraestructura de datos operativo.
 **Fase 2 Completada** ✓ - Motor matematico y capa de servicio operativo.
+**Fase 3 Completada** ✓ - Interfaz de usuario y visualización operativa.
 
 ### Componentes Implementados
 
@@ -291,10 +321,23 @@ Ver [LICENSE](LICENSE) para más detalles.
 - **WebSocket Push**: Notificacion en tiempo real de nuevas manos (< 500ms)
 - **File Watcher Service**: Integracion completa Rust -> Python -> WebSocket
 
+#### Fase 3: Interfaz de Usuario y Visualización
+- **React SPA**: Aplicación React 18 + Vite + TypeScript en modo oscuro
+- **Componentes Base**: Button, Card, Modal, Navbar, Input, Badge (6 componentes reutilizables)
+- **Hand Replayer**: Reproductor de manos con React-Konva (Canvas 60 FPS)
+- **Controles de Reproducción**: Play/Pause/Step con velocidad ajustable
+- **Dashboard**: Estadísticas agregadas con gráficos Recharts
+- **Matriz de Rangos 13x13**: Visualización de starting hands con mapas de calor
+- **Presets GTO**: 8 rangos predefinidos (Open, 3Bet, Blind Defense) para 6-max
+- **Toggle BB/Moneda**: Formato de cantidades configurable globalmente
+- **React Query**: Estado del servidor con cache y sincronización
+- **WebSocket Hook**: Conexión en tiempo real con reconexión automática
+
 ### Tests
 - 60+ tests de Fase 1 (48 unitarios + 12 integracion)
 - Tests de integracion Python-Rust (pytest)
 - Tests de WebSocket (conexion, heartbeat, broadcasting)
+- Build frontend sin errores de TypeScript
 
 Consulta el [Roadmap](docs/project/roadmap.md) para conocer el estado actual de las fases de implementacion.
 
