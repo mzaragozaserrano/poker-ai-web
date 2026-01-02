@@ -28,13 +28,14 @@ La Fase 2 (Motor Matemático y Capa de Servicio) ha sido completada. Se inicia l
 
 ## Próxima Tarea: FASE 3.1 - Base de la SPA
 
-### Contexto
+### Contexto (Issue #36)
 - Fase 3: Interfaz de Usuario y Visualización
 - Stack: React 18 + Vite + TypeScript + Tailwind CSS
 - Objetivo: Crear la base del frontend con sistema de diseño Dark Mode
+- Status: En progreso - Configurando proyecto React con Vite
 
 ### Tareas Planificadas (Fase 3.1)
-- [ ] Configurar proyecto React con Vite + TypeScript
+- [x] Configurar proyecto React con Vite + TypeScript
 - [ ] Configurar Tailwind CSS con paleta de colores de poker
 - [ ] Crear componentes base (Button, Card, Modal, Navbar)
 - [ ] Implementar layout principal con sidebar
