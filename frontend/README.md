@@ -1,97 +1,74 @@
-# Frontend - Poker AI Web
+# Frontend - Poker AI Analyzer
 
-Plataforma de análisis de póker de alto rendimiento para Winamax, construida con React 18, Vite, TypeScript y Tailwind CSS.
+Plataforma de análisis de póker de alto rendimiento con React 18, Vite y TypeScript.
 
-## Requisitos
+## Características
 
-- Node.js 18+ 
-- npm 9+
+- React 18 + Vite (dev server < 500ms)
+- TypeScript strict mode
+- Tailwind CSS (Dark Mode)
+- Path aliases configurados (@/components, @/features, etc.)
+- ESLint + Prettier para calidad de código
+- Estructura de directorios organizada
 
 ## Instalación
 
 ```bash
+cd frontend
 npm install
 ```
 
 ## Desarrollo
 
-Para ejecutar el servidor de desarrollo local:
-
 ```bash
 npm run dev
 ```
 
-El servidor estará disponible en `http://localhost:5173/`
+El servidor estará disponible en `http://localhost:5173`
 
-## Compilación
-
-Para crear una compilación de producción:
+## Build
 
 ```bash
 npm run build
 ```
 
-Los archivos compilados estarán en `dist/`
-
-## Visualización de Compilación de Producción
-
-Para probar la compilación de producción localmente:
+## Linting
 
 ```bash
-npm run preview
+npm run lint
 ```
 
-## Estructura del Proyecto
+## Estructura de Directorios
 
 ```
 src/
-├── components/          # Componentes reutilizables
-├── features/            # Características principales
-│   ├── replayer/       # Hand Replayer para análisis post-juego
-│   ├── stats/          # Estadísticas y análisis
-│   └── dashboard/      # Dashboard principal
-├── lib/                # Utilidades y librerías
-│   └── canvas/        # Renderizado con Konva
-├── hooks/              # Custom React hooks
-├── utils/              # Funciones utilitarias
-├── types/              # Definiciones de tipos TypeScript
-├── App.tsx            # Componente raíz
-├── main.tsx           # Punto de entrada
-└── index.css          # Estilos globales (Tailwind)
+├── components/       # Componentes reutilizables
+├── features/         # Características del dominio
+├── hooks/            # Custom React hooks
+├── utils/            # Funciones de utilidad
+├── types/            # Definiciones TypeScript
+├── lib/
+│   └── canvas/       # Utilidades de renderizado Konva
+├── App.tsx
+└── main.tsx
 ```
 
-## Stack Tecnológico
+## Stack Técnico
 
-- **React 18**: Framework UI
-- **Vite 7**: Build tool moderno y rápido
-- **TypeScript**: Type safety
-- **Tailwind CSS 4**: Utility-first CSS framework
-- **React Router DOM**: Navegación
-- **Konva & React-Konva**: Renderizado Canvas para Hand Replayer
-- **ECharts**: Gráficos de estadísticas
-- **React Query**: Gestión de estado asincrónico
-- **Zustand**: State management
+- **Framework:** React 18
+- **Build:** Vite 5
+- **Lenguaje:** TypeScript 5
+- **Estilos:** Tailwind CSS 3
+- **Router:** React Router 6
+- **Estado:** React Query 5
+- **Canvas:** React Konva (Hand Replayer)
+- **Gráficos:** Recharts 2
 
-## Configuración
+## API Backend
 
-### TypeScript
-- Strict mode activado
-- Path aliases configurados (@/, @components/, @features/, etc.)
-
-### Tailwind CSS
-- Tema oscuro (slate-950/slate-800)
-- Paleta de colores de póker personalizada (raise, call, fold, equity)
-- Breakpoints responsivos
-
-### Vite
-- Optimizaciones de producción
-- Code splitting automático
-- Fast Refresh para HMR
-
-## Linting y Formato
-
-El proyecto incluye ESLint para mantener la calidad del código.
+- Base URL: `http://127.0.0.1:8000/api/v1`
+- WebSocket: `ws://127.0.0.1:8000/ws`
 
 ## Licencia
 
-Parte del proyecto Poker AI Web.
+ISC

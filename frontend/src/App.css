@@ -1,5 +1,26 @@
-/* App component styles - Tailwind utilities are used instead */
-#root {
-  width: 100%;
-  min-height: 100vh;
+:root {
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #0F172A;
 }
+
+body {
+  margin: 0;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    'Roboto',
+    'Oxygen',
+    'Ubuntu',
+    'Cantarell',
+    'Fira Sans',
+    'Droid Sans',
+    'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
