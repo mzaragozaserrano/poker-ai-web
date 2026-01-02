@@ -1,6 +1,7 @@
 // Types for canvas rendering
 
 import type { SeatPosition } from './constants'
+import type { AmountFormat } from '../../hooks/useAmountFormat'
 
 /** Coordenadas 2D */
 export interface Point {
@@ -50,6 +51,8 @@ export interface PokerTableProps {
   width?: number
   height?: number
   onPlayerClick?: (playerId: string) => void
+  amountFormat?: AmountFormat
+  bigBlind?: number
 }
 
 /** Props para el componente PlayerSeat */

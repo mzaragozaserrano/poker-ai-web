@@ -1,36 +1,42 @@
 import React, { useState } from 'react'
 import type { PlaybackSpeed } from '../../../types/poker'
+import type { AmountFormat } from '../../../hooks/useAmountFormat'
+import { AmountFormatToggle } from './AmountFormatToggle'
 
 interface ReplayerControlsProps {
   isPlaying: boolean
   currentActionIndex: number
   totalActions: number
   playbackSpeed: PlaybackSpeed
+  amountFormat?: AmountFormat
   onPlay: () => void
   onPause: () => void
   onStop: () => void
   onStepForward: () => void
   onStepBackward: () => void
   onSetSpeed: (speed: PlaybackSpeed) => void
+  onToggleAmountFormat?: () => void
 }
 
 const SPEED_OPTIONS: PlaybackSpeed[] = [1, 2, 5, 10]
 
 /**
  * Componente de controles para el reproductor de manos
- * Incluye botones Play/Pause, Step, selector de velocidad
+ * Incluye botones Play/Pause, Step, selector de velocidad y toggle de formato
  */
 export const ReplayerControls: React.FC<ReplayerControlsProps> = ({
   isPlaying,
   currentActionIndex,
   totalActions,
   playbackSpeed,
+  amountFormat = 'bb',
   onPlay,
   onPause,
   onStop,
   onStepForward,
   onStepBackward,
   onSetSpeed,
+  onToggleAmountFormat,
 }) => {
   const [showSpeedMenu, setShowSpeedMenu] = useState(false)
   const progress = totalActions > 0 ? Math.round((currentActionIndex / (totalActions - 1)) * 100) : 0
@@ -145,6 +151,17 @@ export const ReplayerControls: React.FC<ReplayerControlsProps> = ({
             </div>
           )}
         </div>
+
+        {/* Divider */}
+        <div className="w-px h-6 bg-slate-700" />
+
+        {/* Amount format toggle */}
+        {onToggleAmountFormat && (
+          <AmountFormatToggle
+            format={amountFormat}
+            onToggle={onToggleAmountFormat}
+          />
+        )}
       </div>
 
       {/* Información de estado */}
