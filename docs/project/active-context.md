@@ -4,10 +4,11 @@
 La Fase 2 (Motor Matemático y Capa de Servicio) ha sido completada. Fase 3.1 completada. Iniciando Fase 3.2: Hand Replayer con React-Konva.
 
 ## Current Focus
-- **Issue #45**: Implementar toggle de formato de cantidades (BB vs Monedas) - COMPLETADA
-- Objetivo: Toggle para alternar entre Big Blinds y EUR con persistencia en localStorage
-- Componentes: AmountFormatToggle, useAmountFormat hook, conversión BB <-> EUR
-- Próximo: Issue #46 o statsboard/dashboard
+- **Issue #46**: Implementar Dashboard principal con KPIs - COMPLETADA
+- Objetivo: Dashboard principal con tarjetas de KPIs y resumen del Hero (thesmoy)
+- Implementado: StatCard, DashboardHeader, lógica de colores y tendencias
+- KPIs: VPIP, PFR, 3Bet, bb/100, WTSD (opcional)
+- Próximo: Issue #47 o features adicionales del dashboard
 
 ## Resumen de Fase 2 Completada
 
@@ -62,7 +63,7 @@ La Fase 2 (Motor Matemático y Capa de Servicio) ha sido completada. Fase 3.1 co
 - [x] Toggle de formato de cantidades BB/EUR (Issue #45 - COMPLETADA)
 
 ### Tareas Planificadas (Fase 3.3)
-- [ ] Dashboard principal con estadísticas
+- [x] Dashboard principal con estadísticas (Issue #46 - COMPLETADA)
 - [ ] Gráficos de beneficios con Recharts/ECharts
 - [ ] Matriz de rangos 13x13
 - [ ] Vista de análisis de leaks
