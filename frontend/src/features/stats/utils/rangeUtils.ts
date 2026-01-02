@@ -79,7 +79,7 @@ export function getHeatmapColorGradient(
  * Obtiene el color de texto apropiado según el fondo
  * Para mantener buen contraste
  */
-export function getTextColor(backgroundColor: string, frequency: Frequency): string {
+export function getTextColor(_backgroundColor: string, frequency: Frequency): string {
   // Si la frecuencia es alta (>0.5), usar texto blanco
   // Si es baja, usar texto gris claro
   return frequency > 0.5 ? '#FFFFFF' : '#CBD5E1' // white : slate-300

@@ -3,9 +3,7 @@
  * Presets de rangos GTO para 6-max Cash Games
  */
 
-import React from 'react'
 import type { RangePreset, RangeData } from '../../../types/ranges'
-import { Button } from '../../../components/Button'
 
 interface RangePresetsProps {
   onPresetSelect: (preset: RangePreset) => void

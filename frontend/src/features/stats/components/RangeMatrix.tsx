@@ -3,8 +3,8 @@
  * Matriz 13x13 para visualización de rangos de starting hands
  */
 
-import React, { useState, useMemo } from 'react'
-import type { RangeData, MatrixCell, Hand, HandNotation } from '../../../types/ranges'
+import { useState, useMemo } from 'react'
+import type { RangeData, MatrixCell, StartingHand, HandNotation } from '../../../types/ranges'
 import { RANKS as RANK_LIST } from '../../../types/ranges'
 import { getHeatmapColor, getTotalFrequency, getPrimaryAction, formatActionBreakdown } from '../utils/rangeUtils'
 
@@ -21,7 +21,7 @@ interface RangeMatrixProps {
  * - Arriba diagonal (row < col): Suited (AKs, AQs, KQs, ...)
  * - Abajo diagonal (row > col): Offsuit (AKo, AQo, KQo, ...)
  */
-function getHandFromPosition(row: number, col: number): Hand {
+function getHandFromPosition(row: number, col: number): StartingHand {
   const rank1 = RANK_LIST[row]
   const rank2 = RANK_LIST[col]
 
@@ -250,7 +250,7 @@ function RangeCell({ cell, isSelected, onClick, onMouseDown, onMouseEnter, onMou
       style={{ backgroundColor }}
       onClick={onClick}
       onMouseDown={onMouseDown}
-      onMouseEnter={(e) => {
+      onMouseEnter={() => {
         onMouseEnter()
         setShowTooltip(true)
       }}

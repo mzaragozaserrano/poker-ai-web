@@ -28,9 +28,9 @@ export type Rank = 'A' | 'K' | 'Q' | 'J' | 'T' | '9' | '8' | '7' | '6' | '5' | '
 export type HandNotation = string
 
 /**
- * Información completa de una mano
+ * Información completa de una mano de starting hand
  */
-export interface Hand {
+export interface StartingHand {
   notation: HandNotation // "AA", "AKs", "AKo", etc.
   type: HandType // pair, suited, offsuit
   rank1: Rank // Primera carta (mayor)
@@ -86,7 +86,7 @@ export interface RangeMetadata {
 /**
  * Rango completo con metadatos
  */
-export interface Range {
+export interface PokerRange {
   metadata: RangeMetadata
   data: RangeData
 }
@@ -110,7 +110,7 @@ export interface MatrixPosition {
  */
 export interface MatrixCell {
   position: MatrixPosition
-  hand: Hand
+  hand: StartingHand
   entries: RangeEntry[] // Acciones asociadas (puede haber múltiples)
   isSelected: boolean // Para drag-to-select
 }
