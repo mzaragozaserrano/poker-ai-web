@@ -1,7 +1,12 @@
-# FASE 3 PENDIENTE - Interfaz de Usuario y Visualización
+# FASE 3 EN PROGRESO - Interfaz de Usuario y Visualización
 
 ## Estado General
-La Fase 2 (Motor Matemático y Capa de Servicio) ha sido completada. Se inicia la Fase 3: Frontend React.
+La Fase 2 (Motor Matemático y Capa de Servicio) ha sido completada. Fase 3.1 completada. Iniciando Fase 3.2: Hand Replayer con React-Konva.
+
+## Current Focus
+- **Issue #42**: Implementar canvas de mesa de poker 6-max con React-Konva
+- Objetivo: Renderizado de mesa 6-max a 60 FPS
+- Componentes: PokerTable, PlayerSeat, DealerButton, Pot
 
 ## Resumen de Fase 2 Completada
 
