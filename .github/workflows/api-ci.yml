@@ -1,6 +1,10 @@
 name: API CI
 
 on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'server-api/**'
   pull_request:
     branches: [main, develop]
     paths:
@@ -8,26 +12,24 @@ on:
       - '.github/workflows/api-ci.yml'
 
 jobs:
-  python-checks:
-    name: API Quality Checks
+  lint:
+    name: Ruff Lint
     runs-on: ubuntu-latest
-    
     defaults:
       run:
         working-directory: ./server-api
-    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      
+
       - name: Install Poetry
         run: pip install poetry
-      
+
       - name: Cache Poetry dependencies
         uses: actions/cache@v4
         with:
@@ -35,25 +37,73 @@ jobs:
           key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
           restore-keys: |
             ${{ runner.os }}-poetry-
-      
-      - name: Regenerate lock file
-        run: poetry lock
-      
-      - name: Install dependencies
-        run: poetry install --extras dev
-      
-      - name: Lint with Ruff
-        run: |
-          poetry run ruff check app/ || echo "Ruff check completed with warnings"
-      
-      - name: Type check with mypy
-        run: |
-          poetry run mypy app/ --ignore-missing-imports || echo "Mypy check completed (may need configuration)"
-      
-      - name: Run tests
-        run: poetry run pytest tests/ -v --tb=short
-      
-      - name: Test coverage report
-        run: |
-          poetry run pytest tests/ --cov=app --cov-report=term-missing || echo "Coverage report completed"
 
+      - name: Install dependencies
+        run: poetry install --with dev
+
+      - name: Lint with Ruff
+        run: poetry run ruff check app/
+
+  typecheck:
+    name: Type Check (mypy)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./server-api
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Poetry
+        run: pip install poetry
+
+      - name: Cache Poetry dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pypoetry
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-poetry-
+
+      - name: Install dependencies
+        run: poetry install --with dev
+
+      - name: Type check with mypy
+        run: poetry run mypy app/ --ignore-missing-imports
+
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./server-api
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Poetry
+        run: pip install poetry
+
+      - name: Cache Poetry dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pypoetry
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-poetry-
+
+      - name: Install dependencies
+        run: poetry install --with dev
+
+      - name: Run tests with coverage
+        run: poetry run pytest tests/ -v --tb=short --cov=app --cov-report=term-missing
