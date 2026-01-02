@@ -4,19 +4,20 @@
 La Fase 2 (Motor Matemático y Capa de Servicio) ha sido completada. Fase 3.1 completada. Iniciando Fase 3.2: Hand Replayer con React-Konva.
 
 ## Current Focus
-- **Issue #49**: Implementar matriz de rangos 13x13
+- **Issue #49**: Implementar matriz de rangos 13x13 - COMPLETADA
 - Objetivo: Crear componente RangeMatrix.tsx con mapas de calor para visualización de starting hands
 - Fase 3.3: Feature Stats - Análisis de Rangos
-- Tareas:
-  - Crear componente RangeMatrix.tsx
-  - Renderizar grid 13x13 con CSS Grid
-  - Implementar colores de calor según frecuencia
-  - Añadir etiquetas de filas/columnas (A, K, Q, ..., 2)
-  - Diferenciar suited (arriba diagonal) vs offsuit (abajo diagonal)
-  - Implementar drag-to-select para selección múltiple
-  - Añadir hover con tooltip de frecuencia
-  - Crear presets de rangos (EP Open, BTN Open, etc.)
-- Status: EN PROGRESO
+- Implementado:
+  - RangeMatrix.tsx con grid 13x13 CSS y labels A-2
+  - Sistema de colores de calor según frecuencia (0.0-1.0)
+  - RangeCell con hover tooltip y diferenciación suited/offsuit
+  - Drag-to-select para selección múltiple de celdas
+  - RangePresets.tsx con rangos GTO 6-max (UTG/MP/CO/BTN/SB Open, 3Bet, Blind Defense)
+  - Utilidades rangeUtils.ts para análisis y colores
+  - Tipos TypeScript completos (types/ranges.ts)
+  - Integración en página Stats con layout responsive
+  - Build exitoso sin errores de TypeScript
+- Próximo: Fase 3.3 - Vista de análisis de leaks o Fase 4
 
 ## Resumen de Fase 2 Completada
 
@@ -74,7 +75,7 @@ La Fase 2 (Motor Matemático y Capa de Servicio) ha sido completada. Fase 3.1 co
 - [x] Dashboard principal con estadísticas (Issue #46 - COMPLETADA)
 - [x] Gráficos de beneficios con Recharts (Issue #47 - COMPLETADA)
 - [x] Lista de manos recientes con filtros (Issue #48 - COMPLETADA)
-- [ ] Matriz de rangos 13x13 (Issue #49 - EN PROGRESO)
+- [x] Matriz de rangos 13x13 (Issue #49 - COMPLETADA)
 - [ ] Vista de análisis de leaks
 
 ---
