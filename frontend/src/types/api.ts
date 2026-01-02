@@ -33,6 +33,7 @@ export interface PlayerStats {
   winrate: number // BB/100
   totalProfit: number // En centavos
   roi: number // Return On Investment %
+  wtsd?: number // Went To ShowDown % (opcional, futuro)
   positionalStats?: PositionalStats
 }
 
