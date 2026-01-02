@@ -13,519 +13,268 @@
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
 # --- ZONA EDITABLE POR EL AGENTE ---
-# FASE 3: Interfaz de Usuario y Visualización
+# FASE 4: Optimización, Seguridad y Lanzamiento
 $issues = @(
     @{ 
         Title = @"
-3.1.1 Configurar proyecto React con Vite + TypeScript
+4.1.1 Implementar generador de manos sintéticas para pruebas de carga
 "@
         Body = @"
-Inicializar el proyecto frontend con React 18, Vite y TypeScript.
+Crear un generador de manos sintéticas en Rust para poblar la base de datos con millones de manos de prueba.
 
 ## Contexto
-- Fase 3.1: Base de la SPA (React)
-- Stack: React 18 + Vite + TypeScript
-- Directorio: frontend/
+- Fase 4.1: Rendimiento y Escalabilidad
+- Necesario para pruebas de carga con 10M de manos
+- Debe generar datos realistas y válidos
 
 ## Tareas
-- [ ] Crear proyecto con Vite (template react-ts)
-- [ ] Configurar TypeScript strict mode
-- [ ] Configurar ESLint + Prettier
-- [ ] Configurar paths aliases (@/components, @/features, etc.)
-- [ ] Crear estructura de directorios base (components/, features/, hooks/, utils/, types/)
-- [ ] Verificar que dev server inicia correctamente
+- [ ] Crear módulo backend/parsers/src/synthetic_generator.rs
+- [ ] Implementar generación de manos con distribución realista
+- [ ] Generar acciones válidas (preflop, flop, turn, river)
+- [ ] Generar stacks y apuestas coherentes con el stake
+- [ ] Usar Rayon para generación paralela (16 threads)
+- [ ] Implementar CLI para generar N manos
+- [ ] Añadir semilla para reproducibilidad
+- [ ] Integrar con Parquet writer para persistencia
 
 ## Criterios de Aceptación
-- npm run dev inicia servidor en < 500ms
-- TypeScript strict mode activo
-- Estructura de directorios creada
-- Build de producción funciona sin errores
+- Genera 1M manos en < 60 segundos
+- Datos cumplen con el esquema de DuckDB
+- Distribución de posiciones y acciones realista
+- Generación determinista con semilla
 
-## Dependencias Clave
-- react: ^18.2.0
-- react-dom: ^18.2.0
-- typescript: ^5.x
-- vite: ^5.x
+## Parámetros de Generación
+- Número de manos
+- Rango de fechas
+- Stakes (NL2, NL5, NL10, NL25, NL50)
+- Seed para reproducibilidad
 "@
-        Labels = "enhancement,frontend,fase-3" 
+        Labels = "enhancement,backend,fase-4,testing" 
     },
     @{ 
         Title = @"
-3.1.2 Configurar Tailwind CSS con paleta Dark Mode
+4.1.2 Ejecutar pruebas de carga masiva con 10M de manos
 "@
         Body = @"
-Configurar Tailwind CSS con la paleta de colores específica para el modo oscuro de poker.
+Ejecutar y documentar pruebas de carga con una base de datos de 10 millones de manos.
 
 ## Contexto
-- Fase 3.1: Base de la SPA (React)
-- Dark Mode ONLY (no light mode)
-- Paleta definida en docs/project/ui-foundations.md
+- Fase 4.1: Rendimiento y Escalabilidad
+- Hardware: Ryzen 7 3800X (16 threads) + 64GB RAM
+- Medir rendimiento de consultas y API
 
 ## Tareas
-- [ ] Instalar y configurar Tailwind CSS
-- [ ] Configurar paleta de colores base (Slate-950/800/700)
-- [ ] Añadir colores de acciones de poker (raise, call, fold, equity)
-- [ ] Configurar color de acento (violet-500 para Hero)
-- [ ] Crear archivo de variables CSS para colores custom
-- [ ] Configurar dark mode como default (no toggle)
-- [ ] Documentar paleta en comentarios de tailwind.config.js
+- [ ] Generar dataset de 10M manos con generador sintético
+- [ ] Medir tiempo de carga inicial en DuckDB
+- [ ] Benchmark de consultas típicas:
+  - [ ] Estadísticas por jugador (VPIP, PFR, 3Bet)
+  - [ ] Filtrado por fecha y stake
+  - [ ] Agregaciones por posición
+- [ ] Medir latencia de endpoints API
+- [ ] Medir uso de memoria durante consultas
+- [ ] Identificar cuellos de botella
+- [ ] Documentar resultados en docs/specs/performance-benchmark.md
 
 ## Criterios de Aceptación
-- Colores de poker disponibles como clases (bg-poker-raise, etc.)
-- Background slate-950 por defecto
-- No hay opción de light mode
-- Paleta consistente con ui-foundations.md
+- Carga de 10M manos en < 5 minutos
+- Consultas de stats < 500ms
+- Uso de RAM < 32GB durante consultas
+- Sin OOM (Out of Memory) errors
 
-## Paleta de Colores
-- bg-slate-950 (#0F172A) - Background principal
-- bg-slate-800 (#1E293B) - Surface/Cards
-- poker-raise (#EF4444) - Rojo
-- poker-call (#3B82F6) - Azul
-- poker-fold (#64748B) - Gris
-- accent-violet (#8B5CF6) - Hero
+## Métricas a Capturar
+- Tiempo de ingesta (manos/segundo)
+- Latencia p50, p95, p99 de queries
+- Memoria pico durante operaciones
+- Throughput de API (requests/segundo)
 "@
-        Labels = "enhancement,frontend,fase-3,ui" 
+        Labels = "enhancement,backend,fase-4,testing,database" 
     },
     @{ 
         Title = @"
-3.1.3 Crear componentes base del sistema de diseño
+4.1.3 Configurar Huge Pages para optimización de memoria
 "@
         Body = @"
-Desarrollar los componentes reutilizables base del sistema de diseño.
+Configurar el sistema operativo para usar Huge Pages y optimizar el rendimiento de memoria.
 
 ## Contexto
-- Fase 3.1: Base de la SPA (React)
-- Componentes en src/components/
-- Dark Mode only
+- Fase 4.1: Rendimiento y Escalabilidad
+- 64GB RAM disponibles
+- Huge Pages reducen TLB misses
 
 ## Tareas
-- [ ] Crear Button.tsx con variantes (primary, secondary, ghost, destructive)
-- [ ] Crear Card.tsx como contenedor base
-- [ ] Crear Modal.tsx para diálogos
-- [ ] Crear Navbar.tsx para navegación principal
-- [ ] Crear Input.tsx para formularios
-- [ ] Crear Badge.tsx para etiquetas
-- [ ] Documentar props con TypeScript interfaces
-- [ ] Crear storybook básico o página de componentes
+- [ ] Documentar configuración de Huge Pages en Windows/Linux
+- [ ] Crear script de configuración para Windows (PowerShell)
+- [ ] Crear script de configuración para Linux (bash)
+- [ ] Configurar DuckDB para usar Huge Pages
+- [ ] Benchmark comparativo (con/sin Huge Pages)
+- [ ] Documentar impacto en rendimiento
+- [ ] Añadir instrucciones en docs/specs/sys-ops.md
 
 ## Criterios de Aceptación
-- Todos los componentes tipados con TypeScript
-- Estilos consistentes con paleta Dark Mode
-- Focus rings visibles para accesibilidad
-- Componentes exportados desde index.ts
+- Scripts de configuración funcionan
+- Mejora medible en benchmarks (>10%)
+- Documentación clara para el usuario
+- Configuración reversible
 
-## Componentes Mínimos
-- Button (variantes: primary, secondary, ghost)
-- Card (con header, body, footer opcionales)
-- Modal (con overlay y animación)
-- Navbar (logo, links, user area)
+## Configuración Recomendada
+- Huge Pages: 1GB pages si disponible, sino 2MB
+- Reservar 32GB para Huge Pages (deja 32GB para SO)
+- Deshabilitar swap o configurar swappiness=10
 "@
-        Labels = "enhancement,frontend,fase-3,ui" 
+        Labels = "enhancement,devops,fase-4,performance" 
     },
     @{ 
         Title = @"
-3.1.4 Configurar React Query y API client
+4.1.4 Tuning de DuckDB para consultas vectorizadas masivas
 "@
         Body = @"
-Configurar React Query para estado del servidor y crear cliente HTTP para la API.
+Optimizar la configuración de DuckDB para máximo rendimiento en consultas analíticas.
 
 ## Contexto
-- Fase 3.1: Base de la SPA (React)
-- Backend API en http://127.0.0.1:8000/api/v1
-- Usar @tanstack/react-query
+- Fase 4.1: Rendimiento y Escalabilidad
+- DuckDB opera in-memory
+- 64GB RAM, 16 threads disponibles
 
 ## Tareas
-- [ ] Instalar @tanstack/react-query
-- [ ] Configurar QueryClient con defaults
-- [ ] Crear api-client.ts con fetch wrapper
-- [ ] Configurar base URL y headers
-- [ ] Crear hooks para endpoints principales:
-  - [ ] usePlayerStats(playerName)
-  - [ ] useRecentHands(limit)
-  - [ ] useHand(handId)
-  - [ ] useEquityCalculation()
-- [ ] Configurar error handling global
-- [ ] Añadir tipos de respuesta (types/api.ts)
+- [ ] Configurar threads = 16 (Ryzen 3800X)
+- [ ] Ajustar memory_limit para aprovechar RAM
+- [ ] Configurar preserve_insertion_order = false
+- [ ] Optimizar checkpoint_threshold
+- [ ] Evaluar configuración de compression para Parquet
+- [ ] Crear índices para columnas de filtrado frecuente
+- [ ] Implementar particionamiento por fecha
+- [ ] Benchmark antes/después de tuning
+- [ ] Documentar configuración óptima
 
 ## Criterios de Aceptación
-- Hooks funcionan con API real
-- Cache configurado correctamente
-- Error handling consistente
-- Tipos TypeScript para todas las respuestas
+- Consultas 2x más rápidas post-tuning
+- Uso eficiente de los 16 threads
+- Sin degradación en inserciones
+- Configuración documentada
 
-## Endpoints a Integrar
-- GET /api/v1/stats/player/{name}
-- GET /api/v1/hands/recent
-- GET /api/v1/hands/{hand_id}
-- POST /api/v1/equity/calculate
+## Configuraciones a Evaluar
+- threads: 16
+- memory_limit: 48GB
+- temp_directory: /path/to/ssd
+- checkpoint_threshold: 256MB
+- enable_progress_bar: false (producción)
 "@
-        Labels = "enhancement,frontend,fase-3,api" 
+        Labels = "enhancement,database,fase-4,performance" 
     },
     @{ 
         Title = @"
-3.1.5 Crear hook useWebSocket para conexión con backend
+4.2.1 Verificar y asegurar que API escucha solo en localhost
 "@
         Body = @"
-Desarrollar hook personalizado para gestionar la conexión WebSocket con el backend.
+Verificar y reforzar que la API REST y WebSocket solo escuchan en 127.0.0.1.
 
 ## Contexto
-- Fase 3.1: Base de la SPA (React)
-- WebSocket endpoint: ws://127.0.0.1:8000/ws
-- Debe manejar reconexión automática
+- Fase 4.2: Cumplimiento y Seguridad
+- Privacidad: Datos nunca deben salir de localhost
+- Requisito crítico del proyecto
 
 ## Tareas
-- [ ] Crear useWebSocket.ts en src/hooks/
-- [ ] Implementar conexión automática al montar
-- [ ] Manejar mensajes de heartbeat
-- [ ] Implementar reconexión automática con backoff exponencial
-- [ ] Crear estado de conexión (connected, disconnected, reconnecting)
-- [ ] Exponer callback para new_hand messages
-- [ ] Manejar cleanup en unmount
-- [ ] Añadir tipos para mensajes WebSocket
+- [ ] Auditar configuración de Uvicorn en server-api
+- [ ] Verificar bind a 127.0.0.1 (no 0.0.0.0)
+- [ ] Añadir tests de seguridad que verifican binding
+- [ ] Configurar CORS para solo aceptar localhost origins
+- [ ] Bloquear headers de forwarding (X-Forwarded-For)
+- [ ] Documentar configuración de seguridad
+- [ ] Añadir warning si se detecta intento de bind a 0.0.0.0
+- [ ] Crear checklist de seguridad en docs/specs/security.md
 
 ## Criterios de Aceptación
-- Conexión automática al cargar la app
-- Reconexión automática funciona
-- Estado de conexión visible en UI
-- No hay memory leaks en unmount
-- Heartbeat mantiene conexión viva
+- API rechaza conexiones no-localhost
+- Tests automáticos verifican binding
+- CORS configurado restrictivamente
+- Documentación de seguridad completa
 
-## Formato de Mensajes
-- connection_ack: { type, client_id, timestamp }
-- heartbeat: { type, timestamp }
-- new_hand: { type, hand_id, timestamp, hero_result, ... }
+## Verificaciones
+- netstat/ss muestra bind a 127.0.0.1:8000
+- Conexión desde otra IP es rechazada
+- Headers de proxy no son honrados
 "@
-        Labels = "enhancement,frontend,fase-3,websocket" 
+        Labels = "enhancement,backend,fase-4,security" 
     },
     @{ 
         Title = @"
-3.1.6 Configurar React Router y layout principal
+4.2.2 Implementar sistema de auditoría de logs
 "@
         Body = @"
-Configurar el sistema de routing y el layout principal con sidebar.
+Implementar sistema de logging estructurado para auditoría y debugging.
 
 ## Contexto
-- Fase 3.1: Base de la SPA (React)
-- Layout con sidebar fija y contenido principal
+- Fase 4.2: Cumplimiento y Seguridad
+- Asegurar trazabilidad de operaciones
+- No debe haber interacción con proceso de Winamax
 
 ## Tareas
-- [ ] Instalar react-router-dom
-- [ ] Configurar BrowserRouter en main.tsx
-- [ ] Crear layout principal con sidebar + main content
-- [ ] Definir rutas principales:
-  - [ ] / (Dashboard)
-  - [ ] /sessions (Lista de sesiones)
-  - [ ] /hands/:handId (Replayer de mano)
-  - [ ] /stats (Estadísticas)
-  - [ ] /settings (Configuración)
-- [ ] Crear componente Sidebar con navegación
-- [ ] Implementar indicador de ruta activa
-- [ ] Configurar 404 page
+- [ ] Configurar logging estructurado en Python (structlog)
+- [ ] Configurar logging en Rust (tracing crate)
+- [ ] Definir niveles de log (ERROR, WARN, INFO, DEBUG)
+- [ ] Implementar rotación de logs (max 100MB por archivo)
+- [ ] Añadir contexto a logs (request_id, timestamp, user)
+- [ ] Crear logs de auditoría para:
+  - [ ] Acceso a endpoints
+  - [ ] Operaciones de base de datos
+  - [ ] Detección de archivos nuevos
+- [ ] Almacenar logs en directorio local (logs/)
+- [ ] NO loguear contenido de manos (solo metadatos)
 
 ## Criterios de Aceptación
-- Navegación funciona sin recargar página
-- Sidebar indica ruta activa
-- Layout responsive (sidebar colapsable en mobile)
-- Rutas definidas y funcionando
+- Logs estructurados en JSON
+- Rotación automática funciona
+- No hay PII en logs
+- Logs de auditoría separados de logs de debug
 
-## Estructura de Rutas
-/ - Dashboard principal
-/sessions - Lista de sesiones de juego
-/hands/:id - Hand Replayer
-/stats - Estadísticas del jugador
-/settings - Configuración
+## Formato de Log
+- timestamp: ISO 8601
+- level: ERROR/WARN/INFO/DEBUG
+- component: api/parser/db
+- message: descripción
+- context: { request_id, duration_ms, ... }
 "@
-        Labels = "enhancement,frontend,fase-3,routing" 
+        Labels = "enhancement,backend,fase-4,security,devops" 
     },
     @{ 
         Title = @"
-3.2.1 Implementar canvas de mesa de poker 6-max
+4.2.3 Crear empaquetado de aplicación como ejecutable local
 "@
         Body = @"
-Desarrollar el componente Canvas para renderizar la mesa de poker 6-max con React-Konva.
+Empaquetar la aplicación completa como un ejecutable local simplificado.
 
 ## Contexto
-- Fase 3.2: Hand Replayer (HTML5 Canvas)
-- Usar React-Konva para renderizado por GPU
-- Objetivo: 60 FPS
+- Fase 4.2: Cumplimiento y Seguridad
+- Objetivo: Instalación sin dependencias externas
+- Soporte Windows (prioridad) y Linux
 
 ## Tareas
-- [ ] Instalar react-konva y konva
-- [ ] Crear componente PokerTable.tsx en features/replayer/
-- [ ] Renderizar mesa oval con felt texture
-- [ ] Posicionar 6 seats en posiciones correctas (BTN, SB, BB, UTG, MP, CO)
-- [ ] Crear componente PlayerSeat con avatar, nombre, stack
-- [ ] Renderizar dealer button
-- [ ] Renderizar pot en el centro
-- [ ] Crear utilidades de posicionamiento en lib/canvas/
+- [ ] Crear script de build para backend Rust (release optimizado)
+- [ ] Compilar poker-ffi como wheel de Python
+- [ ] Bundlear frontend con Vite (npm run build)
+- [ ] Crear script de empaquetado (PowerShell para Windows)
+- [ ] Incluir DuckDB embebido
+- [ ] Crear launcher script (inicia backend + abre browser)
+- [ ] Generar instalador o ZIP autocontenido
+- [ ] Documentar proceso de build en README
+- [ ] Crear GitHub Actions para builds automáticos
 
 ## Criterios de Aceptación
-- Mesa renderiza correctamente en canvas
-- 6 posiciones claramente identificables
-- Performance > 60 FPS
-- Responsive a diferentes tamaños de pantalla
+- Instalación en < 5 minutos
+- No requiere Python/Node instalado por usuario
+- Funciona offline después de instalación
+- Tamaño total < 500MB
 
-## Posiciones 6-max (sentido horario desde BTN)
-- BTN (Button) - posición 0
-- SB (Small Blind) - posición 1
-- BB (Big Blind) - posición 2
-- UTG (Under the Gun) - posición 3
-- MP (Middle Position) - posición 4
-- CO (Cutoff) - posición 5
+## Estructura del Paquete
+poker-analyzer/
+  - poker-analyzer.exe (launcher)
+  - backend/ (binarios Rust + Python embebido)
+  - frontend/ (archivos estáticos)
+  - data/ (directorio para Parquet)
+  - logs/
+  - config.toml
 "@
-        Labels = "enhancement,frontend,fase-3,canvas,replayer" 
-    },
-    @{ 
-        Title = @"
-3.2.2 Implementar sistema de renderizado de cartas
-"@
-        Body = @"
-Desarrollar el sistema de renderizado de cartas para el Hand Replayer.
-
-## Contexto
-- Fase 3.2: Hand Replayer (HTML5 Canvas)
-- Cartas deben ser claras y legibles
-- Soporte para cartas boca abajo (oponentes)
-
-## Tareas
-- [ ] Crear componente Card.tsx para canvas
-- [ ] Implementar renderizado de palos (hearts, diamonds, clubs, spades)
-- [ ] Implementar renderizado de valores (2-10, J, Q, K, A)
-- [ ] Crear sprites o shapes para cartas
-- [ ] Implementar carta boca abajo (back)
-- [ ] Crear animación de repartir cartas
-- [ ] Renderizar community cards (flop, turn, river)
-- [ ] Crear utilidades en lib/canvas/cards.ts
-
-## Criterios de Aceptación
-- Cartas legibles a diferentes tamaños
-- Colores claros (rojo para hearts/diamonds, negro para clubs/spades)
-- Animaciones fluidas a 60 FPS
-- Cartas de oponentes muestran back
-
-## Notación de Cartas
-- Formato: valor + palo (Ah = As de corazones, Kd = Rey de diamantes)
-- Valores: 2, 3, 4, 5, 6, 7, 8, 9, T, J, Q, K, A
-- Palos: h (hearts), d (diamonds), c (clubs), s (spades)
-"@
-        Labels = "enhancement,frontend,fase-3,canvas,replayer" 
-    },
-    @{ 
-        Title = @"
-3.2.3 Implementar controles de reproducción del Hand Replayer
-"@
-        Body = @"
-Desarrollar los controles de reproducción para el Hand Replayer.
-
-## Contexto
-- Fase 3.2: Hand Replayer (HTML5 Canvas)
-- Controles: Play, Pause, Step, Speed
-- Timeline visual de la mano
-
-## Tareas
-- [ ] Crear componente ReplayerControls.tsx
-- [ ] Implementar botones Play/Pause
-- [ ] Implementar botón Step Forward/Backward
-- [ ] Implementar selector de velocidad (x1, x2, x5, x10)
-- [ ] Crear timeline visual con acciones
-- [ ] Implementar click en timeline para saltar a acción
-- [ ] Crear máquina de estados para reproducción
-- [ ] Sincronizar controles con canvas
-
-## Criterios de Aceptación
-- Controles responden correctamente
-- Timeline muestra todas las acciones
-- Velocidad ajustable funciona
-- Step permite ir acción por acción
-
-## Estados de Reproducción
-- idle: Mano cargada, no reproduciendo
-- playing: Reproducción automática
-- paused: Pausado en una acción
-- finished: Mano completada
-"@
-        Labels = "enhancement,frontend,fase-3,replayer" 
-    },
-    @{ 
-        Title = @"
-3.2.4 Implementar toggle de formato de cantidades (BB vs Monedas)
-"@
-        Body = @"
-Desarrollar el toggle para alternar entre formato de Big Blinds y moneda real.
-
-## Contexto
-- Fase 3.2: Hand Replayer (HTML5 Canvas)
-- Definido en docs/specs/ux-spec.md
-- Preferencia persistente en localStorage
-
-## Tareas
-- [ ] Crear componente AmountFormatToggle.tsx
-- [ ] Implementar lógica de conversión BB <-> EUR
-- [ ] Aplicar formato a:
-  - [ ] Apuestas en canvas
-  - [ ] Pot en centro de mesa
-  - [ ] Stacks de jugadores
-  - [ ] Log de acciones
-- [ ] Persistir preferencia en localStorage
-- [ ] Crear hook useAmountFormat()
-- [ ] Añadir a barra de controles del replayer
-
-## Criterios de Aceptación
-- Toggle cambia formato instantáneamente
-- Preferencia se mantiene entre sesiones
-- Formato aplicado consistentemente en toda la UI
-- BB muestra decimales cuando es necesario (2.5bb)
-
-## Formatos
-- Big Blinds: "2.5bb", "100bb"
-- Moneda: "0.05€", "2.00€"
-"@
-        Labels = "enhancement,frontend,fase-3,replayer,ux" 
-    },
-    @{ 
-        Title = @"
-3.3.1 Implementar Dashboard principal con KPIs
-"@
-        Body = @"
-Desarrollar el Dashboard principal con tarjetas de KPIs y resumen del Hero.
-
-## Contexto
-- Fase 3.3: Feature Stats - Dashboard
-- Hero: thesmoy
-- KPIs: VPIP, PFR, 3Bet, WTSD, bb/100
-
-## Tareas
-- [ ] Crear página Dashboard.tsx en features/dashboard/
-- [ ] Implementar header con resumen (profit total, manos totales)
-- [ ] Crear componente StatCard.tsx para KPIs
-- [ ] Implementar grid de KPIs (VPIP, PFR, 3Bet, WTSD)
-- [ ] Añadir indicadores de tendencia (up/down arrows)
-- [ ] Integrar con usePlayerStats hook
-- [ ] Añadir filtros de fecha/stake
-- [ ] Implementar skeleton loading
-
-## Criterios de Aceptación
-- Dashboard muestra datos reales del API
-- KPIs se actualizan con filtros
-- Loading state visible
-- Colores indican rendimiento (verde/rojo)
-
-## KPIs Principales
-- VPIP (Voluntarily Put In Pot)
-- PFR (Pre-Flop Raise)
-- 3Bet percentage
-- WTSD (Went To ShowDown)
-- bb/100 (winrate)
-"@
-        Labels = "enhancement,frontend,fase-3,dashboard" 
-    },
-    @{ 
-        Title = @"
-3.3.2 Implementar gráfico de beneficios con Recharts
-"@
-        Body = @"
-Desarrollar el gráfico de evolución de beneficios (bankroll) con Recharts.
-
-## Contexto
-- Fase 3.3: Feature Stats - Dashboard
-- Mostrar Net Won y All-in EV
-- Filtrable por rango de fechas
-
-## Tareas
-- [ ] Instalar recharts
-- [ ] Crear componente ProfitChart.tsx
-- [ ] Implementar gráfico de líneas con eje temporal
-- [ ] Añadir línea de Net Won (beneficio real)
-- [ ] Añadir línea de All-in EV (beneficio esperado)
-- [ ] Implementar tooltip con detalles
-- [ ] Añadir leyenda
-- [ ] Configurar colores Dark Mode
-- [ ] Implementar zoom/pan en rango de fechas
-
-## Criterios de Aceptación
-- Gráfico muestra datos históricos
-- Dos líneas diferenciadas (Net Won vs EV)
-- Tooltip muestra valores exactos
-- Responsive a diferentes tamaños
-
-## Colores
-- Net Won: accent-violet (#8B5CF6)
-- All-in EV: slate-400 (#94A3B8)
-- Background: slate-800
-"@
-        Labels = "enhancement,frontend,fase-3,dashboard,charts" 
-    },
-    @{ 
-        Title = @"
-3.3.3 Implementar lista de manos recientes
-"@
-        Body = @"
-Desarrollar la lista de manos recientes con filtros y navegación al Replayer.
-
-## Contexto
-- Fase 3.3: Feature Stats - Dashboard/Sessions
-- Mostrar últimas N manos con resultado
-- Click navega al Hand Replayer
-
-## Tareas
-- [ ] Crear componente HandsList.tsx
-- [ ] Implementar tabla/lista con columnas (fecha, stake, resultado, posición)
-- [ ] Añadir indicador de ganada/perdida (color)
-- [ ] Implementar paginación o infinite scroll
-- [ ] Añadir filtros (stake, posición, resultado)
-- [ ] Implementar click para navegar a /hands/:id
-- [ ] Integrar con useRecentHands hook
-- [ ] Añadir búsqueda por hand_id
-
-## Criterios de Aceptación
-- Lista carga manos del API
-- Filtros funcionan correctamente
-- Click navega al Replayer
-- Loading y empty states visibles
-
-## Columnas
-- Fecha/Hora
-- Stake (ej: NL10)
-- Posición (BTN, SB, etc.)
-- Resultado (+5.50€ o -2.00€)
-- Acción principal (ej: 3bet, call, fold)
-"@
-        Labels = "enhancement,frontend,fase-3,dashboard" 
-    },
-    @{ 
-        Title = @"
-3.3.4 Implementar matriz de rangos 13x13
-"@
-        Body = @"
-Desarrollar el componente de matriz de rangos 13x13 con mapas de calor.
-
-## Contexto
-- Fase 3.3: Feature Stats - Análisis de Rangos
-- Matriz clásica de starting hands
-- Drag-to-select para edición
-
-## Tareas
-- [ ] Crear componente RangeMatrix.tsx
-- [ ] Renderizar grid 13x13 con CSS Grid
-- [ ] Implementar colores de calor según frecuencia
-- [ ] Añadir etiquetas de filas/columnas (A, K, Q, ..., 2)
-- [ ] Diferenciar suited (arriba diagonal) vs offsuit (abajo diagonal)
-- [ ] Implementar drag-to-select para selección múltiple
-- [ ] Añadir hover con tooltip de frecuencia
-- [ ] Crear presets de rangos (EP Open, BTN Open, etc.)
-
-## Criterios de Aceptación
-- Matriz renderiza correctamente 169 celdas
-- Colores de calor visibles
-- Drag-to-select funciona
-- Performance sin re-renders excesivos
-
-## Layout de Matriz
-- Diagonal: Pocket pairs (AA, KK, QQ, ...)
-- Arriba diagonal: Suited combos (AKs, AQs, ...)
-- Abajo diagonal: Offsuit combos (AKo, AQo, ...)
-"@
-        Labels = "enhancement,frontend,fase-3,stats,ranges" 
+        Labels = "enhancement,devops,fase-4" 
     }
 )
 # -----------------------------------
