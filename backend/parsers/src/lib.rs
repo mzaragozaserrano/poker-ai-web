@@ -54,6 +54,7 @@ pub mod file_reader;
 pub mod file_watcher;
 pub mod fsm;
 pub mod parallel_processor;
+pub mod synthetic_generator;
 pub mod types;
 
 pub use file_watcher::{FileEvent, FileWatcher, FileWatcherBuilder, WatcherConfig, WatcherError};
@@ -62,6 +63,9 @@ pub use parallel_processor::{
     process_files_parallel, process_files_parallel_with_progress, BatchProcessingResult,
     CancellationToken, FileProcessingError, FileProcessingResult, ParallelProcessor,
     ProcessingConfig, ProcessingProgress,
+};
+pub use synthetic_generator::{
+    generate_synthetic_hands, GenerationResult, StakeLevel, SyntheticConfig, SyntheticGenerator,
 };
 pub use types::{
     Action, ActionType, Card, GameType, ParseResult, ParsedHand, ParserState, Player, Position,
