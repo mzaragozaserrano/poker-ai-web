@@ -28,10 +28,10 @@ La Fase 2 (Motor Matemático y Capa de Servicio) ha sido completada. Se inicia l
 
 ## Próxima Tarea: FASE 3.1 - Base de la SPA
 
-### Contexto Actual (Issue #40)
-- Fase 3: Interfaz de Usuario y Visualización
-- Objetivo: Crear hook useWebSocket para conexión en tiempo real con el backend
-- WebSocket endpoint: ws://127.0.0.1:8000/ws
+### Contexto Actual (Issue #41)
+- Fase 3.1: Base de la SPA - Routing y Layout
+- Objetivo: Configurar React Router y crear layout principal con sidebar
+- Rutas principales: Dashboard, Sessions, Hands Replayer, Stats, Settings
 - Status: En Progreso
 
 ### Contexto Previo (Issue #39)
