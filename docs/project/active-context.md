@@ -28,8 +28,13 @@ La Fase 2 (Motor Matemático y Capa de Servicio) ha sido completada. Se inicia l
 
 ## Próxima Tarea: FASE 3.1 - Base de la SPA
 
-### Contexto (Issue #39)
+### Contexto Actual (Issue #40)
 - Fase 3: Interfaz de Usuario y Visualización
+- Objetivo: Crear hook useWebSocket para conexión en tiempo real con el backend
+- WebSocket endpoint: ws://127.0.0.1:8000/ws
+- Status: En Progreso
+
+### Contexto Previo (Issue #39)
 - Stack: React 18 + Vite + TypeScript + Tailwind CSS
 - Objetivo: Configurar React Query para estado del servidor y crear cliente HTTP para la API
 - Status: Completada - Implementación funcional de React Query, API client y hooks de datos
@@ -40,7 +45,7 @@ La Fase 2 (Motor Matemático y Capa de Servicio) ha sido completada. Se inicia l
 - [x] Crear componentes base (Button, Card, Modal, Navbar, Input, Badge) (Issue #38)
 - [x] Integrar React Query para estado del servidor (Issue #39 - Completada)
 - [ ] Implementar layout principal con sidebar
-- [ ] Crear hook useWebSocket para conexión con backend
+- [ ] Crear hook useWebSocket para conexión con backend (Issue #40 - En Progreso)
 - [ ] Configurar routing con React Router
 
 ### Tareas Planificadas (Fase 3.2)
