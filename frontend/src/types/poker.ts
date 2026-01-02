@@ -23,3 +23,33 @@ export interface APIResponse<T> {
   error?: string
   timestamp: string
 }
+
+// ============================================================================
+// REPRODUCTOR DE MANOS - MÁQUINA DE ESTADOS
+// ============================================================================
+
+export type ReplayerPlaybackState = 'idle' | 'playing' | 'paused' | 'finished'
+
+export type PlaybackSpeed = 1 | 2 | 5 | 10
+
+export interface ReplayerActionStep {
+  index: number
+  street: 'preflop' | 'flop' | 'turn' | 'river'
+  player: string
+  action: 'fold' | 'check' | 'call' | 'bet' | 'raise' | 'all-in'
+  amount: number
+  description: string
+}
+
+export interface ReplayerState {
+  state: ReplayerPlaybackState
+  currentActionIndex: number
+  totalActions: number
+  playbackSpeed: PlaybackSpeed
+  isPaused: boolean
+}
+
+export interface ReplayerAction {
+  type: 'PLAY' | 'PAUSE' | 'STOP' | 'STEP_FORWARD' | 'STEP_BACKWARD' | 'SET_SPEED' | 'JUMP_TO_ACTION' | 'FINISH'
+  payload?: unknown
+}
