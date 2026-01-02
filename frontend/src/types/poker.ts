@@ -1,4 +1,6 @@
 // Tipos de base de datos y API
+// Note: Los tipos más detallados para Hand, Action, etc. están en api.ts
+
 export interface Player {
   id: string
   name: string
@@ -7,16 +9,6 @@ export interface Player {
   threebet: number
   winrate: number
   totalHands: number
-}
-
-export interface Hand {
-  id: string
-  timestamp: string
-  gameType: string
-  stakes: string
-  players: Player[]
-  hero: string
-  result: number
 }
 
 export interface Action {
@@ -31,4 +23,3 @@ export interface APIResponse<T> {
   error?: string
   timestamp: string
 }
-
