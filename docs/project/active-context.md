@@ -26,13 +26,13 @@ La Fase 2 (Motor Matemático y Capa de Servicio) ha sido completada. Se inicia l
 
 ---
 
-## Próxima Tarea: FASE 3.1 - Base de la SPA
+## Próxima Tarea: FASE 3.2 - Hand Replayer con React-Konva
 
-### Contexto Actual (Issue #41)
-- Fase 3.1: Base de la SPA - Routing y Layout
-- Objetivo: Configurar React Router y crear layout principal con sidebar
-- Rutas principales: Dashboard, Sessions, Hands Replayer, Stats, Settings
-- Status: En Progreso
+### Contexto Actual (Issue #42)
+- Fase 3.2: Hand Replayer
+- Objetivo: Implementar replayer de manos con React-Konva y Canvas
+- Renderizar mesa 6-max a 60 FPS
+- Status: Pendiente
 
 ### Contexto Previo (Issue #39)
 - Stack: React 18 + Vite + TypeScript + Tailwind CSS
@@ -44,9 +44,9 @@ La Fase 2 (Motor Matemático y Capa de Servicio) ha sido completada. Se inicia l
 - [x] Configurar Tailwind CSS con paleta de colores de poker (Issue #37)
 - [x] Crear componentes base (Button, Card, Modal, Navbar, Input, Badge) (Issue #38)
 - [x] Integrar React Query para estado del servidor (Issue #39 - Completada)
-- [ ] Implementar layout principal con sidebar
+- [x] Implementar layout principal con sidebar (Issue #41 - Completada)
 - [ ] Crear hook useWebSocket para conexión con backend (Issue #40 - En Progreso)
-- [ ] Configurar routing con React Router
+- [ ] Configurar routing con React Router (Issue #41 - Completada)
 
 ### Tareas Planificadas (Fase 3.2)
 - [ ] Implementar Hand Replayer con React-Konva
