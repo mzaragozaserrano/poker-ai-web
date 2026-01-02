@@ -4,9 +4,9 @@
 La Fase 2 (Motor Matemático y Capa de Servicio) ha sido completada. Fase 3.1 completada. Iniciando Fase 3.2: Hand Replayer con React-Konva.
 
 ## Current Focus
-- **Issue #44**: Implementar controles de reproducción del Hand Replayer
+- **Issue #44**: Implementar controles de reproducción del Hand Replayer (COMPLETADA)
 - Objetivo: Play, Pause, Step, Speed, Timeline visual
-- Componentes: ReplayerControls, máquina de estados de reproducción
+- Componentes: ReplayerControls, ReplayerTimeline, useReplayerState (máquina de estados)
 
 ## Resumen de Fase 2 Completada
 
@@ -54,10 +54,10 @@ La Fase 2 (Motor Matemático y Capa de Servicio) ha sido completada. Fase 3.1 co
 - [ ] Configurar routing con React Router (Issue #41 - Completada)
 
 ### Tareas Planificadas (Fase 3.2)
-- [ ] Implementar Hand Replayer con React-Konva
-- [ ] Renderizado de mesa 6-max a 60 FPS
-- [ ] Sistema de cartas y animaciones
-- [ ] Controles de reproducción
+- [x] Implementar Hand Replayer con React-Konva (Issue #43)
+- [x] Renderizado de mesa 6-max a 60 FPS (Issue #43)
+- [x] Sistema de cartas y animaciones (Issue #43)
+- [x] Controles de reproducción (Issue #44 - COMPLETADA)
 
 ### Tareas Planificadas (Fase 3.3)
 - [ ] Dashboard principal con estadísticas
