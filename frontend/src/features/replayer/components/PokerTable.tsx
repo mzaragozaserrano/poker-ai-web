@@ -1,6 +1,5 @@
 import { Stage, Layer, Ellipse, Text, Rect, Group } from 'react-konva'
 import type { PokerTableProps } from '../../../lib/canvas'
-import type { AmountFormat } from '../../../hooks/useAmountFormat'
 import { 
   TABLE_COLORS, 
   TABLE_DIMENSIONS,
@@ -11,7 +10,6 @@ import {
 import { 
   getAllSeatPositions, 
   getTableCenter, 
-  formatPot,
   calculateResponsiveScale,
   isValidCard 
 } from '../../../lib/canvas'
