@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import type { PlaybackSpeed } from '../../types/poker'
+import type { PlaybackSpeed } from '../../../types/poker'
 
 interface ReplayerControlsProps {
   isPlaying: boolean

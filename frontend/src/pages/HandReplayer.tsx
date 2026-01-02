@@ -197,7 +197,7 @@ export const HandReplayer = () => {
   const [dimensions, setDimensions] = useState({ width: 800, height: 500 })
   const [currentStreet, setCurrentStreet] = useState<'preflop' | 'flop' | 'turn' | 'river'>('preflop')
   const [selectedPlayer, setSelectedPlayer] = useState<string | null>(null)
-  const timerRef = useRef<NodeJS.Timeout | null>(null)
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // Hook para controlar la reproducción
   const replayer = useReplayerState({
@@ -275,8 +275,6 @@ export const HandReplayer = () => {
     },
     [replayer]
   )
-
-  const streets: Array<'preflop' | 'flop' | 'turn' | 'river'> = ['preflop', 'flop', 'turn', 'river']
 
   return (
     <div className="h-full flex flex-col gap-4">

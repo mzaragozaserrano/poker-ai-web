@@ -1,30 +1,38 @@
-/**
- * Test suite para useReplayerState hook
- * 
- * NOTA: Este es un archivo de especificación de pruebas.
- * Para ejecutar estas pruebas, se necesita configurar:
- * - Vitest + React Testing Library
- * - O Jest + React Testing Library
- * 
- * Instalación:
- * npm install -D vitest @vitest/ui @testing-library/react @testing-library/jest-dom
- * 
- * Configuración en vite.config.ts:
- * ```
- * import { defineConfig } from 'vite'
- * import react from '@vitejs/plugin-react'
- * 
- * export default defineConfig({
- *   plugins: [react()],
- *   test: {
- *     globals: true,
- *     environment: 'jsdom',
- *     setupFiles: ['./src/__tests__/setup.ts'],
- *   }
- * })
- * ```
- */
+# Test Specifications para useReplayerState
 
+Este documento describe las pruebas que deberían ejecutarse para `useReplayerState`.
+
+## Configuración Requerida
+
+Para ejecutar estas pruebas, instalar:
+
+```bash
+npm install -D vitest @vitest/ui @testing-library/react @testing-library/jest-dom
+```
+
+Actualizar `vite.config.ts`:
+
+```typescript
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+export default defineConfig({
+  plugins: [react()],
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: ['./src/__tests__/setup.ts'],
+  }
+})
+```
+
+## Colocar Archivo de Pruebas
+
+Crear: `frontend/src/__tests__/useReplayerState.test.ts`
+
+Con el siguiente contenido (sin los imports de Vitest/Testing Library en TypeScript principal):
+
+```typescript
 import { renderHook, act } from '@testing-library/react'
 import { describe, it, expect, beforeEach } from 'vitest'
 import { useReplayerState } from '../hooks/useReplayerState'
@@ -298,4 +306,13 @@ describe('useReplayerState', () => {
     })
   })
 })
+```
+
+## Ejecutar Pruebas
+
+```bash
+npm run test
+# o
+npm run test:ui  # para modo UI
+```
 

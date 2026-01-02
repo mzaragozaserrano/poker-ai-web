@@ -1,5 +1,5 @@
 import React from 'react'
-import type { ReplayerActionStep } from '../../types/poker'
+import type { ReplayerActionStep } from '../../../types/poker'
 
 interface ReplayerTimelineProps {
   actions: ReplayerActionStep[]
@@ -100,10 +100,9 @@ export const ReplayerTimeline: React.FC<ReplayerTimelineProps> = ({
 
               {/* Actions in this street */}
               <div className="flex flex-wrap gap-1.5">
-                {streetActions.map((action) => {
+                {streetActions.map((action: ReplayerActionStep) => {
                   const isCurrentAction = action.index === currentActionIndex
                   const isPastAction = action.index < currentActionIndex
-                  const isFutureAction = action.index > currentActionIndex
 
                   return (
                     <button
