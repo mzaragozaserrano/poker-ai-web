@@ -5,4 +5,5 @@
 
 export { StatCard, type StatCardProps } from './StatCard'
 export { DashboardHeader, type DashboardHeaderProps } from './DashboardHeader'
+export { ProfitChart, type ProfitChartProps } from './ProfitChart'
 

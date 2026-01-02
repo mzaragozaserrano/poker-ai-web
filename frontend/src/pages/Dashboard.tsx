@@ -4,7 +4,7 @@
  */
 
 import { useSimplePlayerStats } from '../hooks/usePlayerStats'
-import { DashboardHeader, StatCard } from '../features/dashboard'
+import { DashboardHeader, StatCard, ProfitChart } from '../features/dashboard'
 
 // Hero por defecto del proyecto
 const HERO_NAME = 'thesmoy'
@@ -140,15 +140,20 @@ export const Dashboard = () => {
         )}
       </div>
 
+      {/* Gráfico de evolución de beneficios */}
+      <div className="mt-8">
+        <ProfitChart playerName={HERO_NAME} height={400} />
+      </div>
+
       {/* Sección adicional para futuras features */}
       <div className="mt-8">
         <h2 className="text-2xl font-bold text-white mb-4">Próximamente</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="bg-slate-800 p-6 rounded-lg border border-slate-700 border-dashed">
-            <p className="text-slate-400">Gráficos de progresión</p>
+            <p className="text-slate-400">Análisis de rangos 13x13</p>
           </div>
           <div className="bg-slate-800 p-6 rounded-lg border border-slate-700 border-dashed">
-            <p className="text-slate-400">Análisis de rangos y leaks</p>
+            <p className="text-slate-400">Detección de leaks</p>
           </div>
         </div>
       </div>
