@@ -4,9 +4,9 @@
 La Fase 2 (Motor Matemático y Capa de Servicio) ha sido completada. Fase 3.1 completada. Iniciando Fase 3.2: Hand Replayer con React-Konva.
 
 ## Current Focus
-- **Issue #43**: Implementar sistema de renderizado de cartas para Hand Replayer
-- Objetivo: Renderizado de cartas legibles y animadas en Canvas
-- Componentes: Card, CardBack, utilidades de renderizado de palos y valores
+- **Issue #44**: Implementar controles de reproducción del Hand Replayer
+- Objetivo: Play, Pause, Step, Speed, Timeline visual
+- Componentes: ReplayerControls, máquina de estados de reproducción
 
 ## Resumen de Fase 2 Completada
 
