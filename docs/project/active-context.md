@@ -4,10 +4,11 @@
 La Fase 2 (Motor Matemático y Capa de Servicio) ha sido completada. Fase 3.1 completada. Iniciando Fase 3.2: Hand Replayer con React-Konva.
 
 ## Current Focus
-- **Issue #46**: Implementar Dashboard principal con KPIs - EN PROGRESO
-- Objetivo: Desarrollar el Dashboard principal con tarjetas de KPIs y resumen del Hero (thesmoy)
-- KPIs: VPIP, PFR, 3Bet, WTSD, bb/100
-- Componentes: Dashboard page, StatCard component, filtros de fecha/stake
+- **Issue #46**: Implementar Dashboard principal con KPIs - COMPLETADA
+- Objetivo: Dashboard principal con tarjetas de KPIs y resumen del Hero (thesmoy)
+- Implementado: StatCard, DashboardHeader, lógica de colores y tendencias
+- KPIs: VPIP, PFR, 3Bet, bb/100, WTSD (opcional)
+- Próximo: Issue #47 o features adicionales del dashboard
 
 ## Resumen de Fase 2 Completada
 
@@ -62,7 +63,7 @@ La Fase 2 (Motor Matemático y Capa de Servicio) ha sido completada. Fase 3.1 co
 - [x] Toggle de formato de cantidades BB/EUR (Issue #45 - COMPLETADA)
 
 ### Tareas Planificadas (Fase 3.3)
-- [ ] Dashboard principal con estadísticas
+- [x] Dashboard principal con estadísticas (Issue #46 - COMPLETADA)
 - [ ] Gráficos de beneficios con Recharts/ECharts
 - [ ] Matriz de rangos 13x13
 - [ ] Vista de análisis de leaks
