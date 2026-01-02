@@ -35,7 +35,7 @@ La Fase 2 (Motor Matemático y Capa de Servicio) ha sido completada. Se inicia l
 - Status: En progreso - Configurando proyecto React con Vite
 
 ### Tareas Planificadas (Fase 3.1)
-- [ ] Configurar proyecto React con Vite + TypeScript
+- [x] Configurar proyecto React con Vite + TypeScript
 - [ ] Configurar Tailwind CSS con paleta de colores de poker
 - [ ] Crear componentes base (Button, Card, Modal, Navbar)
 - [ ] Implementar layout principal con sidebar
