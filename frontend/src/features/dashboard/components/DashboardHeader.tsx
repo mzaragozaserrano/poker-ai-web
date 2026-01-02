@@ -3,13 +3,21 @@
  * Header del dashboard con resumen general del Hero
  */
 
-import { useAmountFormat } from '../../../hooks/useAmountFormat'
-
 export interface DashboardHeaderProps {
   playerName: string
   totalHands: number
   totalProfit: number // En centavos
   isLoading?: boolean
+}
+
+/**
+ * Formatea un profit total en EUR
+ * @param amountCents - Cantidad en centavos
+ * @returns String formateado (ej: "+€245.00")
+ */
+const formatProfitEUR = (amountCents: number): string => {
+  const eur = amountCents / 100
+  return `€${Math.abs(eur).toFixed(2)}`
 }
 
 /**
@@ -25,7 +33,6 @@ export const DashboardHeader = ({
   totalProfit,
   isLoading = false,
 }: DashboardHeaderProps) => {
-  const { formatAmount } = useAmountFormat()
 
   if (isLoading) {
     return (
@@ -47,6 +54,7 @@ export const DashboardHeader = ({
 
   const profitColor = totalProfit >= 0 ? 'text-green-500' : 'text-red-500'
   const profitSign = totalProfit >= 0 ? '+' : ''
+  const profitFormatted = formatProfitEUR(totalProfit)
 
   return (
     <div className="mb-8">
@@ -62,7 +70,7 @@ export const DashboardHeader = ({
           <p className="text-sm text-slate-400 uppercase tracking-wide mb-1">Ganancia Total</p>
           <p className={`text-2xl font-bold ${profitColor}`}>
             {profitSign}
-            {formatAmount(totalProfit)}
+            {profitFormatted}
           </p>
         </div>
       </div>
