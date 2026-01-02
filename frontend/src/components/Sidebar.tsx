@@ -9,7 +9,7 @@ const navItems = [
   { href: '/settings', label: 'Configuración', icon: '⚙️' },
 ]
 
-interface SidebarProps {
+export interface SidebarProps {
   isCollapsed: boolean
   onToggleCollapse: () => void
 }
