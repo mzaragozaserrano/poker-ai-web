@@ -19,3 +19,8 @@ export type { ModalProps } from './Modal';
 
 export { Navbar } from './Navbar';
 export type { NavbarProps, NavItem } from './Navbar';
+
+// Layout Components
+export { Sidebar } from './Sidebar';
+export type { SidebarProps } from './Sidebar';
+
