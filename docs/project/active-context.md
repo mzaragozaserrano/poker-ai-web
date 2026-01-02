@@ -4,19 +4,20 @@
 La Fase 2 (Motor Matemático y Capa de Servicio) ha sido completada. Fase 3.1 completada. Iniciando Fase 3.2: Hand Replayer con React-Konva.
 
 ## Current Focus
-- **Issue #48**: Implementar lista de manos recientes - COMPLETADA
-- Objetivo: Crear componente HandsList.tsx con filtros y navegación al Replayer
+- **Issue #49**: Implementar matriz de rangos 13x13 - COMPLETADA
+- Objetivo: Crear componente RangeMatrix.tsx con mapas de calor para visualización de starting hands
+- Fase 3.3: Feature Stats - Análisis de Rangos
 - Implementado:
-  - HandsList.tsx con tabla responsive
-  - HandsListFilters.tsx con filtros por stake, posición y resultado
-  - Búsqueda por hand_id
-  - Paginación (20 manos por página)
-  - Navegación a /hands/:id
-  - Integración con useRecentHands y useAmountFormat hooks
-  - Estados de loading, error y empty
-  - Formateo de fechas relativas
-  - Indicadores visuales de ganancia/pérdida
-- Próximo: Fase 3.3 - Matriz de rangos 13x13 o análisis de leaks
+  - RangeMatrix.tsx con grid 13x13 CSS y labels A-2
+  - Sistema de colores de calor según frecuencia (0.0-1.0)
+  - RangeCell con hover tooltip y diferenciación suited/offsuit
+  - Drag-to-select para selección múltiple de celdas
+  - RangePresets.tsx con rangos GTO 6-max (UTG/MP/CO/BTN/SB Open, 3Bet, Blind Defense)
+  - Utilidades rangeUtils.ts para análisis y colores
+  - Tipos TypeScript completos (types/ranges.ts)
+  - Integración en página Stats con layout responsive
+  - Build exitoso sin errores de TypeScript
+- Próximo: Fase 3.3 - Vista de análisis de leaks o Fase 4
 
 ## Resumen de Fase 2 Completada
 
@@ -74,7 +75,7 @@ La Fase 2 (Motor Matemático y Capa de Servicio) ha sido completada. Fase 3.1 co
 - [x] Dashboard principal con estadísticas (Issue #46 - COMPLETADA)
 - [x] Gráficos de beneficios con Recharts (Issue #47 - COMPLETADA)
 - [x] Lista de manos recientes con filtros (Issue #48 - COMPLETADA)
-- [ ] Matriz de rangos 13x13
+- [x] Matriz de rangos 13x13 (Issue #49 - COMPLETADA)
 - [ ] Vista de análisis de leaks
 
 ---
