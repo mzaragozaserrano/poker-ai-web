@@ -27,7 +27,7 @@
 //! println!("Generated {} hands", hands.len());
 //! ```
 
-use chrono::{DateTime, Duration, NaiveDateTime, Utc};
+use chrono::{DateTime, Duration, Utc};
 use rand::distributions::{Distribution, WeightedIndex};
 use rand::prelude::*;
 use rand_chacha::ChaCha8Rng;
@@ -35,7 +35,6 @@ use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
 use std::str::FromStr;
 use std::sync::atomic::{AtomicUsize, Ordering};
-use uuid::Uuid;
 
 use crate::types::{
     Action, ActionType, Card, GameType, ParsedHand, Player, Position, PotInfo, Street,
