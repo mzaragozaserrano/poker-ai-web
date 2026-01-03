@@ -301,4 +301,3 @@ fn format_number(n: usize) -> String {
     }
     result
 }
-
