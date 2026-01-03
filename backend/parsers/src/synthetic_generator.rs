@@ -111,7 +111,7 @@ impl SyntheticConfig {
     pub fn with_stakes(mut self, stakes: Vec<String>) -> Self {
         self.stakes = stakes
             .iter()
-            .filter_map(|s| StakeLevel::from_str(s))
+            .filter_map(|s| s.parse().ok())
             .collect();
         if self.stakes.is_empty() {
             self.stakes = vec![StakeLevel::NL10];
@@ -165,11 +165,6 @@ impl FromStr for StakeLevel {
 }
 
 impl StakeLevel {
-    /// Convierte string a StakeLevel (helper method)
-    pub fn from_str(s: &str) -> Option<Self> {
-        s.parse().ok()
-    }
-
     /// Small blind en centavos
     pub fn small_blind_cents(&self) -> i64 {
         match self {
@@ -988,9 +983,9 @@ mod tests {
 
     #[test]
     fn test_stake_from_str() {
-        assert_eq!(StakeLevel::from_str("NL10"), Some(StakeLevel::NL10));
-        assert_eq!(StakeLevel::from_str("nl50"), Some(StakeLevel::NL50));
-        assert_eq!(StakeLevel::from_str("invalid"), None);
+        assert_eq!("NL10".parse::<StakeLevel>(), Ok(StakeLevel::NL10));
+        assert_eq!("nl50".parse::<StakeLevel>(), Ok(StakeLevel::NL50));
+        assert_eq!("invalid".parse::<StakeLevel>(), Err(()));
     }
 
     #[test]
