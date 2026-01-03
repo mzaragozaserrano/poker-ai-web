@@ -16,7 +16,7 @@
 //! - `--output, -o`: Archivo de salida JSON (opcional)
 //! - `--benchmark`: Solo medir tiempo, no guardar
 
-use poker_parsers::synthetic_generator::{generate_synthetic_hands, StakeLevel, SyntheticConfig};
+use poker_parsers::synthetic_generator::{generate_synthetic_hands, SyntheticConfig};
 use std::env;
 use std::fs::File;
 use std::io::Write;
