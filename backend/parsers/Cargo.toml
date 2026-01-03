@@ -19,6 +19,11 @@ nom = "7.1"
 chrono = { workspace = true, features = ["serde"] }
 md5 = "0.7"
 
+# Synthetic generator dependencies
+rand = "0.8"
+rand_chacha = "0.3"
+uuid = { version = "1.6", features = ["v4"] }
+
 [dev-dependencies]
 tempfile = "3.8"
 criterion = { version = "0.5", features = ["html_reports"] }

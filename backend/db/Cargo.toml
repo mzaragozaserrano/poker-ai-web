@@ -32,6 +32,14 @@ zstd = "0.13"
 thiserror = "1.0"
 anyhow = "1.0"
 
+# Parallelization
+rayon = "1.8"
+
 [dev-dependencies]
 tempfile = "3.8"
+poker-parsers = { path = "../parsers" }
+
+[[example]]
+name = "generate_and_persist"
+required-features = []
 
