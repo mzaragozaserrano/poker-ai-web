@@ -33,6 +33,7 @@ use rand::prelude::*;
 use rand_chacha::ChaCha8Rng;
 use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
+use std::str::FromStr;
 use std::sync::atomic::{AtomicUsize, Ordering};
 use uuid::Uuid;
 
@@ -147,18 +148,26 @@ pub enum StakeLevel {
     NL100, // 0.50/1.00
 }
 
-impl StakeLevel {
-    /// Convierte string a StakeLevel
-    pub fn from_str(s: &str) -> Option<Self> {
+impl FromStr for StakeLevel {
+    type Err = ();
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s.to_uppercase().as_str() {
-            "NL2" => Some(StakeLevel::NL2),
-            "NL5" => Some(StakeLevel::NL5),
-            "NL10" => Some(StakeLevel::NL10),
-            "NL25" => Some(StakeLevel::NL25),
-            "NL50" => Some(StakeLevel::NL50),
-            "NL100" => Some(StakeLevel::NL100),
-            _ => None,
+            "NL2" => Ok(StakeLevel::NL2),
+            "NL5" => Ok(StakeLevel::NL5),
+            "NL10" => Ok(StakeLevel::NL10),
+            "NL25" => Ok(StakeLevel::NL25),
+            "NL50" => Ok(StakeLevel::NL50),
+            "NL100" => Ok(StakeLevel::NL100),
+            _ => Err(()),
         }
+    }
+}
+
+impl StakeLevel {
+    /// Convierte string a StakeLevel (helper method)
+    pub fn from_str(s: &str) -> Option<Self> {
+        s.parse().ok()
     }
 
     /// Small blind en centavos
@@ -552,11 +561,11 @@ impl SyntheticGenerator {
             board.push(deck.pop().unwrap());
         }
 
-        if has_turn && deck.len() >= 1 {
+        if has_turn && !deck.is_empty() {
             board.push(deck.pop().unwrap());
         }
 
-        if has_river && deck.len() >= 1 {
+        if has_river && !deck.is_empty() {
             board.push(deck.pop().unwrap());
         }
 
