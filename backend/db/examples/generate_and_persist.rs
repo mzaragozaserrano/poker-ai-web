@@ -142,7 +142,10 @@ fn main() {
     println!("  Resumen");
     println!("========================================");
     println!("  - Manos procesadas: {}", format_number(count));
-    println!("  - Acciones totales: {}", format_number(actions_list.len()));
+    println!(
+        "  - Acciones totales: {}",
+        format_number(actions_list.len())
+    );
     println!("  - Tiempo total: {:.2}s", total_elapsed.as_secs_f64());
     println!(
         "  - Velocidad total: {:.0} manos/s",
@@ -182,7 +185,10 @@ fn convert_hands_to_db_format(
         // Crear metadata
         let metadata = HandMetadata {
             hand_id: hand.hand_id.clone(),
-            session_id: Some(format!("SESSION-{}", &hand.hand_id[..8.min(hand.hand_id.len())])),
+            session_id: Some(format!(
+                "SESSION-{}",
+                &hand.hand_id[..8.min(hand.hand_id.len())]
+            )),
             tournament_id: None,
             timestamp: naive_dt.format("%Y-%m-%dT%H:%M:%SZ").to_string(),
             stake,
@@ -271,7 +277,9 @@ fn print_help() {
     println!("OPTIONS:");
     println!("    -c, --count <N>      Numero de manos a generar (default: 10000)");
     println!("    -s, --seed <N>       Semilla para reproducibilidad");
-    println!("    -o, --output <DIR>   Directorio de salida para Parquet (default: ./data/synthetic)");
+    println!(
+        "    -o, --output <DIR>   Directorio de salida para Parquet (default: ./data/synthetic)"
+    );
     println!("    -h, --help           Mostrar esta ayuda");
     println!();
     println!("EXAMPLES:");

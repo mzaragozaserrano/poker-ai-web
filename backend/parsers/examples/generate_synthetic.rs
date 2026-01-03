@@ -16,9 +16,7 @@
 //! - `--output, -o`: Archivo de salida JSON (opcional)
 //! - `--benchmark`: Solo medir tiempo, no guardar
 
-use poker_parsers::synthetic_generator::{
-    generate_synthetic_hands, StakeLevel, SyntheticConfig,
-};
+use poker_parsers::synthetic_generator::{generate_synthetic_hands, StakeLevel, SyntheticConfig};
 use std::env;
 use std::fs::File;
 use std::io::Write;
@@ -26,7 +24,7 @@ use std::time::Instant;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    
+
     // Parsear argumentos
     let mut count: usize = 10_000;
     let mut seed: Option<u64> = None;
@@ -82,14 +80,17 @@ fn main() {
     println!();
     println!("Configuracion:");
     println!("  - Manos a generar: {}", format_number(count));
-    println!("  - Semilla: {}", seed.map_or("aleatorio".to_string(), |s| s.to_string()));
+    println!(
+        "  - Semilla: {}",
+        seed.map_or("aleatorio".to_string(), |s| s.to_string())
+    );
     println!("  - Stakes: {:?}", stakes);
     println!("  - Threads: {}", rayon::current_num_threads());
     println!();
 
     // Construir configuracion
     let mut config = SyntheticConfig::new(count).with_stakes(stakes);
-    
+
     if let Some(s) = seed {
         config = config.with_seed(s);
     }
@@ -107,14 +108,20 @@ fn main() {
     println!("========================================");
     println!("  - Manos generadas: {}", format_number(result.hands.len()));
     println!("  - Tiempo total: {:.2}s", elapsed.as_secs_f64());
-    println!("  - Velocidad: {:.0} manos/segundo", result.hands_per_second);
+    println!(
+        "  - Velocidad: {:.0} manos/segundo",
+        result.hands_per_second
+    );
     println!();
 
     // Verificar criterio de rendimiento (1M en < 60s)
     if count >= 1_000_000 && elapsed.as_secs() < 60 {
         println!("  [OK] Criterio de rendimiento cumplido: 1M manos en < 60s");
     } else if count >= 1_000_000 {
-        println!("  [!!] Criterio de rendimiento NO cumplido: {} segundos", elapsed.as_secs());
+        println!(
+            "  [!!] Criterio de rendimiento NO cumplido: {} segundos",
+            elapsed.as_secs()
+        );
     }
 
     // Estadisticas de las manos generadas
@@ -123,8 +130,10 @@ fn main() {
         let avg_pot = total_pot / result.hands.len() as i64;
         let total_actions: usize = result.hands.iter().map(|h| h.actions.len()).sum();
         let avg_actions = total_actions / result.hands.len();
-        
-        let hero_hands = result.hands.iter()
+
+        let hero_hands = result
+            .hands
+            .iter()
             .filter(|h| h.players.iter().any(|p| p.is_hero))
             .count();
 
@@ -132,8 +141,9 @@ fn main() {
         println!("Estadisticas de manos:");
         println!("  - Bote promedio: {} centavos", avg_pot);
         println!("  - Acciones promedio por mano: {}", avg_actions);
-        println!("  - Manos con heroe: {} ({:.1}%)", 
-            hero_hands, 
+        println!(
+            "  - Manos con heroe: {} ({:.1}%)",
+            hero_hands,
             (hero_hands as f64 / result.hands.len() as f64) * 100.0
         );
     }
@@ -143,7 +153,7 @@ fn main() {
         if let Some(output_path) = output {
             println!();
             println!("Guardando en {}...", output_path);
-            
+
             match save_to_json(&result.hands, &output_path) {
                 Ok(_) => println!("  [OK] Guardado exitosamente"),
                 Err(e) => println!("  [ERROR] Error al guardar: {}", e),
@@ -159,11 +169,21 @@ fn main() {
         println!("========================================");
         println!("  Hand ID: {}", first_hand.hand_id);
         println!("  Table: {}", first_hand.table_name);
-        println!("  Blinds: {}/{}", first_hand.small_blind_cents, first_hand.big_blind_cents);
+        println!(
+            "  Blinds: {}/{}",
+            first_hand.small_blind_cents, first_hand.big_blind_cents
+        );
         println!("  Players: {}", first_hand.players.len());
         println!("  Actions: {}", first_hand.actions.len());
         println!("  Pot: {} centavos", first_hand.pot.total_cents);
-        println!("  Board: {:?}", first_hand.board.iter().map(|c| format!("{}{}", c.rank, c.suit)).collect::<Vec<_>>());
+        println!(
+            "  Board: {:?}",
+            first_hand
+                .board
+                .iter()
+                .map(|c| format!("{}{}", c.rank, c.suit))
+                .collect::<Vec<_>>()
+        );
     }
 }
 
@@ -207,10 +227,10 @@ fn format_number(n: usize) -> String {
 fn save_to_json(hands: &[poker_parsers::ParsedHand], path: &str) -> std::io::Result<()> {
     let json = serde_json::to_string_pretty(hands)
         .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
-    
+
     let mut file = File::create(path)?;
     file.write_all(json.as_bytes())?;
-    
+
     Ok(())
 }
 

@@ -108,7 +108,10 @@ impl SyntheticConfig {
 
     /// Establece los stakes a generar
     pub fn with_stakes(mut self, stakes: Vec<String>) -> Self {
-        self.stakes = stakes.iter().filter_map(|s| StakeLevel::from_str(s)).collect();
+        self.stakes = stakes
+            .iter()
+            .filter_map(|s| StakeLevel::from_str(s))
+            .collect();
         if self.stakes.is_empty() {
             self.stakes = vec![StakeLevel::NL10];
         }
@@ -223,9 +226,9 @@ impl Default for PreflopDistribution {
 #[derive(Debug, Clone)]
 struct PostflopDistribution {
     // Pesos: [Check, Bet, Call, Raise, Fold]
-    ip_no_bet_weights: [u32; 5],     // In position, no bet
-    ip_facing_bet_weights: [u32; 5], // In position, facing bet
-    oop_no_bet_weights: [u32; 5],    // Out of position, no bet
+    ip_no_bet_weights: [u32; 5],      // In position, no bet
+    ip_facing_bet_weights: [u32; 5],  // In position, facing bet
+    oop_no_bet_weights: [u32; 5],     // Out of position, no bet
     oop_facing_bet_weights: [u32; 5], // Out of position, facing bet
 }
 
@@ -320,7 +323,12 @@ impl SyntheticGenerator {
     /// Genera una mano individual
     fn generate_single_hand(&self, rng: &mut ChaCha8Rng, hand_num: usize) -> ParsedHand {
         // Seleccionar stake aleatorio
-        let stake = self.config.stakes.choose(rng).copied().unwrap_or(StakeLevel::NL10);
+        let stake = self
+            .config
+            .stakes
+            .choose(rng)
+            .copied()
+            .unwrap_or(StakeLevel::NL10);
 
         // Generar timestamp aleatorio en el rango
         let timestamp = self.generate_timestamp(rng);
@@ -336,7 +344,8 @@ impl SyntheticGenerator {
 
         // Generar cartas
         let mut deck = self.create_shuffled_deck(rng);
-        let (players_with_cards, hero_cards) = self.deal_cards(&mut deck, players_with_positions, rng);
+        let (players_with_cards, hero_cards) =
+            self.deal_cards(&mut deck, players_with_positions, rng);
 
         // Generar acciones
         let (actions, pot_total, winners) = self.generate_actions(rng, &players_with_cards, stake);
@@ -374,7 +383,7 @@ impl SyntheticGenerator {
         let start_ts = self.config.start_date.timestamp();
         let end_ts = self.config.end_date.timestamp();
         let random_ts = rng.gen_range(start_ts..=end_ts);
-        
+
         DateTime::from_timestamp(random_ts, 0)
             .map(|dt| dt.format("%Y/%m/%d %H:%M:%S UTC").to_string())
             .unwrap_or_else(|| Utc::now().format("%Y/%m/%d %H:%M:%S UTC").to_string())
@@ -387,9 +396,21 @@ impl SyntheticGenerator {
 
         // Lista de nombres de oponentes
         let opponent_names = [
-            "fish123", "shark_pro", "donkey42", "nit_master", "lag_wizard",
-            "tight_tiger", "loose_lucy", "aggro_andy", "passive_pete", "random_rx",
-            "grinder99", "bluffer_bob", "value_vic", "pot_control", "check_raise_cr",
+            "fish123",
+            "shark_pro",
+            "donkey42",
+            "nit_master",
+            "lag_wizard",
+            "tight_tiger",
+            "loose_lucy",
+            "aggro_andy",
+            "passive_pete",
+            "random_rx",
+            "grinder99",
+            "bluffer_bob",
+            "value_vic",
+            "pot_control",
+            "check_raise_cr",
         ];
 
         let mut players = Vec::with_capacity(num_players as usize);
@@ -412,12 +433,16 @@ impl SyntheticGenerator {
                 }
             };
 
-            let (name, is_hero) = if Some(i + 1) == hero_seat.map(|_| i + 1) && hero_present && i == 0 {
-                (self.config.hero_name.clone(), true)
-            } else {
-                let name = opponent_names.choose(rng).unwrap_or(&"opponent").to_string();
-                (name, false)
-            };
+            let (name, is_hero) =
+                if Some(i + 1) == hero_seat.map(|_| i + 1) && hero_present && i == 0 {
+                    (self.config.hero_name.clone(), true)
+                } else {
+                    let name = opponent_names
+                        .choose(rng)
+                        .unwrap_or(&"opponent")
+                        .to_string();
+                    (name, false)
+                };
 
             // Stack aleatorio entre 50BB y 200BB
             let stack_bbs = rng.gen_range(50..=200) as i64;
@@ -447,7 +472,10 @@ impl SyntheticGenerator {
         }
 
         // Encontrar indice del button
-        let btn_idx = players.iter().position(|p| p.seat == button_seat).unwrap_or(0);
+        let btn_idx = players
+            .iter()
+            .position(|p| p.seat == button_seat)
+            .unwrap_or(0);
 
         // Asignar posiciones en orden desde el button
         let positions_6max = [
@@ -469,7 +497,9 @@ impl SyntheticGenerator {
 
     /// Crea y baraja un mazo de cartas
     fn create_shuffled_deck(&self, rng: &mut ChaCha8Rng) -> Vec<Card> {
-        let ranks = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'];
+        let ranks = [
+            '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A',
+        ];
         let suits = ['h', 'd', 'c', 's'];
 
         let mut deck: Vec<Card> = ranks
@@ -495,7 +525,7 @@ impl SyntheticGenerator {
                 let card1 = deck.pop().unwrap();
                 let card2 = deck.pop().unwrap();
                 let cards = [card1.clone(), card2.clone()];
-                
+
                 if player.is_hero {
                     hero_cards = Some(cards.clone());
                     player.hole_cards = Some(cards);
@@ -548,8 +578,12 @@ impl SyntheticGenerator {
         let sb = stake.small_blind_cents();
 
         // Encontrar SB y BB
-        let sb_idx = players.iter().position(|p| p.position == Some(Position::SmallBlind));
-        let bb_idx = players.iter().position(|p| p.position == Some(Position::BigBlind));
+        let sb_idx = players
+            .iter()
+            .position(|p| p.position == Some(Position::SmallBlind));
+        let bb_idx = players
+            .iter()
+            .position(|p| p.position == Some(Position::BigBlind));
 
         // Postear ciegas
         if let Some(idx) = sb_idx {
@@ -579,7 +613,7 @@ impl SyntheticGenerator {
         // Simular preflop
         let (preflop_actions, preflop_pot, preflop_folded) =
             self.simulate_preflop(rng, players, &player_bets, &player_folded, stake);
-        
+
         actions.extend(preflop_actions);
         pot += preflop_pot;
         player_folded = preflop_folded;
@@ -602,7 +636,7 @@ impl SyntheticGenerator {
 
                 let (street_actions, street_pot, street_folded) =
                     self.simulate_postflop(rng, players, &player_folded, stake, street);
-                
+
                 actions.extend(street_actions);
                 pot += street_pot;
                 player_folded = street_folded;
@@ -621,7 +655,10 @@ impl SyntheticGenerator {
             active_players[0].name.clone()
         } else if !active_players.is_empty() {
             // Showdown: elegir ganador aleatorio
-            active_players.choose(rng).map(|p| p.name.clone()).unwrap_or_default()
+            active_players
+                .choose(rng)
+                .map(|p| p.name.clone())
+                .unwrap_or_default()
         } else {
             players.first().map(|p| p.name.clone()).unwrap_or_default()
         };
@@ -965,7 +1002,7 @@ mod tests {
         let hands = generator.generate_sequential();
 
         assert_eq!(hands.len(), 100);
-        
+
         // Verificar estructura basica
         for hand in &hands {
             assert!(!hand.hand_id.is_empty());
@@ -1008,7 +1045,7 @@ mod tests {
         let config = SyntheticConfig::new(100)
             .with_seed(42)
             .with_hero_name("test_hero".to_string());
-        
+
         let generator = SyntheticGenerator::new(config);
         let hands = generator.generate_sequential();
 
@@ -1017,7 +1054,7 @@ mod tests {
             .iter()
             .filter(|h| h.players.iter().any(|p| p.is_hero))
             .count();
-        
+
         assert!(hero_hands > 0, "Hero should be present in some hands");
     }
 
@@ -1029,7 +1066,10 @@ mod tests {
 
         for hand in &hands {
             for player in &hand.players {
-                assert!(player.position.is_some(), "Every player should have a position");
+                assert!(
+                    player.position.is_some(),
+                    "Every player should have a position"
+                );
             }
         }
     }
