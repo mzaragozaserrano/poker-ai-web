@@ -108,10 +108,7 @@ impl SyntheticConfig {
 
     /// Establece los stakes a generar
     pub fn with_stakes(mut self, stakes: Vec<String>) -> Self {
-        self.stakes = stakes
-            .iter()
-            .filter_map(|s| s.parse().ok())
-            .collect();
+        self.stakes = stakes.iter().filter_map(|s| s.parse().ok()).collect();
         if self.stakes.is_empty() {
             self.stakes = vec![StakeLevel::NL10];
         }
