@@ -39,7 +39,7 @@ jobs:
             ${{ runner.os }}-poetry-
 
       - name: Update lock file
-        run: poetry lock --no-update
+        run: poetry lock
 
       - name: Install dependencies
         run: poetry install --with dev
@@ -74,7 +74,7 @@ jobs:
             ${{ runner.os }}-poetry-
 
       - name: Update lock file
-        run: poetry lock --no-update
+        run: poetry lock
 
       - name: Install dependencies
         run: poetry install --with dev
@@ -109,7 +109,7 @@ jobs:
             ${{ runner.os }}-poetry-
 
       - name: Update lock file
-        run: poetry lock --no-update
+        run: poetry lock
 
       - name: Install dependencies
         run: poetry install --with dev
