@@ -18,6 +18,7 @@ class Settings(BaseSettings):
     app_name: str = "Poker AI API"
     debug: bool = False
     api_port: int = 8000
+    api_host: str = "127.0.0.1"  # SECURITY: Only localhost, never 0.0.0.0
 
     # Winamax configuration
     winamax_history_path: Path = Path(

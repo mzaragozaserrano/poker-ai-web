@@ -14,6 +14,7 @@ from app.config.settings import Settings
 from app.routes import stats, hands, equity, websocket
 from app.bridge import is_ffi_available, get_system_info
 from app.services.file_watcher_service import get_file_watcher_service
+from app.middleware import LocalhostOnlyMiddleware, validate_server_host
 
 # Initialize settings from environment
 settings = Settings()
@@ -65,6 +66,9 @@ app = FastAPI(
     redoc_url="/redoc",
     openapi_url="/api/v1/openapi.json",
 )
+
+# SECURITY: Localhost-only enforcement middleware (MUST be first)
+app.add_middleware(LocalhostOnlyMiddleware)
 
 # Configure CORS middleware - LOCALHOST ONLY para seguridad
 app.add_middleware(
@@ -120,9 +124,12 @@ async def get_config() -> dict[str, Any]:
 if __name__ == "__main__":
     import uvicorn
 
+    # SECURITY: Validate host is localhost before starting
+    validate_server_host(settings.api_host)
+    
     uvicorn.run(
         "app.main:app",
-        host="127.0.0.1",
+        host=settings.api_host,
         port=settings.api_port,
         reload=settings.debug,
     )
