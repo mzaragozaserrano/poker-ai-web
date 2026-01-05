@@ -4,15 +4,16 @@
 La Fase 4 (Optimización, Seguridad y Lanzamiento) ha iniciado. Esta fase se enfoca en pruebas de carga masiva, optimización de rendimiento, seguridad y empaquetado de la aplicación.
 
 ## Current Focus
-**Issue #69: Implementar sistema de auditoría de logs**
-- Configurar logging estructurado en Python (structlog)
-- Configurar logging en Rust (tracing crate)
-- Definir niveles de log (ERROR, WARN, INFO, DEBUG)
-- Implementar rotación de logs (max 100MB por archivo)
-- Añadir contexto a logs (request_id, timestamp, user)
-- Crear logs de auditoría para acceso a endpoints, operaciones de base de datos y detección de archivos
-- Almacenar logs en directorio local (logs/)
-- NO loguear contenido de manos (solo metadatos)
+**Issue #70: Crear empaquetado de aplicación como ejecutable local**
+- Crear script de build para backend Rust (release optimizado)
+- Compilar poker-ffi como wheel de Python
+- Bundlear frontend con Vite (npm run build)
+- Crear script de empaquetado (PowerShell para Windows)
+- Incluir DuckDB embebido
+- Crear launcher script (inicia backend + abre browser)
+- Generar instalador o ZIP autocontenido
+- Documentar proceso de build en README
+- Crear GitHub Actions para builds automáticos
 
 ## Issues Fase 4 (Creadas)
 
@@ -24,8 +25,8 @@ La Fase 4 (Optimización, Seguridad y Lanzamiento) ha iniciado. Esta fase se enf
 
 ### 4.2 Cumplimiento y Seguridad
 - [x] #68 - 4.2.1 Verificar y asegurar que API escucha solo en localhost
-- [ ] #69 - 4.2.2 Implementar sistema de auditoría de logs (EN PROGRESO)
-- [ ] #70 - 4.2.3 Crear empaquetado de aplicación como ejecutable local
+- [x] #69 - 4.2.2 Implementar sistema de auditoría de logs
+- [ ] #70 - 4.2.3 Crear empaquetado de aplicación como ejecutable local (EN PROGRESO)
 
 ---
 
