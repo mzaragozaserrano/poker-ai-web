@@ -18,8 +18,7 @@ Uso:
     equity = calculate_equity("AhKd", "QsQh", "", 100000)
 """
 
-from typing import List, Optional
-import os
+from typing import List
 
 
 def _get_ffi_module():
