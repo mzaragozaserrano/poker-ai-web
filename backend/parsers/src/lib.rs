@@ -53,6 +53,7 @@ pub mod bytes_parser;
 pub mod file_reader;
 pub mod file_watcher;
 pub mod fsm;
+pub mod logging;
 pub mod parallel_processor;
 pub mod synthetic_generator;
 pub mod types;

@@ -10,6 +10,7 @@ on:
     paths:
       - 'server-api/**'
       - '.github/workflows/api-ci.yml'
+  workflow_dispatch:
 
 jobs:
   lint:

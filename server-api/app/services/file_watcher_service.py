@@ -4,14 +4,14 @@ File watcher service para integración con WebSocket.
 Conecta el file watcher de Rust con el WebSocket manager de FastAPI.
 """
 
-import logging
 from datetime import datetime
 from typing import List, Optional
 from pathlib import Path
 
 from app.services.websocket_manager import get_ws_manager
+from app.utils.logger import get_logger, audit_log
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 class FileWatcherService:
@@ -31,7 +31,7 @@ class FileWatcherService:
         """
         self.watch_path = watch_path
         self._is_running = False
-        logger.info(f"FileWatcherService initialized for path: {watch_path}")
+        logger.info("file_watcher_service_initialized", watch_path=watch_path)
     
     def start(self) -> None:
         """
@@ -41,12 +41,12 @@ class FileWatcherService:
         y notifica a todos los clientes WebSocket conectados.
         """
         if self._is_running:
-            logger.warning("FileWatcherService already running")
+            logger.warning("file_watcher_already_running", watch_path=self.watch_path)
             return
         
         # Verificar que el directorio existe
         if not Path(self.watch_path).exists():
-            logger.error(f"Watch path does not exist: {self.watch_path}")
+            logger.error("watch_path_not_found", watch_path=self.watch_path)
             raise FileNotFoundError(f"Watch path does not exist: {self.watch_path}")
         
         try:
@@ -67,10 +67,19 @@ class FileWatcherService:
             )
             
             self._is_running = True
-            logger.info(f"FileWatcherService started successfully on {self.watch_path}")
+            audit_log(
+                "file_watcher_started",
+                watch_path=self.watch_path,
+                max_retries=3,
+            )
             
         except Exception as e:
-            logger.error(f"Error starting FileWatcherService: {e}")
+            logger.error(
+                "file_watcher_start_failed",
+                watch_path=self.watch_path,
+                error=str(e),
+                exc_info=True,
+            )
             raise
     
     def _on_hands_detected(self, hands: List) -> None:
@@ -81,10 +90,10 @@ class FileWatcherService:
             hands: Lista de PyHandSummary con las manos detectadas
         """
         if not hands:
-            logger.debug("No hands detected in file")
+            logger.debug("no_hands_detected_in_file")
             return
         
-        logger.info(f"Detected {len(hands)} new hands")
+        audit_log("new_hands_detected", hands_count=len(hands))
         
         # Obtener el gestor de WebSocket
         ws_manager = get_ws_manager()
@@ -114,10 +123,15 @@ class FileWatcherService:
                 )
                 ws_manager.queue_broadcast(message.model_dump_json())
                 
-                logger.debug(f"Notified clients about hand {hand_id}")
+                logger.debug("hand_notification_sent", hand_id=hand_id)
                 
             except Exception as e:
-                logger.error(f"Error notifying hand {hand.hand_id}: {e}")
+                logger.error(
+                    "hand_notification_failed",
+                    hand_id=hand.hand_id,
+                    error=str(e),
+                    exc_info=True,
+                )
     
     def stop(self) -> None:
         """
@@ -127,7 +141,7 @@ class FileWatcherService:
         se detiene cuando el proceso termina.
         """
         self._is_running = False
-        logger.info("FileWatcherService stopped")
+        audit_log("file_watcher_stopped", watch_path=self.watch_path)
     
     @property
     def is_running(self) -> bool:

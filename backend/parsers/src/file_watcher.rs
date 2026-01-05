@@ -39,6 +39,7 @@ use std::sync::mpsc::{self, Receiver, Sender};
 use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
+use tracing::{debug, error, info, warn};
 
 use crate::parallel_processor::ParallelProcessor;
 
@@ -160,9 +161,11 @@ impl FileWatcher {
         // Iniciar el watching
         watcher.watch(&self.config.watch_path, RecursiveMode::NonRecursive)?;
 
-        println!(
-            "File watcher iniciado en: {:?}",
-            self.config.watch_path.display()
+        info!(
+            path = %self.config.watch_path.display(),
+            max_retries = self.config.max_retries,
+            retry_delay_ms = self.config.retry_delay_ms,
+            "File watcher started"
         );
 
         // Clonar referencias para los threads
@@ -181,10 +184,10 @@ impl FileWatcher {
                             &processed_hashes,
                             &file_queue_tx,
                         ) {
-                            eprintln!("Error manejando evento: {}", e);
+                            error!(error = %e, "Failed to handle notify event");
                         }
                     }
-                    Err(e) => eprintln!("Error de notify: {}", e),
+                    Err(e) => error!(error = %e, "Notify error"),
                 }
             }
         });
@@ -210,11 +213,13 @@ impl FileWatcher {
     /// Los archivos detectados se procesan automáticamente usando Rayon.
     pub fn start_with_processor(self, processor: ParallelProcessor) -> Result<(), WatcherError> {
         self.start(move |path| {
-            println!("Procesando archivo detectado: {:?}", path);
+            debug!(file_path = %path.display(), "Processing detected file");
             let result = processor.process_files(vec![path.clone()], None::<fn(_)>);
-            println!(
-                "Procesadas {} manos en {}ms",
-                result.total_hands, result.elapsed_ms
+            info!(
+                file_path = %path.display(),
+                total_hands = result.total_hands,
+                elapsed_ms = result.elapsed_ms,
+                "File processed successfully"
             );
         })
     }
@@ -251,12 +256,22 @@ impl FileWatcher {
                     hashes.insert(file_event.hash.clone());
                     drop(hashes); // Liberar lock
 
+                    info!(
+                        file_path = %file_event.path.display(),
+                        hash = %file_event.hash,
+                        "New file detected and queued for processing"
+                    );
+
                     file_queue_tx
                         .send(file_event)
                         .expect("Failed to send file event");
                 }
                 Err(e) => {
-                    eprintln!("Error procesando archivo {:?}: {}", path, e);
+                    error!(
+                        file_path = %path.display(),
+                        error = %e,
+                        "Failed to process file"
+                    );
                 }
             }
         }
@@ -291,11 +306,12 @@ impl FileWatcher {
                 }
                 Err(e) if attempt < config.max_retries => {
                     // Archivo bloqueado, reintentar
-                    eprintln!(
-                        "Archivo bloqueado (intento {}/{}): {:?}",
-                        attempt + 1,
-                        config.max_retries,
-                        path
+                    warn!(
+                        file_path = %path.display(),
+                        attempt = attempt + 1,
+                        max_retries = config.max_retries,
+                        delay_ms = delay,
+                        "File locked, retrying"
                     );
                     thread::sleep(Duration::from_millis(delay));
 
