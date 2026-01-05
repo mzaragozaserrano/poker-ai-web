@@ -63,8 +63,7 @@ pub fn init_logging(log_dir: impl AsRef<Path>, log_level: &str) {
         .with_span_events(FmtSpan::CLOSE)
         .with_writer(file_appender)
         .with_filter(
-            EnvFilter::try_from_default_env()
-                .unwrap_or_else(|_| EnvFilter::new(log_level)),
+            EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new(log_level)),
         );
 
     // Crear layer de consola con formato legible
@@ -76,8 +75,7 @@ pub fn init_logging(log_dir: impl AsRef<Path>, log_level: &str) {
         .with_target(false)
         .with_writer(std::io::stdout)
         .with_filter(
-            EnvFilter::try_from_default_env()
-                .unwrap_or_else(|_| EnvFilter::new(log_level)),
+            EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new(log_level)),
         );
 
     // Registrar subscriber global
@@ -116,12 +114,12 @@ mod tests {
         let log_dir = temp_dir.path().join("test_logs");
 
         assert!(!log_dir.exists());
-        
+
         // Use try_init to avoid panic if already initialized
         let _ = std::panic::catch_unwind(|| {
             init_logging(&log_dir, "INFO");
         });
-        
+
         assert!(log_dir.exists());
     }
 
@@ -149,4 +147,3 @@ mod tests {
         );
     }
 }
-
