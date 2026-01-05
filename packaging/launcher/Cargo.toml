@@ -1,0 +1,39 @@
+[package]
+name = "poker-analyzer-launcher"
+version = "0.1.0"
+edition = "2021"
+authors = ["Miguel Zaragoza <mzaragoza@example.com>"]
+description = "Launcher for Poker Analyzer standalone package"
+
+[[bin]]
+name = "poker-analyzer"
+path = "src/main.rs"
+
+[dependencies]
+# Para abrir el navegador
+webbrowser = "1.0"
+
+# Para gestión de procesos
+subprocess = "0.2"
+
+# Para leer configuración TOML
+toml = "0.8"
+serde = { version = "1.0", features = ["derive"] }
+
+# Para paths y filesystem
+path-absolutize = "3.1"
+
+# Para logging simple
+env_logger = "0.11"
+log = "0.4"
+
+# Para capturar Ctrl+C
+ctrlc = "3.4"
+
+[profile.release]
+opt-level = "z"     # Optimizar para tamaño
+lto = true
+strip = true
+codegen-units = 1
+panic = "abort"
+

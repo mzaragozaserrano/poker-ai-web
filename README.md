@@ -73,14 +73,31 @@ La aplicación opera íntegramente de forma local para garantizar la privacidad 
 
 ## Instalación
 
-### Prerrequisitos
+### Opción 1: Paquete Autocontenido (Recomendado para usuarios finales)
+
+Descarga el paquete precompilado que no requiere instalación de dependencias:
+
+1. Descarga `poker-analyzer-windows-x64.zip` desde [Releases](https://github.com/mzaragozaserrano/poker-ai-web/releases)
+2. Extrae el ZIP en cualquier directorio (ej: `C:\PokerAnalyzer\`)
+3. Ejecuta `poker-analyzer.exe`
+4. Configura la ruta de historiales de Winamax en `config.toml`
+5. El navegador se abrirá automáticamente en `http://127.0.0.1:8000`
+
+**Tiempo estimado**: < 5 minutos  
+**Tamaño del paquete**: ~80 MB comprimido, ~150 MB extraído
+
+Ver [packaging/README.md](packaging/README.md) para más detalles sobre el paquete autocontenido.
+
+### Opción 2: Instalación desde Código Fuente (Desarrolladores)
+
+#### Prerrequisitos
 
 - **Rust 1.70+** (última versión estable)
 - Python 3.11+ (para Fase 2 - API)
 - Node.js 18+ y npm/pnpm (para Fase 3 - Frontend)
 - DuckDB (se instala automáticamente vía dependencias)
 
-### Pasos de Instalación
+#### Pasos de Instalación
 
 ```powershell
 # Clonar el repositorio
@@ -340,6 +357,31 @@ Ver [LICENSE](LICENSE) para más detalles.
 - Build frontend sin errores de TypeScript
 
 Consulta el [Roadmap](docs/project/roadmap.md) para conocer el estado actual de las fases de implementacion.
+
+## Empaquetado y Distribución
+
+### Crear Paquete de Distribución
+
+Para crear un paquete autocontenido listo para distribución:
+
+```powershell
+# Empaquetar aplicación completa
+.\packaging\package-windows.ps1 -Verbose
+
+# Crear ZIP de distribución
+.\packaging\create-zip.ps1 -Validate
+
+# Resultado: release/poker-analyzer-windows-x64.zip
+```
+
+El paquete incluye:
+- Python 3.11 embebido
+- Todas las dependencias Rust y Python
+- Frontend compilado (React build estático)
+- Launcher ejecutable (poker-analyzer.exe)
+- Configuración por defecto (config.toml)
+
+Ver [packaging/README.md](packaging/README.md) para documentación completa del proceso de empaquetado.
 
 ## Contribuciones
 
