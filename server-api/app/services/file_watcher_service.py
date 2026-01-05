@@ -103,14 +103,16 @@ class FileWatcherService:
                     # parsear más información de la mano. Lo dejamos como None.
                     hero_result = None
                 
-                # Notificar vía WebSocket
-                ws_manager.notify_new_hand(
+                # Notificar vía WebSocket (usar queue_broadcast para llamadas desde threads externos)
+                from app.models.websocket import NewHandMessage
+                message = NewHandMessage(
                     hand_id=hand_id,
                     timestamp=timestamp,
                     hero_result=hero_result,
                     hero_position=None,  # Se podría extraer del parsing
                     stakes="0.05/0.10",  # Se podría extraer del parsing
                 )
+                ws_manager.queue_broadcast(message.model_dump_json())
                 
                 logger.debug(f"Notified clients about hand {hand_id}")
                 
