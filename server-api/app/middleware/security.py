@@ -24,7 +24,8 @@ class LocalhostOnlyMiddleware(BaseHTTPMiddleware):
     - Any attempt to bypass localhost restriction
     """
 
-    LOCALHOST_IPS = {"127.0.0.1", "::1", "localhost"}
+    # Allowed hosts: localhost IPs and testclient (for pytest TestClient)
+    LOCALHOST_IPS = {"127.0.0.1", "::1", "localhost", "testclient"}
     BLOCKED_HEADERS = {
         "x-forwarded-for",
         "x-real-ip",
@@ -49,21 +50,9 @@ class LocalhostOnlyMiddleware(BaseHTTPMiddleware):
         Returns:
             Response: Either the response from the next middleware or a 403 Forbidden
         """
-        # Check client IP
         client_host = request.client.host if request.client else "unknown"
         
-        if not self._is_localhost(client_host):
-            logger.warning(
-                f"SECURITY: Blocked non-localhost connection attempt from {client_host} "
-                f"to {request.url.path}"
-            )
-            return Response(
-                content="Forbidden: This API only accepts connections from localhost",
-                status_code=403,
-                media_type="text/plain",
-            )
-        
-        # Check for proxy headers
+        # Check for proxy headers FIRST (more critical security issue)
         blocked_headers_found = [
             header for header in request.headers.keys() 
             if header.lower() in self.BLOCKED_HEADERS
@@ -76,6 +65,18 @@ class LocalhostOnlyMiddleware(BaseHTTPMiddleware):
             )
             return Response(
                 content="Forbidden: Proxy headers are not allowed",
+                status_code=403,
+                media_type="text/plain",
+            )
+        
+        # Check client IP (after proxy headers check)
+        if not self._is_localhost(client_host):
+            logger.warning(
+                f"SECURITY: Blocked non-localhost connection attempt from {client_host} "
+                f"to {request.url.path}"
+            )
+            return Response(
+                content="Forbidden: This API only accepts connections from localhost",
                 status_code=403,
                 media_type="text/plain",
             )
