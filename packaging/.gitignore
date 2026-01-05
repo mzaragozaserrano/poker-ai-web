@@ -1,0 +1,22 @@
+# Ignorar artefactos de build
+dist/
+release/
+
+# Ignorar cache de Python
+__pycache__/
+*.py[cod]
+
+# Ignorar archivos temporales de build
+*.zip
+*.exe
+*.whl
+*.dll
+*.so
+
+# Ignorar directorios de build de launcher
+launcher/target/
+launcher/Cargo.lock
+
+# Ignorar Python embebido descargado
+python-embed.zip
+

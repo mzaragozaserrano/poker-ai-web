@@ -1,0 +1,73 @@
+# Configuración de Poker Analyzer
+# Este archivo se copiará como config.toml en la instalación
+
+[database]
+# Ruta a la base de datos DuckDB (relativa al directorio de instalación)
+# Usar ":memory:" para base de datos completamente en memoria
+db_path = "data/poker.duckdb"
+
+# Número de threads para DuckDB (ajustar según CPU)
+# Default: 16 (optimizado para Ryzen 7 3800X)
+threads = 16
+
+# Límite de memoria para DuckDB en GB
+# Default: 48GB (recomendado para sistema con 64GB RAM)
+memory_limit_gb = 48
+
+# Habilitar cache de objetos de DuckDB
+enable_object_cache = true
+
+[server]
+# Host donde escucha la API (NUNCA cambiar de localhost por seguridad)
+host = "127.0.0.1"
+
+# Puerto de la API
+port = 8000
+
+# Nivel de logging (DEBUG, INFO, WARN, ERROR)
+log_level = "INFO"
+
+# Rotación de logs (tamaño máximo en MB)
+log_max_size_mb = 100
+
+[parser]
+# Directorio donde Winamax guarda los historiales
+# Ajustar a la ruta real de tu sistema
+history_directory = "C:\\Users\\YourUser\\AppData\\Local\\Winamax\\Poker\\accounts\\YourAccount\\history"
+
+# Intervalo de detección de nuevos archivos (segundos)
+watch_interval_seconds = 2
+
+# Procesar archivos existentes al inicio
+process_existing_on_startup = true
+
+[player]
+# Nombre del jugador principal (Hero)
+hero_name = "thesmoy"
+
+# Formato de juego principal
+game_format = "CashGame"
+
+# Variante de poker
+game_variant = "NLHE"
+
+# Configuración de mesa
+table_size = 6  # 6-max
+
+[frontend]
+# Ruta relativa al directorio de archivos estáticos del frontend
+static_path = "frontend/dist"
+
+# Abrir navegador automáticamente al iniciar
+auto_open_browser = true
+
+[performance]
+# Usar SIMD AVX2 para cálculos de equidad (recomendado si CPU soporta)
+use_avx2 = true
+
+# Target CPU para optimizaciones (znver2 = Ryzen 3000 series)
+target_cpu = "znver2"
+
+# Número de threads para Rayon (parallelización Rust)
+rayon_threads = 16
+

@@ -1,0 +1,170 @@
+name: Release Package
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # Triggers on version tags like v0.1.0, v1.2.3
+  workflow_dispatch:  # Permite ejecución manual
+
+env:
+  RUST_VERSION: 1.70
+  PYTHON_VERSION: 3.11
+  NODE_VERSION: 18
+
+jobs:
+  build-windows:
+    name: Build Windows x64 Package
+    runs-on: windows-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: ${{ env.RUST_VERSION }}
+          components: rustfmt, clippy
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+      
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install poetry maturin
+      
+      - name: Cache Rust dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            backend/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+      
+      - name: Cache Node dependencies
+        uses: actions/cache@v4
+        with:
+          path: frontend/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('frontend/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      
+      - name: Build Rust Backend
+        shell: pwsh
+        run: |
+          .\packaging\build-rust.ps1 -OutputDir "dist/backend"
+      
+      - name: Build FFI Wheel
+        shell: pwsh
+        run: |
+          .\packaging\build-ffi.ps1 -OutputDir "dist/wheels"
+      
+      - name: Build Frontend
+        shell: pwsh
+        run: |
+          .\packaging\build-frontend.ps1 -OutputDir "dist/frontend"
+      
+      - name: Build Launcher
+        shell: pwsh
+        run: |
+          .\packaging\build-launcher.ps1 -OutputDir "dist/launcher"
+      
+      - name: Package Application
+        shell: pwsh
+        run: |
+          .\packaging\package-windows.ps1 -OutputDir "release/poker-analyzer" -SkipBuild
+      
+      - name: Copy Launcher to Package
+        shell: pwsh
+        run: |
+          Copy-Item -Path "dist/launcher/poker-analyzer.exe" -Destination "release/poker-analyzer/" -Force
+      
+      - name: Create ZIP
+        shell: pwsh
+        run: |
+          .\packaging\create-zip.ps1 -SourceDir "release/poker-analyzer" -OutputZip "release/poker-analyzer-windows-x64.zip" -Validate
+      
+      - name: Get Version from Tag
+        id: get_version
+        shell: bash
+        run: |
+          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            VERSION=${GITHUB_REF#refs/tags/}
+          else
+            VERSION="dev-$(git rev-parse --short HEAD)"
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+      
+      - name: Calculate SHA256
+        id: sha256
+        shell: pwsh
+        run: |
+          $hash = Get-FileHash -Path "release/poker-analyzer-windows-x64.zip" -Algorithm SHA256
+          echo "sha256=$($hash.Hash)" >> $env:GITHUB_OUTPUT
+      
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: poker-analyzer-windows-x64
+          path: release/poker-analyzer-windows-x64.zip
+          retention-days: 30
+      
+      - name: Create Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: release/poker-analyzer-windows-x64.zip
+          body: |
+            # Poker Analyzer ${{ steps.get_version.outputs.version }}
+            
+            ## Instalación
+            
+            1. Descarga `poker-analyzer-windows-x64.zip`
+            2. Extrae en cualquier directorio
+            3. Ejecuta `poker-analyzer.exe`
+            4. Configura `config.toml` con tu ruta de historiales de Winamax
+            
+            ## Requisitos
+            
+            - Windows 10/11 x64
+            - No requiere Python, Node.js o Rust instalados
+            - Funciona offline después de la instalación
+            
+            ## Verificación de Integridad
+            
+            SHA256: `${{ steps.sha256.outputs.sha256 }}`
+            
+            ## Tamaño
+            
+            ~80-100 MB comprimido, ~150-200 MB extraído
+            
+            ## Documentación
+            
+            Ver [packaging/README.md](https://github.com/mzaragozaserrano/poker-ai-web/blob/main/packaging/README.md)
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # Job futuro para Linux
+  # build-linux:
+  #   name: Build Linux x64 Package
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+  #     # TODO: Implementar packaging para Linux
+
