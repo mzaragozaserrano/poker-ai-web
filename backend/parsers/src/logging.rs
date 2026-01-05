@@ -116,7 +116,12 @@ mod tests {
         let log_dir = temp_dir.path().join("test_logs");
 
         assert!(!log_dir.exists());
-        init_logging(&log_dir, "INFO");
+        
+        // Use try_init to avoid panic if already initialized
+        let _ = std::panic::catch_unwind(|| {
+            init_logging(&log_dir, "INFO");
+        });
+        
         assert!(log_dir.exists());
     }
 

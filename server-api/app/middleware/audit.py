@@ -10,7 +10,6 @@ from typing import Callable
 
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
-from starlette.types import ASGIApp
 
 from app.utils.logger import audit_log, get_logger
 

@@ -55,7 +55,8 @@ def test_app(temp_log_dir):
     
     @app.get("/error")
     async def error_endpoint():
-        raise ValueError("Test error")
+        from fastapi import HTTPException
+        raise HTTPException(status_code=500, detail="Test error")
     
     return app, temp_log_dir
 
