@@ -4,22 +4,26 @@
 La Fase 4 (Optimización, Seguridad y Lanzamiento) ha iniciado. Esta fase se enfoca en pruebas de carga masiva, optimización de rendimiento, seguridad y empaquetado de la aplicación.
 
 ## Current Focus
-**Issue #64: Implementar generador de manos sintéticas para pruebas de carga**
-- Crear módulo `backend/parsers/src/synthetic_generator.rs`
-- Generación paralela con Rayon (16 threads)
-- Integración con Parquet writer para persistencia
-- Objetivo: 1M manos en < 60 segundos
+**Issue #68: Verificar y asegurar que API escucha solo en localhost**
+- Auditar configuración de Uvicorn en server-api
+- Verificar bind a 127.0.0.1 (no 0.0.0.0)
+- Añadir tests de seguridad que verifican binding
+- Configurar CORS para solo aceptar localhost origins
+- Bloquear headers de forwarding (X-Forwarded-For)
+- Documentar configuración de seguridad
+- Añadir warning si se detecta intento de bind a 0.0.0.0
+- Crear checklist de seguridad en docs/specs/security.md
 
 ## Issues Fase 4 (Creadas)
 
 ### 4.1 Rendimiento y Escalabilidad
-- [x] #64 - 4.1.1 Implementar generador de manos sintéticas para pruebas de carga (EN PROGRESO)
-- [ ] #65 - 4.1.2 Ejecutar pruebas de carga masiva con 10M de manos
+- [x] #64 - 4.1.1 Implementar generador de manos sintéticas para pruebas de carga
+- [x] #65 - 4.1.2 Ejecutar pruebas de carga masiva con 10M de manos
 - [ ] #66 - 4.1.3 Configurar Huge Pages para optimización de memoria
 - [ ] #67 - 4.1.4 Tuning de DuckDB para consultas vectorizadas masivas
 
 ### 4.2 Cumplimiento y Seguridad
-- [ ] #68 - 4.2.1 Verificar y asegurar que API escucha solo en localhost
+- [ ] #68 - 4.2.1 Verificar y asegurar que API escucha solo en localhost (EN PROGRESO)
 - [ ] #69 - 4.2.2 Implementar sistema de auditoría de logs
 - [ ] #70 - 4.2.3 Crear empaquetado de aplicación como ejecutable local
 

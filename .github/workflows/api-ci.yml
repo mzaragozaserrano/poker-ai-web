@@ -34,9 +34,12 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/pypoetry
-          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
+          key: ${{ runner.os }}-poetry-${{ hashFiles('server-api/pyproject.toml') }}
           restore-keys: |
             ${{ runner.os }}-poetry-
+
+      - name: Update lock file
+        run: poetry lock
 
       - name: Install dependencies
         run: poetry install --with dev
@@ -66,9 +69,12 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/pypoetry
-          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
+          key: ${{ runner.os }}-poetry-${{ hashFiles('server-api/pyproject.toml') }}
           restore-keys: |
             ${{ runner.os }}-poetry-
+
+      - name: Update lock file
+        run: poetry lock
 
       - name: Install dependencies
         run: poetry install --with dev
@@ -98,9 +104,12 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/pypoetry
-          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
+          key: ${{ runner.os }}-poetry-${{ hashFiles('server-api/pyproject.toml') }}
           restore-keys: |
             ${{ runner.os }}-poetry-
+
+      - name: Update lock file
+        run: poetry lock
 
       - name: Install dependencies
         run: poetry install --with dev

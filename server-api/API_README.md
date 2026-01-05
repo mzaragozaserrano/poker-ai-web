@@ -160,9 +160,57 @@ console.log(`PFR: ${stats.summary.pfr}%`);
 
 ## Seguridad
 
-- **CORS configurado SOLO para localhost**: El servidor rechaza requests de orígenes externos
-- **Sin autenticación**: La API es para uso local, no exponer a internet
-- **Binding a 127.0.0.1**: El servidor escucha exclusivamente en localhost
+### Localhost-Only Enforcement
+
+Esta API está diseñada para **uso exclusivo en localhost**. Los datos de poker son privados y nunca deben salir de tu máquina.
+
+**Características de Seguridad:**
+
+- **Binding forzado a 127.0.0.1**: El servidor SOLO escucha en localhost
+- **LocalhostOnlyMiddleware**: Valida cada request y bloquea IPs no-localhost
+- **Bloqueo de proxy headers**: Headers como `X-Forwarded-For` son rechazados
+- **CORS restrictivo**: Solo permite orígenes localhost (puerto 3000 y 5173)
+- **Validación en startup**: El servidor no inicia si se detecta configuración insegura
+
+### Verificación de Seguridad
+
+**Ejecutar script de verificación:**
+
+```bash
+# PowerShell (Windows)
+.\scripts\verify_security.ps1
+
+# Bash (Linux/macOS)
+./scripts/verify_security.sh
+```
+
+**Verificar binding manualmente:**
+
+```bash
+# Windows
+netstat -an | Select-String "8000"
+
+# Linux/macOS
+ss -tlnp | grep 8000
+```
+
+**Resultado esperado:** `127.0.0.1:8000 LISTEN`
+
+**⚠️ NUNCA:** `0.0.0.0:8000 LISTEN` (esto expondría la API a toda la red)
+
+### Tests de Seguridad
+
+```bash
+pytest tests/test_security.py -v
+```
+
+### Documentación Completa
+
+Ver `docs/specs/security.md` para:
+- Checklist de seguridad
+- Respuesta a incidentes
+- Configuración detallada
+- Procedimientos de verificación
 
 ## Performance Esperado
 
