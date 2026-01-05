@@ -28,6 +28,13 @@ class Settings(BaseSettings):
     # DuckDB configuration
     duckdb_memory_limit_gb: int = 48
 
+    # Logging configuration
+    log_level: str = "INFO"
+    log_dir: Path = Path("logs")
+    log_max_bytes: int = 100 * 1024 * 1024  # 100MB
+    log_backup_count: int = 5
+    log_format: str = "json"  # json or console
+
     class Config:
         """Pydantic config."""
 
